@@ -1,0 +1,35 @@
+# Task: Sushifest Implementation
+
+- [x] Planning & Design
+    - [x] Review requirements from `SUSHIFEST.txt`
+    - [x] Analyze `salchipapa-fest` codebase
+    - [x] Design Database Schema (Users, Ratings, Votes, Coupons)
+    - [x] Outline Component 1: Public Rating & Ranking
+    - [x] Outline Component 2: QR Coupon System
+- [x] Setup Project
+    - [x] Initialize `sushifest` repository/folder
+    - [x] Setup Supabase environment
+- [x] Implementation - Phase 1 (Beta in 6 days)
+    - [x] User Registration/Login (Phone/Cedula)
+    - [x] Landing Page (Public Ranking by Stars)
+    - [x] Restaurant Rating System (5 Categories)
+    - [x] Separate Voting System
+    - [x] Gift Card / Coupon Redemption UI
+- [x] Implementation - Phase 2 (Administrative)
+    - [x] Restaurant Dashboard (for scanning coupons)
+    - [x] Admin Dashboard (Vote management)
+    - [x] Deploy to Vercel (https://sushifest.vercel.app)
+- [x] Verification & Testing
+    - [x] Test voting logic
+    - [x] Test coupon redemption flow
+    - [x] Verify Admin Login (PIN 1606)
+- [x] Updating Brand & Aesthetics
+    - [x] Update color palette in `globals.css`
+    - [x] Update landing page (`src/app/page.tsx`)
+    - [x] Update other pages (`votar`, `ranking`, `cupon`)
+    - [x] Replace placeholders with new logo
+- [x] Maintenance & Infrastructure
+    - [x] Fix image upload in Admin Panel (Service Role bypass)
+    - [x] Configure Supabase Storage 'locales' bucket visibility
+    - [x] Fix image rendering (Next.js Remote Patterns authorization)
+    - [x] Verify all admin functions on live site

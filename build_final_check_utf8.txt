@@ -1,0 +1,58 @@
+﻿
+> sushifest@0.1.0 build
+> next build
+
+node.exe :  ÔÜá Warning: Next.js inferred your workspace root, but it may not be correct.
+En línea: 1 Carácter: 1
++ & "C:\Program Files\nodejs/node.exe" "C:\Users\Waiha\AppData\Roaming\ ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ( ÔÜá Warning: N...not be correct.:String) [] 
+   , RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+ We detected multiple lockfiles and selected the directory of 
+C:\Users\Waiha\package-lock.json as the root directory.
+ To silence this warning, set `outputFileTracingRoot` in your Next.js config, or consider 
+removing one of the lockfiles if it's not needed.
+   See https://nextjs.org/docs/app/api-reference/config/next-config-js/output#caveats for 
+more information.
+ Detected additional lockfiles: 
+   * C:\Users\Waiha\.gemini\antigravity\EpicMarketing\sushifest\package-lock.json
+
+   Ôû▓ Next.js 15.5.13
+
+   Creating an optimized production build ...
+ Ô£ô Compiled successfully in 12.8s
+   Linting and checking validity of types ...
+
+./src/context/AuthContext.tsx
+33:23  Warning: 'error' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+61:23  Warning: 'error' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+
+info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/app/api-reference/config/eslint#disabling-rules
+   Collecting page data ...
+[Error: Failed to collect configuration for /admin] {
+  [cause]: Error: supabaseUrl is required.
+      at <unknown> (C:\Users\Waiha\.gemini\antigravity\EpicMarketing\sushifest\.next\serve
+r\app\admin\page.js:44:45894)
+      at new ck (C:\Users\Waiha\.gemini\antigravity\EpicMarketing\sushifest\.next\server\a
+pp\admin\page.js:44:46145)
+      at cl (C:\Users\Waiha\.gemini\antigravity\EpicMarketing\sushifest\.next\server\app\a
+dmin\page.js:44:50019)
+      at 88908 (C:\Users\Waiha\.gemini\antigravity\EpicMarketing\sushifest\.next\server\ap
+p\admin\page.js:44:53371)
+      at c (C:\Users\Waiha\.gemini\antigravity\EpicMarketing\sushifest\.next\server\webpac
+k-runtime.js:1:127)
+      at 8205 (C:\Users\Waiha\.gemini\antigravity\EpicMarketing\sushifest\.next\server\app
+\admin\page.js:1:746)
+      at c (C:\Users\Waiha\.gemini\antigravity\EpicMarketing\sushifest\.next\server\webpac
+k-runtime.js:1:127)
+      at 88699 (C:\Users\Waiha\.gemini\antigravity\EpicMarketing\sushifest\.next\server\ap
+p\admin\page.js:44:51022)
+      at Function.c (C:\Users\Waiha\.gemini\antigravity\EpicMarketing\sushifest\.next\serv
+er\webpack-runtime.js:1:127)
+}
+
+> Build error occurred
+[Error: Failed to collect page data for /admin] { type: 'Error' }
+

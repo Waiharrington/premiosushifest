@@ -1,0 +1,54 @@
+﻿
+> sushifest@0.1.0 build
+> next build
+
+node.exe :  ÔÜá Warning: Next.js inferred your workspace root, but it may not be correct.
+En línea: 1 Carácter: 1
++ & "C:\Program Files\nodejs/node.exe" "C:\Users\Waiha\AppData\Roaming\ ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ( ÔÜá Warning: N...not be correct.:String) [] 
+   , RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+ We detected multiple lockfiles and selected the directory of 
+C:\Users\Waiha\package-lock.json as the root directory.
+ To silence this warning, set `outputFileTracingRoot` in your Next.js config, or consider 
+removing one of the lockfiles if it's not needed.
+   See https://nextjs.org/docs/app/api-reference/config/next-config-js/output#caveats for 
+more information.
+ Detected additional lockfiles: 
+   * C:\Users\Waiha\.gemini\antigravity\EpicMarketing\sushifest\package-lock.json
+
+   Ôû▓ Next.js 15.5.13
+
+   Creating an optimized production build ...
+ Ô£ô Compiled successfully in 10.9s
+   Linting and checking validity of types ...
+   Collecting page data ...
+   Generating static pages (0/10) ...
+   Generating static pages (2/10) 
+   Generating static pages (4/10) 
+   Generating static pages (7/10) 
+ Ô£ô Generating static pages (10/10)
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (app)                                 Size  First Load JS
+Ôöî Ôùï /                                    2.32 kB         200 kB
+Ôö£ Ôùï /_not-found                            994 B         103 kB
+Ôö£ ãÆ /admin                                5.7 kB         155 kB
+Ôö£ Ôùï /cupon                               2.68 kB         200 kB
+Ôö£ Ôùï /ganadores                           3.13 kB         152 kB
+Ôö£ Ôùï /ranking                             3.21 kB         152 kB
+Ôö£ Ôùï /restaurante                         2.36 kB         190 kB
+Ôöö Ôùï /votar                               6.18 kB         210 kB
++ First Load JS shared by all             102 kB
+  Ôö£ chunks/255-3991756713d22f05.js         46 kB
+  Ôö£ chunks/4bd1b696-c023c6e3521b1417.js  54.2 kB
+  Ôöö other shared chunks (total)          1.99 kB
+
+
+Ôùï  (Static)   prerendered as static content
+ãÆ  (Dynamic)  server-rendered on demand
+
+

@@ -1,0 +1,51 @@
+﻿
+> sushifest@0.1.0 build
+> next build
+
+node.exe :  ÔÜá Warning: Next.js inferred your workspace root, but it may not be 
+correct.
+En línea: 1 Carácter: 1
++ & "C:\Program Files\nodejs/node.exe" "C:\Users\Waiha\AppData\Roaming\ ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ( ÔÜá Warning: N...not be correct.:String 
+   ) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+ We detected multiple lockfiles and selected the directory of 
+C:\Users\Waiha\package-lock.json as the root directory.
+ To silence this warning, set `outputFileTracingRoot` in your Next.js config, or 
+consider removing one of the lockfiles if it's not needed.
+   See https://nextjs.org/docs/app/api-reference/config/next-config-js/output#caveats 
+for more information.
+ Detected additional lockfiles: 
+   * C:\Users\Waiha\.gemini\antigravity\EpicMarketing\sushifest\package-lock.json
+
+   Ôû▓ Next.js 15.5.13
+   - Environments: .env.local
+
+   Creating an optimized production build ...
+ Ô£ô Compiled successfully in 8.3s
+   Linting and checking validity of types ...
+
+./src/components/SponsorBackground.tsx
+3:10  Warning: 'motion' is defined but never used.  @typescript-eslint/no-unused-vars
+4:8  Warning: 'Image' is defined but never used.  @typescript-eslint/no-unused-vars
+
+info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/app/api-reference/config/eslint#disabling-rules
+Failed to compile.
+
+./src/app/admin/page.tsx:22:27
+Type error: Cannot find name 'login'.
+
+[0m [90m 20 |[39m     [90m// (This allows immediate access if navigating with 
+?pin=1234)[39m
+ [90m 21 |[39m     [36mif[39m ([33m![39misAuthenticated [33m&&[39m pin) {
+[31m[1m>[22m[39m[90m 22 |[39m         [36mconst[39m res [33m=[39m 
+[36mawait[39m login(pin)
+ [90m    |[39m                           [31m[1m^[22m[39m
+ [90m 23 |[39m         [90m// If the PIN in URL is valid, we'll continue. Login() 
+already set the cookie.[39m
+ [90m 24 |[39m         [36mif[39m ([33m![39mres[33m.[39msuccess) {
+ [90m 25 |[39m             [36mreturn[39m [33m<[39m[33mAdminLogin[39m 
+[33m/[39m[33m>[39m[0m
+Next.js build worker exited with code: 1 and signal: null

@@ -1,0 +1,93 @@
+'use client'
+
+import { useEffect, useRef } from 'react'
+import { Html5QrcodeScanner, Html5QrcodeSupportedFormats } from 'html5-qrcode'
+import { motion, AnimatePresence } from 'framer-motion'
+import { X } from 'lucide-react'
+
+interface QRScannerUIProps {
+    isOpen: boolean
+    onClose: () => void
+    onScan: (decodedText: string) => void
+}
+
+export function QRScannerUI({ isOpen, onClose, onScan }: QRScannerUIProps) {
+    const scannerRef = useRef<Html5QrcodeScanner | null>(null)
+
+    useEffect(() => {
+        if (isOpen && !scannerRef.current) {
+            scannerRef.current = new Html5QrcodeScanner(
+                "qr-reader",
+                { 
+                    fps: 10, 
+                    qrbox: { width: 250, height: 250 },
+                    formatsToSupport: [ Html5QrcodeSupportedFormats.QR_CODE ]
+                },
+                /* verbose= */ false
+            )
+
+            scannerRef.current.render(
+                (decodedText) => {
+                    onScan(decodedText)
+                    onClose()
+                },
+                () => {
+                    // Handle scan error if needed
+                }
+            )
+
+            return () => {
+                if (scannerRef.current) {
+                    scannerRef.current.clear().catch(err => console.error("Error clearing scanner", err))
+                    scannerRef.current = null
+                }
+            }
+        }
+    }, [isOpen, onScan, onClose])
+
+    return (
+        <AnimatePresence>
+            {isOpen && (
+                <div className="fixed inset-0 z-[110] flex items-center justify-center p-4">
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        onClick={onClose}
+                        className="absolute inset-0 bg-black/90 backdrop-blur-sm"
+                    />
+
+                    <motion.div
+                        initial={{ scale: 0.9, opacity: 0, y: 20 }}
+                        animate={{ scale: 1, opacity: 1, y: 0 }}
+                        exit={{ scale: 0.9, opacity: 0, y: 20 }}
+                        className="relative w-full max-w-sm bg-background border border-primary/30 rounded-3xl overflow-hidden p-6"
+                    >
+                        <div className="flex justify-between items-center mb-6">
+                            <h2 className="text-2xl font-lilita text-white">ESCANEAR CÓDIGO QR</h2>
+                            <button onClick={onClose} className="p-2 text-white/50 hover:text-white">
+                                <X size={24} />
+                            </button>
+                        </div>
+
+                        <div className="relative aspect-square bg-slate-900 rounded-2xl overflow-hidden border border-white/5 shadow-inner">
+                            <div id="qr-reader" className="w-full h-full" />
+                            
+                            {/* Overlay Frame */}
+                            <div className="absolute inset-0 pointer-events-none border-4 border-primary/20 m-12 rounded-lg opacity-50 border-dashed" />
+                        </div>
+
+                        <p className="mt-6 text-center text-sm text-white/50 font-medium">
+                            Apunta tu cámara al código QR <br className="hidden md:block"/> del restaurante para registrar tu visita.
+                        </p>
+
+
+                        <div className="mt-8 flex justify-center">
+                            <div className="w-12 h-1 bg-primary/20 rounded-full animate-pulse" />
+                        </div>
+                    </motion.div>
+                </div>
+            )}
+        </AnimatePresence>
+    )
+}
