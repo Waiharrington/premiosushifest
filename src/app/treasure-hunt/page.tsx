@@ -9,6 +9,7 @@ import { Particles } from "@/components/Particles"
 import { TreasureMap } from "@/components/TreasureMap"
 import { QRScannerUI } from "@/components/QRScannerUI"
 import { ScratchCard } from "@/components/ScratchCard"
+import { SponsorBackground } from "@/components/SponsorBackground"
 import { registerVisit, getTreasureHuntStatus, generateScratchPrize } from "@/actions/treasure-hunt"
 import { supabase } from "@/lib/supabase"
 import { Locale, TreasureHuntPrize } from "@/types"
@@ -110,14 +111,41 @@ export default function TreasureHuntPage() {
     const progress = locales.length > 0 ? (visitedIds.length / locales.length) * 100 : 0
 
     return (
-        <div className="min-h-screen bg-background text-white relative overflow-x-hidden pb-20">
-            {/* Background */}
-            <div className="fixed inset-0 z-0">
-                <Image src="/bg-home.jpg" alt="BG" fill className="object-cover opacity-20" unoptimized />
+        <div className="h-[100svh] bg-background text-white relative overflow-hidden selection:bg-primary/30">
+            {/* Background Layer */}
+            <div className="fixed top-0 left-0 w-full h-[100svh] md:h-screen md:inset-0 z-0 text-white">
+                {/* Mobile Background */}
+                <div className="absolute inset-0 z-0 block md:hidden">
+                    <Image
+                        src="/bg-home-mobile.jpg"
+                        alt="Mobile Background"
+                        fill
+                        className="object-cover opacity-50"
+                        priority
+                        quality={100}
+                        unoptimized
+                    />
+                </div>
+
+                {/* Desktop Background */}
+                <div className="absolute inset-0 z-0 hidden md:block">
+                    <Image
+                        src="/bg-home.jpg"
+                        alt="Desktop Background"
+                        fill
+                        className="object-cover opacity-30"
+                        priority
+                        quality={100}
+                        unoptimized
+                    />
+                </div>
+
                 <Particles color="#0537BB" />
+                <SponsorBackground />
             </div>
 
-            <div className="relative z-10 max-w-2xl mx-auto px-6 pt-10">
+            {/* Main Content Layer */}
+            <div className="relative z-10 flex flex-col h-full bg-gradient-to-b from-background/40 to-background/80 overflow-y-auto pb-32">
                 {/* Header */}
                 <header className="text-center mb-8 space-y-4">
                     <motion.div
