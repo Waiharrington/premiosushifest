@@ -111,10 +111,9 @@ export default function TreasureHuntPage() {
     const progress = locales.length > 0 ? (visitedIds.length / locales.length) * 100 : 0
 
     return (
-        <div className="h-[100svh] bg-background text-white relative overflow-hidden selection:bg-primary/30">
-            {/* Background Layer */}
+        <div className="h-[100svh] bg-background text-white relative overflow-hidden selection:bg-primary/30 font-sans">
+            {/* Background Layer (Synchronized with Home) */}
             <div className="fixed top-0 left-0 w-full h-[100svh] md:h-screen md:inset-0 z-0 text-white">
-                {/* Mobile Background */}
                 <div className="absolute inset-0 z-0 block md:hidden">
                     <Image
                         src="/bg-home-mobile.jpg"
@@ -126,8 +125,6 @@ export default function TreasureHuntPage() {
                         unoptimized
                     />
                 </div>
-
-                {/* Desktop Background */}
                 <div className="absolute inset-0 z-0 hidden md:block">
                     <Image
                         src="/bg-home.jpg"
@@ -139,117 +136,139 @@ export default function TreasureHuntPage() {
                         unoptimized
                     />
                 </div>
-
                 <Particles color="#0537BB" />
                 <SponsorBackground />
             </div>
 
             {/* Main Content Layer */}
-            <div className="relative z-10 flex flex-col h-full bg-gradient-to-b from-background/40 to-background/80 overflow-y-auto pb-32">
-                {/* Header */}
-                <header className="text-center mb-8 space-y-4">
-                    <motion.div
-                        initial={{ y: -20, opacity: 0 }}
-                        animate={{ y: 0, opacity: 1 }}
-                        className="flex justify-center"
-                    >
-                        <Image src="/logo.png" alt="Sushifest" width={80} height={80} className="rounded-full" />
-                    </motion.div>
+            <div className="relative z-10 flex flex-col h-full bg-gradient-to-b from-background/40 to-background/80 overflow-y-auto overflow-x-hidden">
+                <main className="flex-grow flex flex-col items-center px-4 py-8 md:py-12 text-center max-w-lg md:max-w-4xl mx-auto w-full">
                     
-                    <div className="space-y-1">
-                        <h1 className="text-4xl font-lilita uppercase tracking-tight leading-none text-white drop-shadow-lg">
+                    {/* Header: Logo (Same as Home) */}
+                    <div className="relative w-full max-w-[120px] md:max-w-[150px] aspect-square flex justify-center items-center mb-4">
+                        <motion.div
+                            initial={{ scale: 0, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            transition={{ type: "spring", stiffness: 260, damping: 20, delay: 0.1 }}
+                            className="relative w-[100%] h-[100%] z-10"
+                        >
+                            <motion.div
+                                className="w-full h-full relative"
+                                animate={{ y: [0, -10, 0] }}
+                                transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+                            >
+                                <Image
+                                    src="/logo.png"
+                                    alt="Sushifest"
+                                    fill
+                                    className="object-cover rounded-full drop-shadow-[0_0_25px_rgba(5,55,187,0.5)] filter brightness-110"
+                                />
+                            </motion.div>
+                        </motion.div>
+                    </div>
+
+                    {/* Golden Crown (Same as Home) */}
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.8, y: 20 }}
+                        animate={{ opacity: 1, scale: 1, y: 0 }}
+                        transition={{ delay: 0.3, duration: 1, type: "spring" }}
+                        className="-mt-12 relative z-20 mb-4"
+                    >
+                        <Image src="/crown.png" alt="Crown" width={100} height={80} className="w-[80px] md:w-[100px] h-auto drop-shadow-lg mx-auto" />
+                    </motion.div>
+
+                    {/* Title */}
+                    <div className="space-y-1 mb-8">
+                        <motion.h1 
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="text-4xl md:text-5xl font-lilita uppercase tracking-tight leading-none text-white drop-shadow-[0_4px_12px_rgba(0,0,0,0.5)]"
+                        >
                             Búsqueda del <span className="text-secondary">Tesoro</span>
-                        </h1>
-                        <p className="text-white/60 text-xs uppercase font-bold tracking-[0.2em]">
+                        </motion.h1>
+                        <p className="text-white/60 text-[10px] md:text-xs uppercase font-bold tracking-[0.3em] font-sans">
                             Sushifest Panamá 2026
                         </p>
                     </div>
 
-                    {/* Progress Card */}
-                    <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-3xl p-6 mt-8 shadow-2xl relative overflow-hidden group">
+                    {/* Progress Card (Stylized to match) */}
+                    <div className="w-full bg-white/5 backdrop-blur-xl border border-white/10 rounded-[2.5rem] p-6 mb-8 shadow-2xl relative overflow-hidden group">
                         <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                            <Trophy size={80} />
+                            <Trophy size={60} />
                         </div>
                         
-                        <div className="relative flex justify-between items-end mb-4">
+                        <div className="relative flex justify-between items-end mb-4 px-2">
                             <div className="text-left">
-                                <p className="text-[10px] uppercase font-bold text-primary tracking-widest mb-1">Tu Progreso</p>
-                                <h3 className="text-2xl font-lilita uppercase">{visitedIds.length} / {locales.length} <span className="text-sm font-sans text-white/40">Locales</span></h3>
+                                <p className="text-[10px] uppercase font-bold text-primary tracking-widest mb-1">Tu Ruta</p>
+                                <h3 className="text-2xl font-lilita uppercase text-white">{visitedIds.length} / {locales.length} <span className="text-xs font-sans text-white/40 lowercase">lugares</span></h3>
                             </div>
                             <div className="text-right">
-                                <p className="text-2xl font-lilita text-secondary">{Math.round(progress)}%</p>
+                                <p className="text-3xl font-lilita text-secondary drop-shadow-[0_0_10px_rgba(255,77,0,0.3)]">{Math.round(progress)}%</p>
                             </div>
                         </div>
 
-                        {/* Progress Bar */}
-                        <div className="h-4 bg-white/5 rounded-full overflow-hidden border border-white/5">
+                        <div className="h-3 bg-white/5 rounded-full overflow-hidden border border-white/5">
                             <motion.div 
                                 initial={{ width: 0 }}
                                 animate={{ width: `${progress}%` }}
-                                transition={{ duration: 1, ease: "easeOut" }}
-                                className="h-full bg-gradient-to-r from-primary to-blue-600 shadow-[0_0_15px_rgba(5,55,187,0.5)]"
+                                transition={{ duration: 1.5, ease: "easeOut" }}
+                                className="h-full bg-gradient-to-r from-primary via-blue-500 to-blue-400 shadow-[0_0_15px_rgba(5,55,187,0.5)]"
                             />
                         </div>
-
-                        <p className="mt-4 text-[10px] text-white/40 uppercase font-medium leading-tight">
-                            ¡Visita todos los locales para participar por el <span className="text-primary font-bold">PREMIO MAYOR</span>!
-                        </p>
-                    </div>
-                </header>
-
-                {/* Map Section */}
-                <section className="bg-background/40 backdrop-blur-sm border border-white/5 rounded-[2rem] p-4 mb-10 min-h-[400px]">
-                    <div className="flex items-center gap-2 mb-6 px-4">
-                        <MapIcon className="text-primary" size={18} />
-                        <h2 className="text-lg font-lilita uppercase tracking-wider">Mapa de la Ruta</h2>
                     </div>
 
-                    <TreasureMap 
-                        locales={locales} 
-                        visitedIds={visitedIds} 
-                        onLocaleClick={(l) => {
-                            if (!visitedIds.includes(l.id)) {
-                                alert(`Visita "${l.name}" y escanea su código QR para desbloquearlo.`)
-                            } else {
-                                // show prize ?
-                                const p = prizes.find(p => p.locale_id === l.id)
-                                alert(`Has visitado "${l.name}". ${p ? `Ganaste: ${p.prize_name}` : ""}`)
-                            }
-                        }} 
-                    />
-                </section>
+                    {/* Map Section */}
+                    <section className="w-full bg-background/20 backdrop-blur-md border border-white/5 rounded-[2.5rem] p-4 mb-10 min-h-[400px]">
+                        <div className="flex items-center gap-2 mb-6 px-4">
+                            <MapIcon className="text-primary" size={18} />
+                            <h2 className="text-lg font-lilita uppercase tracking-wider text-white/80">Mapa de la Victoria</h2>
+                        </div>
 
-                {/* Instructions */}
-                <section className="space-y-4 mb-20 px-4">
-                    <h3 className="text-sm font-lilita uppercase text-white/60 tracking-widest text-center">¿Cómo funciona?</h3>
-                    <div className="grid grid-cols-1 gap-4">
-                        {[
-                            { icon: QrCode, text: "Escanea el código QR oficial en el local." },
-                            { icon: Gift, text: "Gana un premio instantáneo con el raspadito." },
-                            { icon: CheckCircle2, text: "Completa la ruta y sé el primero en ganar el iPhone." }
-                        ].map((step, i) => (
-                            <div key={i} className="flex items-center gap-4 bg-white/5 p-4 rounded-2xl border border-white/5 hover:bg-white/10 transition-colors">
-                                <div className="bg-primary/20 p-2 rounded-xl text-primary">
-                                    <step.icon size={20} />
-                                </div>
-                                <p className="text-xs font-medium text-white/80">{step.text}</p>
-                            </div>
-                        ))}
+                        <TreasureMap 
+                            locales={locales} 
+                            visitedIds={visitedIds} 
+                            onLocaleClick={(l) => {
+                                if (!visitedIds.includes(l.id)) {
+                                    alert(`Visita "${l.name}" y escanea su código QR para desbloquearlo.`)
+                                } else {
+                                    const p = prizes.find(p => p.locale_id === l.id)
+                                    alert(`Has visitado "${l.name}". ${p ? `Ganaste: ${p.prize_name}` : ""}`)
+                                }
+                            }} 
+                        />
+                    </section>
+
+                    {/* CTA Button (Same Style as Home Start Voting) */}
+                    <div className="w-full max-w-xs mb-20">
+                        <motion.button
+                            onClick={() => setIsScannerOpen(true)}
+                            initial={{ scale: 0.9, opacity: 0 }}
+                            animate={{
+                                scale: [1, 1.05, 1],
+                                opacity: 1,
+                                boxShadow: ["0 0 10px rgba(5,55,187,0.25)", "0 0 30px rgba(5,55,187,0.45)", "0 0 10px rgba(5,55,187,0.25)"]
+                            }}
+                            whileHover={{ scale: 1.1, boxShadow: "0 0 50px rgba(5,55,187,0.8)" }}
+                            whileTap={{ scale: 0.95 }}
+                            transition={{
+                                default: { type: "spring", stiffness: 200, damping: 20 },
+                                boxShadow: { duration: 1.5, repeat: Infinity, ease: "easeInOut" },
+                                scale: { duration: 1.5, repeat: Infinity, ease: "easeInOut" }
+                            }}
+                            className="group relative w-full bg-gradient-to-r from-primary to-blue-700 text-white font-lilita text-xl py-5 rounded-full border border-white/20 overflow-hidden flex items-center justify-center gap-3"
+                        >
+                            <QrCode size={24} className="relative z-10" />
+                            <span className="relative z-10">ESCANEAR CÓDIGO QR 🔥</span>
+                            
+                            {/* Button Shine Effect */}
+                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+                        </motion.button>
                     </div>
-                </section>
-            </div>
 
-            {/* Floating Action Button */}
-            <div className="fixed bottom-10 left-0 right-0 flex justify-center z-50 px-6">
-                <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() => setIsScannerOpen(true)}
-                    className="w-full max-w-xs bg-gradient-to-r from-primary to-blue-700 text-white font-lilita text-xl py-5 rounded-2xl shadow-[0_15px_30px_rgba(5,55,187,0.4)] border border-white/20 flex items-center justify-center gap-3"
-                >
-                    <QrCode size={24} />
-                    ESCANEAR VISITA 🔥
-                </motion.button>
+                    <footer className="pb-8 pt-4 text-center text-white/40 text-[10px] uppercase tracking-[0.2em] w-full">
+                        <p>© 2026 SUSHIFEST • BY EPIC MARKETING • PANAMÁ</p>
+                    </footer>
+                </main>
             </div>
 
             {/* Modals */}

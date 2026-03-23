@@ -34,15 +34,15 @@ export function ScratchCard({
                 canvas.width = rect.width
                 canvas.height = rect.height
                 
-                // Fill with gray
-                ctx.fillStyle = '#4b5563' // gray-600
+                // Fill with brand primary or similar
+                ctx.fillStyle = '#1D4ED8' // blue-700
                 ctx.fillRect(0, 0, canvas.width, canvas.height)
                 
                 // Add some texture/text
-                ctx.font = '24px font-lilita'
-                ctx.fillStyle = '#9ca3af'
+                ctx.font = 'bold 24px Arial'
+                ctx.fillStyle = '#FFFFFF'
                 ctx.textAlign = 'center'
-                ctx.fillText('¡RASPA AQUÍ!', canvas.width / 2, canvas.height / 2)
+                ctx.fillText('¡RASPA AQUÍ PARA GANAR!', canvas.width / 2, canvas.height / 2)
             }
         }
 
