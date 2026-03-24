@@ -37,27 +37,46 @@ CREATE TABLE IF NOT EXISTS treasure_hunt_prizes (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
--- 5. Enable RLS
+-- 5. App Config (Global settings)
+CREATE TABLE IF NOT EXISTS app_config (
+    key TEXT PRIMARY KEY,
+    value TEXT NOT NULL,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
+-- Insert default voting status
+INSERT INTO app_config (key, value) VALUES ('voting_active', 'true') ON CONFLICT (key) DO NOTHING;
+
+-- 6. Enable RLS
 ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE locales ENABLE ROW LEVEL SECURITY;
 ALTER TABLE treasure_hunt_visits ENABLE ROW LEVEL SECURITY;
 ALTER TABLE treasure_hunt_prizes ENABLE ROW LEVEL SECURITY;
+ALTER TABLE app_config ENABLE ROW LEVEL SECURITY;
 
 -- 6. RLS Policies
+DROP POLICY IF EXISTS "Profiles are viewable by everyone" ON profiles;
 CREATE POLICY "Profiles are viewable by everyone" ON profiles FOR SELECT USING (true);
+
+DROP POLICY IF EXISTS "Anyone can register" ON profiles;
 CREATE POLICY "Anyone can register" ON profiles FOR INSERT WITH CHECK (true);
 
+DROP POLICY IF EXISTS "Locales are public" ON locales;
 CREATE POLICY "Locales are public" ON locales FOR SELECT USING (true);
 
+DROP POLICY IF EXISTS "Users can view their own visits" ON treasure_hunt_visits;
 CREATE POLICY "Users can view their own visits" ON treasure_hunt_visits
-    FOR SELECT USING (auth.uid() = user_id OR true); -- Allowing public select for demo if needed, but standard is auth.uid()
+    FOR SELECT USING (auth.uid() = user_id OR true);
 
+DROP POLICY IF EXISTS "Users can insert their visits" ON treasure_hunt_visits;
 CREATE POLICY "Users can insert their visits" ON treasure_hunt_visits
     FOR INSERT WITH CHECK (true);
 
+DROP POLICY IF EXISTS "Users can view their own prizes" ON treasure_hunt_prizes;
 CREATE POLICY "Users can view their own prizes" ON treasure_hunt_prizes
     FOR SELECT USING (auth.uid() = user_id OR true);
 
+DROP POLICY IF EXISTS "Users can insert their prizes" ON treasure_hunt_prizes;
 CREATE POLICY "Users can insert their prizes" ON treasure_hunt_prizes
     FOR INSERT WITH CHECK (true);
 
