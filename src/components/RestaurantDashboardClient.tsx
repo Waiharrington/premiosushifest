@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Lock, QrCode, Gift, Search, FileDown } from "lucide-react"
 import { Input } from "./ui/input"
@@ -59,6 +59,7 @@ export function RestaurantDashboardClient({ locale }: { locale: Locale }) {
                 profiles (full_name, phone)
             `)
             .eq('locale_id', locale.id)
+            .neq('prize_type', 'try_again')
             .order('created_at', { ascending: false })
 
         if (data && !error) {
