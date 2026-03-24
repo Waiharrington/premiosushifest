@@ -211,6 +211,14 @@ export function AdminDashboard({ locales, votes }: AdminDashboardProps) {
                         <span className="block text-xs text-slate-400 uppercase tracking-wider">Total Visitas</span>
                         <span className="text-2xl font-mono font-bold text-primary">{totalVisits}</span>
                     </div>
+
+                    {/* NEW: Special QR Button */}
+                    <button
+                        onClick={() => setShowingQrLocale({ id: 'special', name: 'PREMIO DE CORTESÍA (3 Platos)', image_url: '' } as any)}
+                        className="bg-primary/10 text-primary border border-primary/50 hover:bg-primary/20 px-4 py-2 rounded-lg flex items-center gap-2 font-bold transition-all h-[52px]"
+                    >
+                        <QrCode className="w-5 h-5" /> QR CORTESÍA
+                    </button>
                 </div>
             </header>
 
@@ -562,16 +570,24 @@ export function AdminDashboard({ locales, votes }: AdminDashboardProps) {
                             </div>
 
                             <div className="bg-white p-6 rounded-3xl mx-auto inline-block border-8 border-white shadow-2xl">
-                                {/* eslint-disable-next-line @next/next/no-img-element */}
-                                <img 
-                                    src={`https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${showingQrLocale.id}`} 
-                                    alt="QR Code"
-                                    className="w-48 h-48"
-                                />
+                                {(() => {
+                                    const qrValue = showingQrLocale.id === 'special' 
+                                        ? `${window.location.origin}/especial`
+                                        : `${window.location.origin}/treasure-hunt?id=${showingQrLocale.id}`
+                                    
+                                    return (
+                                        /* eslint-disable-next-line @next/next/no-img-element */
+                                        <img 
+                                            src={`https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(qrValue)}`} 
+                                            alt="QR Code"
+                                            className="w-48 h-48"
+                                        />
+                                    )
+                                })()}
                             </div>
 
                             <p className="mt-6 text-slate-500 font-mono text-xs break-all opacity-50">
-                                ID: {showingQrLocale.id}
+                                {showingQrLocale.id === 'special' ? 'URL de Cortesía' : `ID: ${showingQrLocale.id}`}
                             </p>
 
                             <Button

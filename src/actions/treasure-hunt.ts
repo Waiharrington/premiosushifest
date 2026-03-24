@@ -83,20 +83,14 @@ export async function generateScratchPrize(userId: string, localeId: string) {
     const giftCount = winningPrizes?.filter(p => p.prize_type === 'gift').length || 0
     const discountCount = winningPrizes?.filter(p => p.prize_type === 'discount').length || 0
 
-    // Base Prize pool logic
+    // Base Prize pool logic (Normal Scratch only awards DISCOUNTS)
     let prizes = [
-        { name: "10% de Descuento", type: "discount" as const, weight: 40 },
+        { name: "10% de Descuento", type: "discount" as const, weight: 45 },
         { name: "15% de Descuento", type: "discount" as const, weight: 20 },
         { name: "20% de Descuento", type: "discount" as const, weight: 10 },
-        { name: "Licuadora", type: "gift" as const, weight: 2 },
-        { name: "Masaje Relajante", type: "gift" as const, weight: 3 },
         { name: "Gracias por participar, ¡sigue intentando!", type: "try_again" as const, weight: 25 },
     ]
 
-    // If prize pool is exhausted, remove gifts
-    if (giftCount >= prizePool) {
-        prizes = prizes.filter(p => p.type !== 'gift')
-    }
     // If discount pool is exhausted, remove discounts
     if (discountCount >= discountPool) {
         prizes = prizes.filter(p => p.type !== 'discount')
@@ -179,4 +173,67 @@ export async function redeemPrize(prizeId: string) {
 
     revalidatePath("/treasure-hunt")
     return { success: true }
+}
+
+export async function awardGrandPrize(userId: string) {
+    if (!userId) return { success: false, error: "Usuario no identificado" }
+
+    // 1. Check if user already has a 'gift' (since they only come from Special QR now)
+    const { count: giftPrizesCount } = await supabase
+        .from('treasure_hunt_prizes')
+        .select('*', { count: 'exact', head: true })
+        .eq('user_id', userId)
+        .eq('prize_type', 'gift')
+
+    if (giftPrizesCount && giftPrizesCount > 0) {
+        return { success: false, error: "Ya recibiste tu Premio de Cortesía." }
+    }
+
+    // 2. Check Global Limit (200 plates total)
+    const { count: totalGiftsAwarded } = await supabase
+        .from('treasure_hunt_prizes')
+        .select('*', { count: 'exact', head: true })
+        .eq('prize_type', 'gift')
+
+    if (totalGiftsAwarded !== null && totalGiftsAwarded >= 200) {
+        return { success: false, error: "Lo sentimos, los 200 premios de cortesía ya han sido entregados." }
+    }
+
+    // 3. Select 3 random locales that have prize_pool available
+    const { data: locales } = await supabase
+        .from('locales')
+        .select('id, name, prize_pool')
+        .gt('prize_pool', 0)
+
+    if (!locales || locales.length < 3) {
+        return { success: false, error: "No hay suficientes locales con disponibilidad de platos gratis en este momento." }
+    }
+
+    // Shuffle and pick 3
+    const shuffled = [...locales].sort(() => 0.5 - Math.random())
+    const selected = shuffled.slice(0, 3)
+
+    // 4. Create the 3 prizes (using service role key to bypass RLS)
+    const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+    if (!serviceRoleKey) return { success: false, error: "Error de configuración del servidor" }
+    const supabaseAdmin = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, serviceRoleKey)
+
+    const prizeEntries = selected.map(locale => ({
+        user_id: userId,
+        locale_id: locale.id,
+        prize_name: "COMIDA GRATIS (Cortesía)",
+        prize_type: "gift"
+    }))
+
+    const { error: insertError } = await supabaseAdmin
+        .from('treasure_hunt_prizes')
+        .insert(prizeEntries)
+
+    if (insertError) {
+        console.error("Error awarding grand prize:", insertError)
+        return { success: false, error: "Hubo un error asignando tus premios." }
+    }
+
+    revalidatePath("/treasure-hunt")
+    return { success: true, awardedTo: selected.map(s => s.name) }
 }

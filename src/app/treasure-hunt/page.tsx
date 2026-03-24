@@ -13,7 +13,7 @@ import { SponsorBackground } from "@/components/SponsorBackground"
 import { registerVisit, getTreasureHuntStatus, generateScratchPrize } from "@/actions/treasure-hunt"
 import { supabase } from "@/lib/supabase"
 import { Locale, TreasureHuntPrize } from "@/types"
-import { Trophy, QrCode, Map as MapIcon, Gift, CheckCircle2 } from "lucide-react"
+import { Trophy, QrCode, Map as MapIcon, Gift, CheckCircle2, Tag, HelpCircle } from "lucide-react"
 
 export default function TreasureHuntPage() {
     const { user, isLoading: authLoading } = useAuth()
@@ -364,7 +364,9 @@ export default function TreasureHuntPage() {
                                     </h3>
                                     <div className="flex justify-center">
                                         <div className="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center text-primary border border-white/10">
-                                            <Gift size={32} />
+                                            {currentPrize?.prize_type === 'gift' ? <Gift size={32} /> : 
+                                             currentPrize?.prize_type === 'discount' ? <Tag size={32} /> : 
+                                             <HelpCircle size={32} />}
                                         </div>
                                     </div>
                                 </div>
