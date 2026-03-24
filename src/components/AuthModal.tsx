@@ -26,14 +26,18 @@ export default function AuthModal({ onClose, onSuccess }: AuthModalProps) {
         if (!cedula) return setError("La cédula es obligatoria");
 
         setLoading(true);
+        const trimmedCedula = cedula.trim();
+        const trimmedName = name.trim();
+        const trimmedPhone = phone.trim();
+
         try {
             if (isRegistering) {
-                if (!name || !phone) return setError("Nombre y teléfono obligatorios");
-                const success = await register(cedula, name, phone);
+                if (!trimmedName || !trimmedPhone) return setError("Nombre y teléfono obligatorios");
+                const success = await register(trimmedName, trimmedCedula, trimmedPhone);
                 if (success) { onSuccess?.(); onClose(); }
                 else setError("Error al registrar.");
             } else {
-                const success = await login(cedula);
+                const success = await login(trimmedCedula);
                 if (success) { onSuccess?.(); onClose(); }
                 else setError("Cédula no encontrada.");
             }
