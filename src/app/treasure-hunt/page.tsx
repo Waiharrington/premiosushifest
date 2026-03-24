@@ -4,7 +4,7 @@ import { useEffect, useState, useCallback } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import Image from "next/image"
 import { useAuth } from "@/context/AuthContext"
-import { AuthModal } from "@/components/AuthModal"
+import AuthModal from "@/components/AuthModal"
 import { RiceParticles } from "@/components/RiceParticles"
 import { TreasureMap } from "@/components/TreasureMap"
 import { QRScannerUI } from "@/components/QRScannerUI"
@@ -134,10 +134,9 @@ export default function TreasureHuntPage() {
 
         <RiceParticles />
         <SponsorBackground />
-      </div>
 
-      {/* Cinematic Vignette Overlay */}
-      <div className="absolute inset-0 z-30 pointer-events-none bg-[radial-gradient(circle_at_center,transparent_20%,rgba(0,0,0,0.5)_100%)]" />
+        {/* Cinematic Vignette Overlay */}
+        <div className="absolute inset-0 z-30 pointer-events-none bg-[radial-gradient(circle_at_center,transparent_20%,rgba(0,0,0,0.5)_100%)]" />
 
             {/* Main Content Layer */}
             <div className="relative z-10 flex flex-col h-full bg-gradient-to-b from-background/40 to-background/80 overflow-y-auto overflow-x-hidden">
