@@ -9,9 +9,11 @@ interface QRScannerUIProps {
     isOpen: boolean
     onClose: () => void
     onScan: (decodedText: string) => void
+    locales?: Locale[]
+    visitedIds?: string[]
 }
 
-export function QRScannerUI({ isOpen, onClose, onScan }: QRScannerUIProps) {
+export function QRScannerUI({ isOpen, onClose, onScan, locales = [], visitedIds = [] }: QRScannerUIProps) {
     const scannerRef = useRef<Html5QrcodeScanner | null>(null)
 
     useEffect(() => {
@@ -87,8 +89,23 @@ export function QRScannerUI({ isOpen, onClose, onScan }: QRScannerUIProps) {
                         </p>
 
 
-                        <div className="mt-8 flex justify-center">
-                            <div className="w-12 h-1 bg-primary/20 rounded-full animate-pulse" />
+                        <div className="mt-8 flex flex-col items-center gap-4">
+                            <div className="w-12 h-1 bg-primary/20 rounded-full animate-pulse mb-2" />
+                            
+                            {/* Demo Button */}
+                            <button
+                                onClick={() => {
+                                    // Find first unvisited locale
+                                    const nextLocale = locales.find(l => !visitedIds.includes(l.id)) || locales[0]
+                                    if (nextLocale) {
+                                        onScan(nextLocale.id)
+                                        onClose()
+                                    }
+                                }}
+                                className="w-full py-3 px-6 rounded-xl bg-white/5 border border-white/10 text-white/70 font-lilita uppercase tracking-widest text-xs hover:bg-white/10 hover:text-white transition-all active:scale-95"
+                            >
+                                ✨ Simular Escaneo (Demo)
+                            </button>
                         </div>
                     </motion.div>
                 </div>

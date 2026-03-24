@@ -5,7 +5,7 @@ import { addLocale, deleteLocale, editLocale, injectVotes, purgeFraudVotes, remo
 import { Button } from "./ui/button"
 import { Input } from "./ui/input"
 import { motion, AnimatePresence } from "framer-motion"
-import { Pencil, Trash2, X, Plus, Syringe, ShieldAlert, Eraser, Lock, Unlock } from "lucide-react"
+import { Pencil, Trash2, X, Plus, Syringe, ShieldAlert, Eraser, Lock, Unlock, QrCode } from "lucide-react"
 
 interface Locale {
     id: string
@@ -30,6 +30,7 @@ export function AdminDashboard({ locales, votes }: AdminDashboardProps) {
     const [injectingLocale, setInjectingLocale] = useState<Locale | null>(null)
     const [removingLocale, setRemovingLocale] = useState<Locale | null>(null)
     const [votingEnabled, setVotingEnabled] = useState(true) // Default true, syncs on mount
+    const [showingQrLocale, setShowingQrLocale] = useState<Locale | null>(null)
 
     const formRef = useRef<HTMLFormElement>(null)
 
@@ -434,6 +435,14 @@ export function AdminDashboard({ locales, votes }: AdminDashboardProps) {
                                             </Button>
                                             <Button
                                                 variant="ghost"
+                                                onClick={() => setShowingQrLocale(locale)}
+                                                className="h-8 w-8 p-0 text-white/70 hover:text-white hover:bg-white/10"
+                                                title="Mostrar Código QR"
+                                            >
+                                                <QrCode className="w-4 h-4" />
+                                            </Button>
+                                            <Button
+                                                variant="ghost"
                                                 onClick={() => startEditing(locale)}
                                                 className="h-8 w-8 p-0 text-blue-400 hover:text-blue-300 hover:bg-blue-950/30"
                                                 title="Editar"
@@ -489,7 +498,53 @@ export function AdminDashboard({ locales, votes }: AdminDashboardProps) {
                     </section>
                 </div>
 
-            </div>
+                {/* QR Modal */}
+            <AnimatePresence>
+                {showingQrLocale && (
+                    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-xl p-4">
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.9 }}
+                            className="bg-slate-900 border border-white/10 p-8 rounded-[2.5rem] w-full max-w-sm text-center relative"
+                        >
+                            <button
+                                onClick={() => setShowingQrLocale(null)}
+                                className="absolute top-6 right-6 text-slate-400 hover:text-white"
+                            >
+                                <X className="w-6 h-6" />
+                            </button>
+
+                            <div className="mb-6">
+                                <h3 className="text-2xl font-bold text-white mb-2">{showingQrLocale.name}</h3>
+                                <p className="text-slate-400 text-sm italic">Escanea este código para registrar la visita</p>
+                            </div>
+
+                            <div className="bg-white p-6 rounded-3xl mx-auto inline-block border-8 border-white shadow-2xl">
+                                {/* eslint-disable-next-line @next/next/no-img-element */}
+                                <img 
+                                    src={`https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${showingQrLocale.id}`} 
+                                    alt="QR Code"
+                                    className="w-48 h-48"
+                                />
+                            </div>
+
+                            <p className="mt-6 text-slate-500 font-mono text-xs break-all opacity-50">
+                                ID: {showingQrLocale.id}
+                            </p>
+
+                            <Button
+                                onClick={() => window.print()}
+                                className="mt-8 w-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center gap-2 py-6 rounded-2xl"
+                            >
+                                <QrCode className="w-4 h-4" /> IMPRIMIR QR
+                            </Button>
+                        </motion.div>
+                    </div>
+                )}
+            </AnimatePresence>
+
+        </div>
         </div>
     )
 }

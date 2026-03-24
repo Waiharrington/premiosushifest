@@ -288,6 +288,8 @@ export default function TreasureHuntPage() {
                 isOpen={isScannerOpen}
                 onClose={() => setIsScannerOpen(false)}
                 onScan={handleScan}
+                locales={locales}
+                visitedIds={visitedIds}
             />
 
             {/* Prize Modal */}
