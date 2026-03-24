@@ -6,8 +6,10 @@ import Link from "next/link"
 import { RiceParticles } from "@/components/RiceParticles"
 import { SponsorBackground } from "@/components/SponsorBackground"
 import { Trophy, ArrowRight, Map as MapIcon, Sparkles } from "lucide-react"
+import { useAuth } from "@/context/AuthContext"
 
 export default function Home() {
+    const { user } = useAuth()
     return (
         <div className="min-h-[100svh] bg-background text-white relative overflow-hidden font-sans selection:bg-primary/30">
             {/* Background Layer (Cinematic) */}
@@ -138,7 +140,7 @@ export default function Home() {
                             <div className="absolute inset-[2px] rounded-full border border-white/30" />
                             
                             <span className="relative z-10 text-white font-black text-2xl drop-shadow-lg uppercase tracking-tight flex items-center justify-center gap-3">
-                                DESCUBRE LOS PREMIOS <ArrowRight size={24} className="group-hover:translate-x-2 transition-transform duration-300" />
+                                {user ? "SEGUIR LA RUTA" : "COMENZAR RUTA"} <ArrowRight size={24} className="group-hover:translate-x-2 transition-transform duration-300" />
                             </span>
                             
                             {/* Shimmer Effect */}
