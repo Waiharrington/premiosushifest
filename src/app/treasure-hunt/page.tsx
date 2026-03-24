@@ -14,8 +14,10 @@ import { registerVisit, getTreasureHuntStatus, generateScratchPrize } from "@/ac
 import { supabase } from "@/lib/supabase"
 import { Locale, TreasureHuntPrize } from "@/types"
 import { Trophy, QrCode, Map as MapIcon, Gift, CheckCircle2, Tag, HelpCircle, LogOut } from "lucide-react"
+import { useRouter } from "next/navigation"
 
 export default function TreasureHuntPage() {
+    const router = useRouter()
     const { user, isLoading: authLoading, logout } = useAuth()
     const [locales, setLocales] = useState<Locale[]>([])
     const [visitedIds, setVisitedIds] = useState<string[]>([])
@@ -143,7 +145,10 @@ export default function TreasureHuntPage() {
                 {/* Logout Button (Floating Top Right) */}
                 <div className="absolute top-4 right-4 z-50">
                     <button 
-                        onClick={() => logout()}
+                        onClick={() => {
+                            logout()
+                            router.push('/')
+                        }}
                         className="bg-white/5 hover:bg-white/10 backdrop-blur-md border border-white/10 px-4 py-2 rounded-full flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-white/60 transition-colors"
                     >
                         <LogOut size={14} /> Salir
