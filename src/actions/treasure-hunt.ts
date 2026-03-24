@@ -3,6 +3,7 @@
 import { supabase } from "@/lib/supabase"
 import { revalidatePath } from "next/cache"
 import { TreasureHuntVisit, TreasureHuntPrize } from "@/types"
+import { createClient } from "@supabase/supabase-js"
 
 export async function registerVisit(userId: string, localeId: string) {
     if (!userId || !localeId) return { success: false, error: "Datos incompletos" }
@@ -161,14 +162,21 @@ export async function getTreasureHuntLeaderboard() {
 export async function redeemPrize(prizeId: string) {
     if (!prizeId) return { success: false, error: "ID inválido" }
 
-    const { error } = await supabase
+    const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+    if (!serviceRoleKey) return { success: false, error: "Missing SUPABASE_SERVICE_ROLE_KEY en el servidor" }
+    
+    const supabaseAdmin = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, serviceRoleKey)
+
+    const { error, count } = await supabaseAdmin
         .from('treasure_hunt_prizes')
         .update({ is_redeemed: true, redeemed_at: new Date().toISOString() })
         .eq('id', prizeId)
 
     if (error) {
+        console.error("Redeem error:", error)
         return { success: false, error: error.message }
     }
 
+    revalidatePath("/treasure-hunt")
     return { success: true }
 }
