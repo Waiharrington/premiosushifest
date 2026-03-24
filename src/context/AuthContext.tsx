@@ -58,6 +58,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             return existing;
         }
 
+        // Check if phone exists for ANOTHER cedula
+        const { data: phoneExisting } = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('phone', phone)
+            .single();
+
+        if (phoneExisting) {
+            throw new Error("PHONE_EXISTS");
+        }
+
         const { data } = await supabase
             .from('profiles')
             .insert([{ full_name: name, cedula, phone }])

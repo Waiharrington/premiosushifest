@@ -19,6 +19,14 @@ export default function AuthModal({ onClose, onSuccess }: AuthModalProps) {
     const [phone, setPhone] = useState("");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
+    
+    // Security fields
+    const [honeypot, setHoneypot] = useState("");
+    const [mathChallenge, setMathChallenge] = useState(() => {
+        const a = Math.floor(Math.random() * 9) + 1;
+        const b = Math.floor(Math.random() * 9) + 1;
+        return { a, b, userResult: "" };
+    });
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -29,6 +37,20 @@ export default function AuthModal({ onClose, onSuccess }: AuthModalProps) {
         const trimmedCedula = cedula.trim();
         const trimmedName = name.trim();
         const trimmedPhone = phone.trim();
+
+        // Bot check: Honeypot (must be empty)
+        if (honeypot) {
+            console.warn("Bot detected via honeypot");
+            return; // Silent fail for bots
+        }
+
+        // Bot check: Math challenge
+        if (isRegistering) {
+            if (parseInt(mathChallenge.userResult) !== (mathChallenge.a + mathChallenge.b)) {
+                setLoading(false);
+                return setError("Resultado matemático incorrecto.");
+            }
+        }
 
         try {
             if (isRegistering) {
@@ -41,8 +63,13 @@ export default function AuthModal({ onClose, onSuccess }: AuthModalProps) {
                 if (success) { onSuccess?.(); onClose(); }
                 else setError("Cédula no encontrada.");
             }
-        } catch {
-            setError("Error inesperado.");
+        } catch (err) {
+            const errorInstance = err as Error;
+            if (errorInstance.message === "PHONE_EXISTS") {
+                setError("Este número de teléfono ya está registrado.");
+            } else {
+                setError("Error inesperado.");
+            }
         } finally {
             setLoading(false);
         }
@@ -160,14 +187,39 @@ export default function AuthModal({ onClose, onSuccess }: AuthModalProps) {
                             />
                         </div>
                         {isRegistering && (
-                            <div className="space-y-1 px-1">
-                                <label className="text-[10px] text-white/40 font-bold ml-4 uppercase tracking-widest">Teléfono</label>
+                            <div className="space-y-4 px-1">
+                                <div className="space-y-1">
+                                    <label className="text-[10px] text-white/40 font-bold ml-4 uppercase tracking-widest">Teléfono</label>
+                                    <input
+                                        type="tel"
+                                        placeholder="Ej: 6666-6666"
+                                        value={phone}
+                                        onChange={(e) => setPhone(e.target.value)}
+                                        className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 outline-none focus:border-[#00B2FF] text-white text-base"
+                                    />
+                                </div>
+
+                                {/* Math Challenge */}
+                                <div className="space-y-1">
+                                    <label className="text-[10px] text-white/40 font-bold ml-4 uppercase tracking-widest">Seguridad: ¿Cuánto es {mathChallenge.a} + {mathChallenge.b}?</label>
+                                    <input
+                                        type="number"
+                                        placeholder="Resultado"
+                                        value={mathChallenge.userResult}
+                                        onChange={(e) => setMathChallenge(prev => ({ ...prev, userResult: e.target.value }))}
+                                        className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 outline-none focus:border-[#00B2FF] text-white text-base"
+                                    />
+                                </div>
+
+                                {/* Honeypot (Hidden) */}
                                 <input
-                                    type="tel"
-                                    placeholder="Ej: 6666-6666"
-                                    value={phone}
-                                    onChange={(e) => setPhone(e.target.value)}
-                                    className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 outline-none focus:border-[#00B2FF] text-white text-base"
+                                    type="text"
+                                    name="website"
+                                    title="website"
+                                    value={honeypot}
+                                    onChange={(e) => setHoneypot(e.target.value)}
+                                    className="hidden"
+                                    autoComplete="off"
                                 />
                             </div>
                         )}
