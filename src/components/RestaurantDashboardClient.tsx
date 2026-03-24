@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Lock, QrCode, Gift, Search, FileDown } from "lucide-react"
+import { Lock, QrCode, Gift, Search, FileDown, Tag } from "lucide-react"
 import { Input } from "./ui/input"
 import { Button } from "./ui/button"
 import { supabase } from "@/lib/supabase"
@@ -28,6 +28,77 @@ interface Locale {
     name: string
     pin: string
     prize_pool: number
+}
+
+function PrizeListSection({ 
+    title, icon, prizes, loading, searchQuery, handleRedeem 
+}: { 
+    title: string, icon: React.ReactNode, prizes: Prize[], loading: boolean, searchQuery: string, handleRedeem: (id: string) => void 
+}) {
+    const filtered = prizes.filter(p => 
+        p.profiles?.full_name?.toLowerCase().includes(searchQuery.toLowerCase()) || 
+        p.profiles?.phone?.includes(searchQuery)
+    )
+
+    return (
+        <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 flex flex-col h-[500px]">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+                <h2 className="text-xl font-bold text-white flex items-center gap-2">
+                    {icon} {title} ({prizes.length})
+                </h2>
+            </div>
+
+            <div className="flex-grow overflow-y-auto pr-2 space-y-3 custom-scrollbar">
+                {loading && <p className="text-center text-slate-500 py-10">Cargando ganadores...</p>}
+                
+                <AnimatePresence>
+                    {!loading && filtered.length === 0 && (
+                        <p className="text-center text-slate-500 py-10 italic">No hay ganadores en esta categoría.</p>
+                    )}
+
+                    {filtered.map((prize) => (
+                        <motion.div
+                            key={prize.id}
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className={`p-4 rounded-2xl border flex flex-col md:flex-row justify-between items-start md:items-center gap-4 transition-colors
+                                ${prize.is_redeemed 
+                                    ? 'bg-emerald-500/5 border-emerald-500/20' 
+                                    : 'bg-slate-950 border-slate-800 hover:border-slate-700'}`
+                            }
+                        >
+                            <div className="flex-grow">
+                                <h3 className="text-lg font-bold text-white mb-1">{prize.profiles?.full_name || 'Usuario'}</h3>
+                                <div className="flex items-center gap-3 text-sm">
+                                    <span className="text-slate-400 font-mono">{prize.profiles?.phone || 'Sin número'}</span>
+                                    <span className="text-slate-600">•</span>
+                                    <span className="text-yellow-400 font-bold">{prize.prize_name}</span>
+                                </div>
+                                <span className="text-xs text-slate-600 block mt-2">
+                                    Fecha: {new Date(prize.created_at).toLocaleString()}
+                                </span>
+                            </div>
+
+                            <div className="w-full md:w-auto">
+                                {prize.is_redeemed ? (
+                                    <div className="px-4 py-2 bg-emerald-500/10 text-emerald-400 font-bold rounded-xl text-sm border border-emerald-500/20 flex items-center justify-center gap-2">
+                                        <FileDown className="w-4 h-4" /> ENTREGADO
+                                    </div>
+                                ) : (
+                                    <Button 
+                                        onClick={() => handleRedeem(prize.id)}
+                                        className="w-full md:w-auto bg-primary text-primary-foreground hover:bg-primary/90 font-bold"
+                                    >
+                                        CANJEAR
+                                    </Button>
+                                )}
+                            </div>
+                        </motion.div>
+                    ))}
+                </AnimatePresence>
+            </div>
+        </div>
+    )
 }
 
 export function RestaurantDashboardClient({ locale }: { locale: Locale }) {
@@ -116,13 +187,11 @@ export function RestaurantDashboardClient({ locale }: { locale: Locale }) {
     }
 
     const redeemedCount = prizes.filter(p => p.is_redeemed).length
-    const givenCount = prizes.length
     const pool = locale.prize_pool || 0
 
-    const filteredPrizes = prizes.filter(p => 
-        p.profiles?.full_name?.toLowerCase().includes(searchQuery.toLowerCase()) || 
-        p.profiles?.phone?.includes(searchQuery)
-    )
+    const giftPrizes = prizes.filter(p => p.prize_type === 'gift')
+    const discountPrizes = prizes.filter(p => p.prize_type === 'discount')
+
 
     return (
         <div className="min-h-screen bg-slate-950 text-slate-300 p-4 md:p-8 font-sans">
@@ -142,10 +211,11 @@ export function RestaurantDashboardClient({ locale }: { locale: Locale }) {
                         </div>
                         <div className="bg-slate-950 px-6 py-4 rounded-2xl border border-slate-800 flex-shrink-0">
                             <span className="text-xs uppercase tracking-widest text-slate-500 font-bold block mb-1">Entregados (Canjeados)</span>
-                            <span className="text-2xl font-mono text-emerald-400">{redeemedCount}</span> <span className="text-slate-500">/ {givenCount} generados</span>
+                            <span className="text-2xl font-mono text-emerald-400">{redeemedCount}</span> <span className="text-slate-500">/ {prizes.length} generados</span>
                         </div>
                     </div>
                 </header>
+
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     
@@ -170,76 +240,39 @@ export function RestaurantDashboardClient({ locale }: { locale: Locale }) {
                         </div>
                     </div>
 
-                    {/* Right Column: Prizes List */}
-                    <div className="lg:col-span-2">
-                        <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 h-full flex flex-col">
-                            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
-                                <h2 className="text-xl font-bold text-white flex items-center gap-2">
-                                    <Gift className="w-5 h-5 text-primary" /> Historial de Ganadores ({givenCount})
-                                </h2>
-                                
-                                <div className="relative w-full md:w-64">
-                                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
-                                    <Input 
-                                        placeholder="Buscar nombre o celular..." 
-                                        className="pl-9 bg-slate-950 border-slate-800"
-                                        value={searchQuery}
-                                        onChange={(e) => setSearchQuery(e.target.value)}
-                                    />
-                                </div>
-                            </div>
-
-                            <div className="flex-grow overflow-y-auto pr-2 space-y-3 custom-scrollbar">
-                                {loading && <p className="text-center text-slate-500 py-10">Cargando ganadores...</p>}
-                                
-                                <AnimatePresence>
-                                    {!loading && filteredPrizes.length === 0 && (
-                                        <p className="text-center text-slate-500 py-10 italic">No se encontraron ganadores en este local aún.</p>
-                                    )}
-
-                                    {filteredPrizes.map((prize) => (
-                                        <motion.div
-                                            key={prize.id}
-                                            initial={{ opacity: 0, y: 10 }}
-                                            animate={{ opacity: 1, y: 0 }}
-                                            className={`p-4 rounded-2xl border flex flex-col md:flex-row justify-between items-start md:items-center gap-4 transition-colors
-                                                ${prize.is_redeemed 
-                                                    ? 'bg-emerald-500/5 border-emerald-500/20' 
-                                                    : 'bg-slate-950 border-slate-800 hover:border-slate-700'}`
-                                            }
-                                        >
-                                            <div className="flex-grow">
-                                                <h3 className="text-lg font-bold text-white mb-1">{prize.profiles?.full_name || 'Usuario'}</h3>
-                                                <div className="flex items-center gap-3 text-sm">
-                                                    <span className="text-slate-400 font-mono">{prize.profiles?.phone || 'Sin número'}</span>
-                                                    <span className="text-slate-600">•</span>
-                                                    <span className="text-yellow-400 font-bold">{prize.prize_name}</span>
-                                                </div>
-                                                <span className="text-xs text-slate-600 block mt-2">
-                                                    Fecha: {new Date(prize.created_at).toLocaleString()}
-                                                </span>
-                                            </div>
-
-                                            <div className="w-full md:w-auto">
-                                                {prize.is_redeemed ? (
-                                                    <div className="px-4 py-2 bg-emerald-500/10 text-emerald-400 font-bold rounded-xl text-sm border border-emerald-500/20 flex items-center justify-center gap-2">
-                                                        <FileDown className="w-4 h-4" /> ENTREGADO
-                                                    </div>
-                                                ) : (
-                                                    <Button 
-                                                        onClick={() => handleRedeem(prize.id)}
-                                                        className="w-full md:w-auto bg-primary text-primary-foreground hover:bg-primary/90 font-bold"
-                                                    >
-                                                        CANJEAR AHORA
-                                                    </Button>
-                                                )}
-                                            </div>
-                                        </motion.div>
-                                    ))}
-                                </AnimatePresence>
-                            </div>
+                    <div className="lg:col-span-2 flex flex-col gap-6">
+                        {/* Global Search Bar */}
+                        <div className="bg-slate-900 border border-slate-800 rounded-3xl p-4 md:p-6 flex items-center gap-4">
+                            <Search className="w-5 h-5 text-slate-500" />
+                            <Input 
+                                placeholder="Buscar a un ganador por nombre o número de celular..." 
+                                className="bg-transparent border-none text-lg focus-visible:ring-0 px-0 placeholder:text-slate-600"
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                            />
                         </div>
+
+                        {/* Platos Gratis */}
+                        <PrizeListSection 
+                            title="Platos Gratis (Regalos)"
+                            icon={<Gift className="w-5 h-5 text-primary" />}
+                            prizes={giftPrizes}
+                            loading={loading}
+                            searchQuery={searchQuery}
+                            handleRedeem={handleRedeem}
+                        />
+
+                        {/* Descuentos */}
+                        <PrizeListSection 
+                            title="Descuentos"
+                            icon={<Tag className="w-5 h-5 text-blue-400" />}
+                            prizes={discountPrizes}
+                            loading={loading}
+                            searchQuery={searchQuery}
+                            handleRedeem={handleRedeem}
+                        />
                     </div>
+
                 </div>
             </div>
         </div>
