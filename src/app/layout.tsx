@@ -16,8 +16,8 @@ const lilita = Lilita_One({
 });
 
 export const metadata: Metadata = {
-  title: "Sushifest 🏆",
-  description: "Vota por el mejor sushi de la ciudad",
+  title: "Búsqueda del Tesoro 🏆",
+  description: "Participa en la ruta del sushi y gana premios increíbles",
 };
 
 export default function RootLayout({

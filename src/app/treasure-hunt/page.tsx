@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion"
 import Image from "next/image"
 import { useAuth } from "@/context/AuthContext"
 import { AuthModal } from "@/components/AuthModal"
-import { Particles } from "@/components/Particles"
+import { RiceParticles } from "@/components/RiceParticles"
 import { TreasureMap } from "@/components/TreasureMap"
 import { QRScannerUI } from "@/components/QRScannerUI"
 import { ScratchCard } from "@/components/ScratchCard"
@@ -113,80 +113,86 @@ export default function TreasureHuntPage() {
     return (
         <div className="h-[100svh] bg-background text-white relative overflow-hidden selection:bg-primary/30 font-sans">
             {/* Background Layer (Synchronized with Home) */}
-            <div className="fixed top-0 left-0 w-full h-[100svh] md:h-screen md:inset-0 z-0 text-white">
-                <div className="absolute inset-0 z-0 block md:hidden">
-                    <Image
-                        src="/bg-home-mobile.jpg"
-                        alt="Mobile Background"
-                        fill
-                        className="object-cover opacity-50"
-                        priority
-                        quality={100}
-                        unoptimized
-                    />
-                </div>
-                <div className="absolute inset-0 z-0 hidden md:block">
-                    <Image
-                        src="/bg-home.jpg"
-                        alt="Desktop Background"
-                        fill
-                        className="object-cover opacity-30"
-                        priority
-                        quality={100}
-                        unoptimized
-                    />
-                </div>
-                <Particles color="#0537BB" />
-                <SponsorBackground />
-            </div>
+        <div className="absolute inset-0 z-0">
+          <motion.div 
+            animate={{ scale: [1, 1.05, 1] }}
+            transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
+            className="absolute inset-0"
+          >
+            <Image
+              src="/bg-welcome-premium.png"
+              alt="Fondo de Festival"
+              fill
+              className="object-cover opacity-80"
+              priority
+              quality={100}
+            />
+          </motion.div>
+          {/* Overlay to ensure readability */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/60" />
+        </div>
+
+        <RiceParticles />
+        <SponsorBackground />
+      </div>
+
+      {/* Cinematic Vignette Overlay */}
+      <div className="absolute inset-0 z-30 pointer-events-none bg-[radial-gradient(circle_at_center,transparent_20%,rgba(0,0,0,0.5)_100%)]" />
 
             {/* Main Content Layer */}
             <div className="relative z-10 flex flex-col h-full bg-gradient-to-b from-background/40 to-background/80 overflow-y-auto overflow-x-hidden">
                 <main className="flex-grow flex flex-col items-center px-4 py-8 md:py-12 text-center max-w-lg md:max-w-4xl mx-auto w-full">
                     
                     {/* Header: Logo (Same as Home) */}
-                    <div className="relative w-full max-w-[120px] md:max-w-[150px] aspect-square flex justify-center items-center mb-4">
-                        <motion.div
-                            initial={{ scale: 0, opacity: 0 }}
-                            animate={{ scale: 1, opacity: 1 }}
-                            transition={{ type: "spring", stiffness: 260, damping: 20, delay: 0.1 }}
-                            className="relative w-[100%] h-[100%] z-10"
-                        >
-                            <motion.div
-                                className="w-full h-full relative"
-                                animate={{ y: [0, -10, 0] }}
-                                transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-                            >
-                                <Image
-                                    src="/logo.png"
-                                    alt="Sushifest"
-                                    fill
-                                    className="object-cover rounded-full drop-shadow-[0_0_25px_rgba(5,55,187,0.5)] filter brightness-110"
-                                />
-                            </motion.div>
-                        </motion.div>
-                    </div>
-
-                    {/* Golden Crown (Same as Home) */}
                     <motion.div
-                        initial={{ opacity: 0, scale: 0.8, y: 20 }}
-                        animate={{ opacity: 1, scale: 1, y: 0 }}
-                        transition={{ delay: 0.3, duration: 1, type: "spring" }}
-                        className="-mt-12 relative z-20 mb-4"
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.8, type: "spring" }}
+                        className="relative w-full max-w-[155px] aspect-[4/3] mb-4 flex items-center justify-center"
                     >
-                        <Image src="/crown.png" alt="Crown" width={100} height={80} className="w-[80px] md:w-[100px] h-auto drop-shadow-lg mx-auto" />
+                        {/* Pulsing blue glow behind logo */}
+                        <motion.div 
+                            animate={{ opacity: [0.1, 0.25, 0.1], scale: [0.8, 1.1, 0.8] }}
+                            transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+                            className="absolute inset-x-[-20%] inset-y-[-20%] bg-[#0066FF]/40 blur-[85px] rounded-full" 
+                        />
+                        
+                        <Image
+                            src="/logo-fest.png"
+                            alt="Sushi Fest 2026 Logo"
+                            width={200}
+                            height={150}
+                            className="w-full h-auto drop-shadow-[0_0_20px_rgba(0,178,255,0.6)] brightness-110 relative z-10"
+                            priority
+                        />
+
+                        {/* Golden crown below logo - Independent Parallax */}
+                        <motion.div
+                            animate={{ y: [0, -6, 0], x: [0, 2, 0], scale: [1, 1.1, 1], rotate: [0, 2, 0] }}
+                            transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
+                            className="absolute -bottom-2 translate-y-full left-1/2 -translate-x-1/2 z-20 w-44 h-auto"
+                        >
+                            <Image 
+                                src="/crown.png" 
+                                alt="Corona" 
+                                width={160} 
+                                height={130} 
+                                className="w-full drop-shadow-[0_8px_25px_rgba(255,183,0,0.6)]"
+                            />
+                        </motion.div>
                     </motion.div>
 
                     {/* Title */}
-                    <div className="space-y-1 mb-8">
+                    <div className="space-y-1 mb-8 mt-14">
                         <motion.h1 
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             className="text-4xl md:text-5xl font-lilita uppercase tracking-tight leading-none text-white drop-shadow-[0_4px_12px_rgba(0,0,0,0.5)]"
+                            style={{ textShadow: '0 8px 16px rgba(0,0,0,0.8), 0 0 40px rgba(0,0,0,1)' }}
                         >
-                            Búsqueda del <span className="text-secondary">Tesoro</span>
+                            Búsqueda del <span className="text-[#00B2FF]">Tesoro</span>
                         </motion.h1>
-                        <p className="text-white/60 text-[10px] md:text-xs uppercase font-bold tracking-[0.3em] font-sans">
+                        <p className="text-white/90 text-[10px] md:text-xs uppercase font-bold tracking-[0.3em] font-sans">
                             Sushifest Panamá 2026
                         </p>
                     </div>
@@ -239,29 +245,29 @@ export default function TreasureHuntPage() {
                     </section>
 
                     {/* CTA Button (Same Style as Home Start Voting) */}
-                    <div className="w-full max-w-xs mb-20">
+                    <div className="w-full max-w-xs mb-20 relative z-50">
                         <motion.button
                             onClick={() => setIsScannerOpen(true)}
                             initial={{ scale: 0.9, opacity: 0 }}
-                            animate={{
-                                scale: [1, 1.05, 1],
-                                opacity: 1,
-                                boxShadow: ["0 0 10px rgba(5,55,187,0.25)", "0 0 30px rgba(5,55,187,0.45)", "0 0 10px rgba(5,55,187,0.25)"]
-                            }}
-                            whileHover={{ scale: 1.1, boxShadow: "0 0 50px rgba(5,55,187,0.8)" }}
+                            animate={{ scale: 1, opacity: 1 }}
                             whileTap={{ scale: 0.95 }}
-                            transition={{
-                                default: { type: "spring", stiffness: 200, damping: 20 },
-                                boxShadow: { duration: 1.5, repeat: Infinity, ease: "easeInOut" },
-                                scale: { duration: 1.5, repeat: Infinity, ease: "easeInOut" }
-                            }}
-                            className="group relative w-full bg-gradient-to-r from-primary to-blue-700 text-white font-lilita text-xl py-5 rounded-full border border-white/20 overflow-hidden flex items-center justify-center gap-3"
+                            className="group relative h-16 w-full rounded-full overflow-hidden flex items-center justify-center shadow-[0_0_25px_rgba(0,178,255,0.5)]"
                         >
-                            <QrCode size={24} className="relative z-10" />
-                            <span className="relative z-10">ESCANEAR CÓDIGO QR 🔥</span>
+                            {/* Gradient Background */}
+                            <div className="absolute inset-0 bg-gradient-to-r from-[#0066FF] via-[#00B2FF] to-[#0066FF] bg-[length:200%_auto] animate-gradient-x" />
+                            {/* Glow / Border Effect */}
+                            <div className="absolute inset-[1px] rounded-full border border-white/30" />
                             
-                            {/* Button Shine Effect */}
-                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+                            <span className="relative z-10 text-white font-black text-xl drop-shadow-md uppercase tracking-tight flex items-center justify-center gap-3">
+                                <QrCode size={24} /> ESCANEAR CÓDIGO QR 🔥
+                            </span>
+                            
+                            {/* Shimmer Effect */}
+                            <motion.div 
+                                animate={{ x: ['150%', '-150%'] }}
+                                transition={{ duration: 2.5, repeat: Infinity, ease: "linear", repeatDelay: 0.5 }}
+                                className="absolute inset-0 bg-gradient-to-r from-transparent via-white/50 to-transparent skew-x-[-25deg] z-20" 
+                            />
                         </motion.button>
                     </div>
 
@@ -272,11 +278,12 @@ export default function TreasureHuntPage() {
             </div>
 
             {/* Modals */}
-            <AuthModal 
-                isOpen={isAuthModalOpen} 
-                onClose={() => setIsAuthModalOpen(false)} 
-                onSuccess={fetchData}
-            />
+            {isAuthModalOpen && (
+                <AuthModal 
+                    onClose={() => setIsAuthModalOpen(false)} 
+                    onSuccess={fetchData}
+                />
+            )}
 
             <QRScannerUI 
                 isOpen={isScannerOpen}

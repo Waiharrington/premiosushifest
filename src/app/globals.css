@@ -23,3 +23,55 @@ body {
   color: var(--foreground);
   overscroll-behavior: none;
 }
+
+@keyframes gradient-x {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.animate-gradient-x {
+  animation: gradient-x 3s ease infinite;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-15px);
+  }
+}
+
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+/* Custom Premium Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0A021A;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #0066FF;
+  border-radius: 10px;
+  border: 3px solid #0A021A;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #00B2FF;
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #0066FF #0A021A;
+}

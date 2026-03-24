@@ -54,18 +54,23 @@ export function QRScannerUI({ isOpen, onClose, onScan }: QRScannerUIProps) {
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         onClick={onClose}
-                        className="absolute inset-0 bg-black/90 backdrop-blur-sm"
+                        className="absolute inset-0 z-0 bg-black/40 backdrop-blur-3xl"
                     />
 
                     <motion.div
-                        initial={{ scale: 0.9, opacity: 0, y: 20 }}
+                        initial={{ scale: 0.95, opacity: 0, y: 20 }}
                         animate={{ scale: 1, opacity: 1, y: 0 }}
-                        exit={{ scale: 0.9, opacity: 0, y: 20 }}
-                        className="relative w-full max-w-sm bg-background border border-primary/30 rounded-3xl overflow-hidden p-6"
+                        exit={{ scale: 0.95, opacity: 0, y: 20 }}
+                        className="relative w-full max-w-sm bg-black/90 border border-white/20 rounded-[2.5rem] overflow-hidden p-8 shadow-2xl backdrop-blur-xl"
                     >
+                        <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent pointer-events-none" />
                         <div className="flex justify-between items-center mb-6">
                             <h2 className="text-2xl font-lilita text-white">ESCANEAR CÓDIGO QR</h2>
-                            <button onClick={onClose} className="p-2 text-white/50 hover:text-white">
+                            <button 
+                                onClick={onClose} 
+                                className="p-2 text-white/50 hover:text-white transition-colors"
+                                aria-label="Cerrar escáner"
+                            >
                                 <X size={24} />
                             </button>
                         </div>

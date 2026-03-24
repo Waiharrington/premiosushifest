@@ -34,12 +34,19 @@ export function ScratchCard({
                 canvas.width = rect.width
                 canvas.height = rect.height
                 
-                // Fill with brand primary or similar
-                ctx.fillStyle = '#1D4ED8' // blue-700
+                // Fill with brand primary
+                ctx.fillStyle = '#0066FF' // Brand Primary
                 ctx.fillRect(0, 0, canvas.width, canvas.height)
                 
+                // Add a subtle gradient effect to the scratch layer
+                const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height)
+                gradient.addColorStop(0, '#0066FF')
+                gradient.addColorStop(1, '#00B2FF')
+                ctx.fillStyle = gradient
+                ctx.fillRect(0, 0, canvas.width, canvas.height)
+
                 // Add some texture/text
-                ctx.font = 'bold 24px Arial'
+                ctx.font = 'bold 20px Lilita One, system-ui'
                 ctx.fillStyle = '#FFFFFF'
                 ctx.textAlign = 'center'
                 ctx.fillText('¡RASPA AQUÍ PARA GANAR!', canvas.width / 2, canvas.height / 2)
@@ -122,7 +129,7 @@ export function ScratchCard({
     }
 
     return (
-        <div className="relative w-full aspect-[4/3] bg-white/5 rounded-2xl overflow-hidden border border-white/10">
+        <div className="relative w-full aspect-[4/3] bg-white/5 backdrop-blur-xl rounded-3xl overflow-hidden border border-white/10 group shadow-2xl">
             {/* Content underneath */}
             <div className="absolute inset-0 flex items-center justify-center p-6 text-center">
                 {children}
