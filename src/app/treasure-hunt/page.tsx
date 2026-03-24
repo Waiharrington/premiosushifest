@@ -202,13 +202,27 @@ export default function TreasureHuntPage() {
                             <Trophy size={60} />
                         </div>
                         
-                        <div className="relative flex justify-between items-end mb-4 px-2">
-                            <div className="text-left">
-                                <p className="text-[10px] uppercase font-bold text-primary tracking-widest mb-1">Tu Ruta</p>
-                                <h3 className="text-2xl font-lilita uppercase text-white">{visitedIds.length} / {locales.length} <span className="text-xs font-sans text-white/40 lowercase">lugares</span></h3>
+                        <div className="relative flex justify-between items-center mb-4 px-2 gap-2 md:gap-4">
+                            <div className="text-left flex-shrink-0">
+                                <p className="text-[10px] md:text-xs uppercase font-bold text-primary tracking-widest mb-1">Tu Ruta</p>
+                                <h3 className="text-xl md:text-2xl font-lilita uppercase text-white">{visitedIds.length} / {locales.length}</h3>
                             </div>
-                            <div className="text-right">
-                                <p className="text-3xl font-lilita text-secondary drop-shadow-[0_0_10px_rgba(255,77,0,0.3)]">{Math.round(progress)}%</p>
+                            
+                            {/* Scan Button inside Header */}
+                            <motion.button
+                                onClick={() => setIsScannerOpen(true)}
+                                whileTap={{ scale: 0.95 }}
+                                className="group relative h-10 md:h-12 px-3 md:px-6 rounded-full overflow-hidden flex items-center justify-center shadow-[0_0_15px_rgba(0,178,255,0.4)] flex-grow max-w-[220px]"
+                            >
+                                <div className="absolute inset-0 bg-gradient-to-r from-[#0066FF] via-[#00B2FF] to-[#0066FF] bg-[length:200%_auto] animate-gradient-x" />
+                                <div className="absolute inset-[1px] rounded-full border border-white/30" />
+                                <span className="relative z-10 text-white font-black text-[12px] md:text-sm drop-shadow-md uppercase tracking-tight flex items-center justify-center gap-2">
+                                    <QrCode size={16} /> <span className="hidden sm:inline">ESCANEAR CÓDIGO</span><span className="sm:hidden">SCAN</span> 🔥
+                                </span>
+                            </motion.button>
+
+                            <div className="text-right flex-shrink-0">
+                                <p className="text-2xl md:text-3xl font-lilita text-secondary drop-shadow-[0_0_10px_rgba(255,77,0,0.3)]">{Math.round(progress)}%</p>
                             </div>
                         </div>
 
@@ -243,32 +257,61 @@ export default function TreasureHuntPage() {
                         />
                     </section>
 
-                    {/* CTA Button (Same Style as Home Start Voting) */}
-                    <div className="w-full max-w-xs mb-20 relative z-50">
-                        <motion.button
-                            onClick={() => setIsScannerOpen(true)}
-                            initial={{ scale: 0.9, opacity: 0 }}
-                            animate={{ scale: 1, opacity: 1 }}
-                            whileTap={{ scale: 0.95 }}
-                            className="group relative h-16 w-full rounded-full overflow-hidden flex items-center justify-center shadow-[0_0_25px_rgba(0,178,255,0.5)]"
-                        >
-                            {/* Gradient Background */}
-                            <div className="absolute inset-0 bg-gradient-to-r from-[#0066FF] via-[#00B2FF] to-[#0066FF] bg-[length:200%_auto] animate-gradient-x" />
-                            {/* Glow / Border Effect */}
-                            <div className="absolute inset-[1px] rounded-full border border-white/30" />
-                            
-                            <span className="relative z-10 text-white font-black text-xl drop-shadow-md uppercase tracking-tight flex items-center justify-center gap-3">
-                                <QrCode size={24} /> ESCANEAR CÓDIGO QR 🔥
-                            </span>
-                            
-                            {/* Shimmer Effect */}
-                            <motion.div 
-                                animate={{ x: ['150%', '-150%'] }}
-                                transition={{ duration: 2.5, repeat: Infinity, ease: "linear", repeatDelay: 0.5 }}
-                                className="absolute inset-0 bg-gradient-to-r from-transparent via-white/50 to-transparent skew-x-[-25deg] z-20" 
-                            />
-                        </motion.button>
-                    </div>
+                    {/* Prizes / Giftcards Section */}
+                    {prizes.filter(p => Math.random() > -1 && p.prize_type !== 'try_again').length > 0 && (
+                        <div className="w-full mt-2 mb-20 text-left relative z-20">
+                            <h2 className="text-2xl font-lilita uppercase tracking-wider text-white mb-6 flex items-center gap-3 justify-center md:justify-start">
+                                <Gift className="text-primary w-6 h-6" /> Mis Recompensas
+                            </h2>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                {prizes.filter(p => p.prize_type !== 'try_again').map(prize => {
+                                    const locale = locales.find(l => l.id === prize.locale_id)
+                                    const isRedeemed = prize.is_redeemed
+                                    
+                                    return (
+                                        <div 
+                                            key={prize.id} 
+                                            className={`relative overflow-hidden rounded-2xl border p-4 flex items-center gap-4 transition-all duration-300 ${
+                                                isRedeemed 
+                                                    ? 'bg-slate-900/80 border-slate-800 grayscale opacity-70' 
+                                                    : 'bg-gradient-to-br from-blue-900/60 to-primary/30 border-primary/50 shadow-[0_4px_20px_rgba(0,102,255,0.3)] backdrop-blur-md'
+                                            }`}
+                                        >
+                                            <div className="w-16 h-16 rounded-xl bg-white/10 p-2 flex-shrink-0 flex items-center justify-center border border-white/5">
+                                                {/* eslint-disable-next-line @next/next/no-img-element */}
+                                                <img 
+                                                    src={locale?.image_url || "/logo.png"} 
+                                                    alt={locale?.name || "Restaurante"} 
+                                                    className="w-full h-full object-contain drop-shadow-md"
+                                                />
+                                            </div>
+                                            <div className="flex-grow">
+                                                <p className="text-[10px] font-bold uppercase text-white/60 tracking-[0.2em] mb-1">
+                                                    {locale?.name || "Desconocido"}
+                                                </p>
+                                                <h4 className={`text-lg font-black uppercase leading-tight drop-shadow-md ${isRedeemed ? 'text-white' : 'text-[#00B2FF]'}`}>
+                                                    {prize.prize_name}
+                                                </h4>
+                                                {isRedeemed ? (
+                                                    <span className="inline-block mt-2 text-[10px] font-bold uppercase tracking-wider bg-slate-800 text-slate-400 px-2 py-1 rounded shadow-inner">
+                                                        <CheckCircle2 className="w-3 h-3 inline mr-1" /> Usado
+                                                    </span>
+                                                ) : (
+                                                    <span className="inline-block mt-2 text-[10px] font-bold uppercase tracking-wider bg-primary/20 text-primary px-2 py-1 rounded border border-primary/30 shadow-sm backdrop-blur-sm">
+                                                        Válido para canjear
+                                                    </span>
+                                                )}
+                                            </div>
+                                        </div>
+                                    )
+                                })}
+                            </div>
+                        </div>
+                    )}
+
+                    {!prizes.some(p => p.prize_type !== 'try_again') && (
+                        <div className="mb-20" /> // Spacer if no prizes to maintain footer distance
+                    )}
 
                     <footer className="pb-8 pt-4 text-center text-white/40 text-[10px] uppercase tracking-[0.2em] w-full">
                         <p>© 2026 SUSHIFEST • BY EPIC MARKETING • PANAMÁ</p>
