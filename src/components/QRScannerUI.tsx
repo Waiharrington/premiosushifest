@@ -1,9 +1,10 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
-import { Html5QrcodeScanner, Html5QrcodeSupportedFormats } from 'html5-qrcode'
+import { useEffect, useRef, useState } from 'react'
+import { Html5Qrcode, Html5QrcodeSupportedFormats } from 'html5-qrcode'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X } from 'lucide-react'
+import { Locale } from '@/types'
 
 interface QRScannerUIProps {
     isOpen: boolean
@@ -14,34 +15,70 @@ interface QRScannerUIProps {
 }
 
 export function QRScannerUI({ isOpen, onClose, onScan, locales = [], visitedIds = [] }: QRScannerUIProps) {
-    const scannerRef = useRef<Html5QrcodeScanner | null>(null)
+    const scannerRef = useRef<Html5Qrcode | null>(null)
+    const [isInitializing, setIsInitializing] = useState(false)
+    const [error, setError] = useState<string | null>(null)
 
     useEffect(() => {
-        if (isOpen && !scannerRef.current) {
-            scannerRef.current = new Html5QrcodeScanner(
-                "qr-reader",
-                { 
-                    fps: 10, 
+        let mounted = true
+
+        const startScanner = async () => {
+            if (!isOpen) return
+            
+            setIsInitializing(true)
+            setError(null)
+            
+            try {
+                const scanner = new Html5Qrcode("qr-reader")
+                scannerRef.current = scanner
+
+                const config = {
+                    fps: 10,
                     qrbox: { width: 250, height: 250 },
-                    formatsToSupport: [ Html5QrcodeSupportedFormats.QR_CODE ]
-                },
-                /* verbose= */ false
-            )
-
-            scannerRef.current.render(
-                (decodedText) => {
-                    onScan(decodedText)
-                    onClose()
-                },
-                () => {
-                    // Handle scan error if needed
+                    formatsToSupport: [Html5QrcodeSupportedFormats.QR_CODE]
                 }
-            )
 
-            return () => {
-                if (scannerRef.current) {
-                    scannerRef.current.clear().catch(err => console.error("Error clearing scanner", err))
-                    scannerRef.current = null
+                await scanner.start(
+                    { facingMode: "environment" },
+                    config,
+                    (decodedText) => {
+                        onScan(decodedText)
+                        handleClose()
+                    },
+                    () => {} // silent failure for frames
+                )
+                
+                if (mounted) setIsInitializing(false)
+            } catch (err) {
+                const errorInstance = err as Error
+                console.error("Scanner Error:", errorInstance)
+                if (mounted) {
+                    setError("No se pudo acceder a la cámara. Asegúrate de dar permisos.")
+                    setIsInitializing(false)
+                }
+            }
+        }
+
+        const handleClose = async () => {
+            if (scannerRef.current && scannerRef.current.isScanning) {
+                try {
+                    await scannerRef.current.stop()
+                } catch (e) {
+                    console.error("Error stopping scanner", e)
+                }
+            }
+            onClose()
+        }
+
+        if (isOpen) {
+            startScanner()
+        }
+
+        return () => {
+            mounted = false
+            if (scannerRef.current) {
+                if (scannerRef.current.isScanning) {
+                    scannerRef.current.stop().catch(e => console.error(e))
                 }
             }
         }
@@ -77,11 +114,30 @@ export function QRScannerUI({ isOpen, onClose, onScan, locales = [], visitedIds 
                             </button>
                         </div>
 
-                        <div className="relative aspect-square bg-slate-900 rounded-2xl overflow-hidden border border-white/5 shadow-inner">
+                        <div className="relative aspect-square bg-slate-900 rounded-2xl overflow-hidden border border-white/5 shadow-inner flex items-center justify-center">
                             <div id="qr-reader" className="w-full h-full" />
                             
+                            {isInitializing && (
+                                <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-black/60 backdrop-blur-sm">
+                                    <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin mb-4" />
+                                    <p className="text-[10px] text-white/60 uppercase font-bold tracking-widest">Iniciando cámara...</p>
+                                </div>
+                            )}
+
+                            {error && (
+                                <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-black/80 p-8 text-center">
+                                    <p className="text-red-400 text-xs font-bold uppercase mb-4">{error}</p>
+                                    <button 
+                                        onClick={onClose}
+                                        className="px-6 py-2 bg-white/10 rounded-full text-[10px] text-white font-bold uppercase tracking-widest"
+                                    >
+                                        Cerrar
+                                    </button>
+                                </div>
+                            )}
+                            
                             {/* Overlay Frame */}
-                            <div className="absolute inset-0 pointer-events-none border-4 border-primary/20 m-12 rounded-lg opacity-50 border-dashed" />
+                            <div className="absolute inset-0 pointer-events-none border-4 border-primary/20 m-12 rounded-lg opacity-50 border-dashed z-10" />
                         </div>
 
                         <p className="mt-6 text-center text-sm text-white/50 font-medium">
