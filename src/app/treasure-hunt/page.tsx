@@ -13,10 +13,10 @@ import { SponsorBackground } from "@/components/SponsorBackground"
 import { registerVisit, getTreasureHuntStatus, generateScratchPrize } from "@/actions/treasure-hunt"
 import { supabase } from "@/lib/supabase"
 import { Locale, TreasureHuntPrize } from "@/types"
-import { Trophy, QrCode, Map as MapIcon, Gift, CheckCircle2, Tag, HelpCircle } from "lucide-react"
+import { Trophy, QrCode, Map as MapIcon, Gift, CheckCircle2, Tag, HelpCircle, LogOut } from "lucide-react"
 
 export default function TreasureHuntPage() {
-    const { user, isLoading: authLoading } = useAuth()
+    const { user, isLoading: authLoading, logout } = useAuth()
     const [locales, setLocales] = useState<Locale[]>([])
     const [visitedIds, setVisitedIds] = useState<string[]>([])
     const [prizes, setPrizes] = useState<TreasureHuntPrize[]>([])
@@ -140,6 +140,16 @@ export default function TreasureHuntPage() {
 
             {/* Main Content Layer */}
             <div className="relative z-10 flex flex-col h-full bg-gradient-to-b from-background/40 to-background/80 overflow-y-auto overflow-x-hidden">
+                {/* Logout Button (Floating Top Right) */}
+                <div className="absolute top-4 right-4 z-50">
+                    <button 
+                        onClick={() => logout()}
+                        className="bg-white/5 hover:bg-white/10 backdrop-blur-md border border-white/10 px-4 py-2 rounded-full flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-white/60 transition-colors"
+                    >
+                        <LogOut size={14} /> Salir
+                    </button>
+                </div>
+
                 <main className="flex-grow flex flex-col items-center px-4 py-8 md:py-12 text-center max-w-lg md:max-w-4xl mx-auto w-full">
                     
                     {/* Header: Logo (Same as Home) */}
