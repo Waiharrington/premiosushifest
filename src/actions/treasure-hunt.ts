@@ -68,15 +68,19 @@ export async function generateScratchPrize(userId: string, localeId: string) {
     }
 
     // Fetch Locale's Prize Pool limit
-    const { data: locale } = await supabase.from('locales').select('prize_pool').eq('id', localeId).single()
+    const { data: locale } = await supabase.from('locales').select('prize_pool, discount_pool').eq('id', localeId).single()
     const prizePool = locale?.prize_pool || 0
+    const discountPool = locale?.discount_pool || 0
 
-    // Count how many 'winning' prizes (not try_again) have been given out
-    const { count: winningPrizesCount } = await supabase
+    // Count how many 'winning' prizes have been given out
+    const { data: winningPrizes } = await supabase
         .from('treasure_hunt_prizes')
-        .select('*', { count: 'exact', head: true })
+        .select('prize_type')
         .eq('locale_id', localeId)
         .neq('prize_type', 'try_again')
+
+    const giftCount = winningPrizes?.filter(p => p.prize_type === 'gift').length || 0
+    const discountCount = winningPrizes?.filter(p => p.prize_type === 'discount').length || 0
 
     // Base Prize pool logic
     let prizes = [
@@ -88,11 +92,13 @@ export async function generateScratchPrize(userId: string, localeId: string) {
         { name: "Gracias por participar, ¡sigue intentando!", type: "try_again" as const, weight: 25 },
     ]
 
-    // If prize pool is exhausted, only allow try_again
-    if (winningPrizesCount !== null && winningPrizesCount >= prizePool) {
-        prizes = [
-            { name: "Gracias por participar, ¡sigue intentando!", type: "try_again" as const, weight: 100 }
-        ]
+    // If prize pool is exhausted, remove gifts
+    if (giftCount >= prizePool) {
+        prizes = prizes.filter(p => p.type !== 'gift')
+    }
+    // If discount pool is exhausted, remove discounts
+    if (discountCount >= discountPool) {
+        prizes = prizes.filter(p => p.type !== 'discount')
     }
 
     const totalWeight = prizes.reduce((acc, p) => acc + p.weight, 0)

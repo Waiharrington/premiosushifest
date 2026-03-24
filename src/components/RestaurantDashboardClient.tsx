@@ -28,6 +28,7 @@ interface Locale {
     name: string
     pin: string
     prize_pool: number
+    discount_pool: number
 }
 
 function PrizeListSection({ 
@@ -188,6 +189,7 @@ export function RestaurantDashboardClient({ locale }: { locale: Locale }) {
 
     const redeemedCount = prizes.filter(p => p.is_redeemed).length
     const pool = locale.prize_pool || 0
+    const discountPool = locale.discount_pool || 0
 
     const giftPrizes = prizes.filter(p => p.prize_type === 'gift')
     const discountPrizes = prizes.filter(p => p.prize_type === 'discount')
@@ -207,21 +209,32 @@ export function RestaurantDashboardClient({ locale }: { locale: Locale }) {
                     <div className="flex gap-4 w-full md:w-auto overflow-x-auto pb-2 md:pb-0">
                         <div className="bg-slate-950 px-6 py-4 rounded-2xl border border-slate-800 flex-shrink-0">
                             <span className="text-xs uppercase tracking-widest text-slate-500 font-bold block mb-1">Premios Asignados</span>
-                            <span className="text-2xl font-mono text-white">{pool}</span>
+                            <span className="text-2xl font-mono text-white">{pool}</span> <span className="text-slate-500 text-sm">Regalos</span> / <span className="text-2xl font-mono text-blue-400">{discountPool}</span> <span className="text-slate-500 text-sm">Desc.</span>
                         </div>
                         <div className="bg-slate-950 px-6 py-4 rounded-2xl border border-slate-800 flex-shrink-0">
                             <span className="text-xs uppercase tracking-widest text-slate-500 font-bold block mb-1">Entregados (Canjeados)</span>
-                            <span className="text-2xl font-mono text-emerald-400">{redeemedCount}</span> <span className="text-slate-500">/ {prizes.length} generados</span>
+                            <span className="text-2xl font-mono text-emerald-400">{redeemedCount}</span> <span className="text-slate-500">/ {prizes.length} ganadores</span>
                         </div>
                     </div>
                 </header>
 
 
+                {/* Global Search Bar on Top */}
+                <div className="bg-slate-900 border border-slate-800 rounded-3xl p-4 md:p-6 flex items-center gap-4 w-full">
+                    <Search className="w-6 h-6 text-slate-500" />
+                    <Input 
+                        placeholder="Buscar a un ganador por nombre o número de celular..." 
+                        className="bg-transparent border-none text-xl focus-visible:ring-0 px-0 placeholder:text-slate-500"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                    />
+                </div>
+
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     
-                    {/* Left Column: QR Code */}
-                    <div className="lg:col-span-1 space-y-8">
-                        <div className="bg-gradient-to-br from-primary/20 to-blue-900/20 p-8 rounded-3xl border border-primary/30 text-center flex flex-col items-center shadow-xl">
+                    {/* Column 1: QR Code */}
+                    <div className="space-y-8">
+                        <div className="bg-gradient-to-br from-primary/20 to-blue-900/20 p-8 rounded-3xl border border-primary/30 text-center flex flex-col items-center shadow-xl h-[500px] justify-center">
                             <h2 className="text-xl font-bold text-white mb-2 flex items-center justify-center gap-2">
                                 <QrCode className="w-5 h-5" /> Código QR Oficial
                             </h2>
@@ -240,19 +253,8 @@ export function RestaurantDashboardClient({ locale }: { locale: Locale }) {
                         </div>
                     </div>
 
-                    <div className="lg:col-span-2 flex flex-col gap-6">
-                        {/* Global Search Bar */}
-                        <div className="bg-slate-900 border border-slate-800 rounded-3xl p-4 md:p-6 flex items-center gap-4">
-                            <Search className="w-5 h-5 text-slate-500" />
-                            <Input 
-                                placeholder="Buscar a un ganador por nombre o número de celular..." 
-                                className="bg-transparent border-none text-lg focus-visible:ring-0 px-0 placeholder:text-slate-600"
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
-                            />
-                        </div>
-
-                        {/* Platos Gratis */}
+                    {/* Column 2: Platos Gratis */}
+                    <div className="space-y-8">
                         <PrizeListSection 
                             title="Platos Gratis (Regalos)"
                             icon={<Gift className="w-5 h-5 text-primary" />}
@@ -261,8 +263,10 @@ export function RestaurantDashboardClient({ locale }: { locale: Locale }) {
                             searchQuery={searchQuery}
                             handleRedeem={handleRedeem}
                         />
+                    </div>
 
-                        {/* Descuentos */}
+                    {/* Column 3: Descuentos */}
+                    <div className="space-y-8">
                         <PrizeListSection 
                             title="Descuentos"
                             icon={<Tag className="w-5 h-5 text-blue-400" />}

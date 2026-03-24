@@ -359,7 +359,7 @@ export function AdminDashboard({ locales, votes }: AdminDashboardProps) {
                                 defaultValue={editingLocale?.description || ""}
                             />
                             
-                            <div className="grid grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                 <Input
                                     name="prize_pool"
                                     type="number"
@@ -367,7 +367,16 @@ export function AdminDashboard({ locales, votes }: AdminDashboardProps) {
                                     placeholder="Total Premios (Ej: 15)"
                                     className="bg-slate-950"
                                     defaultValue={editingLocale?.prize_pool || "0"}
-                                    title="Cantidad total de platos/premios que regalarán"
+                                    title="Cantidad total de regalos físicos"
+                                />
+                                <Input
+                                    name="discount_pool"
+                                    type="number"
+                                    min="0"
+                                    placeholder="Total Descuentos (Ej: 50)"
+                                    className="bg-slate-950"
+                                    defaultValue={editingLocale?.discount_pool || "0"}
+                                    title="Cantidad límite de descuentos permitidos"
                                 />
                                 <Input
                                     name="pin"
