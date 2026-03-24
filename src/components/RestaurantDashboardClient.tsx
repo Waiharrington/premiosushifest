@@ -191,8 +191,9 @@ export function RestaurantDashboardClient({ locale }: { locale: Locale }) {
     const pool = locale.prize_pool || 0
     const discountPool = locale.discount_pool || 0
 
-    const giftPrizes = prizes.filter(p => p.prize_type === 'gift')
-    const discountPrizes = prizes.filter(p => p.prize_type === 'discount')
+    const giftPrizes = prizes.filter(p => p.prize_type === 'gift' && !p.is_redeemed)
+    const discountPrizes = prizes.filter(p => p.prize_type === 'discount' && !p.is_redeemed)
+    const redeemedPrizesList = prizes.filter(p => p.is_redeemed)
 
 
     return (
@@ -256,7 +257,7 @@ export function RestaurantDashboardClient({ locale }: { locale: Locale }) {
                     {/* Column 2: Platos Gratis */}
                     <div className="space-y-8">
                         <PrizeListSection 
-                            title="Platos Gratis (Regalos)"
+                            title="Platos Gratis Activos"
                             icon={<Gift className="w-5 h-5 text-primary" />}
                             prizes={giftPrizes}
                             loading={loading}
@@ -268,7 +269,7 @@ export function RestaurantDashboardClient({ locale }: { locale: Locale }) {
                     {/* Column 3: Descuentos */}
                     <div className="space-y-8">
                         <PrizeListSection 
-                            title="Descuentos"
+                            title="Descuentos Activos"
                             icon={<Tag className="w-5 h-5 text-blue-400" />}
                             prizes={discountPrizes}
                             loading={loading}
@@ -278,6 +279,19 @@ export function RestaurantDashboardClient({ locale }: { locale: Locale }) {
                     </div>
 
                 </div>
+
+                {/* Redeemed Prizes Section */}
+                <div className="pt-8 mt-8 border-t border-slate-800">
+                    <PrizeListSection 
+                        title="Historial de Entregados (Canjeados)"
+                        icon={<FileDown className="w-5 h-5 text-emerald-400" />}
+                        prizes={redeemedPrizesList}
+                        loading={loading}
+                        searchQuery={searchQuery}
+                        handleRedeem={handleRedeem}
+                    />
+                </div>
+
             </div>
         </div>
     )
