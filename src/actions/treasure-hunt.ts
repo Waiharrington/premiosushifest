@@ -67,8 +67,19 @@ export async function generateScratchPrize(userId: string, localeId: string) {
         return { success: true, prize: existingPrize as TreasureHuntPrize }
     }
 
-    // Prize pool logic
-    const prizes = [
+    // Fetch Locale's Prize Pool limit
+    const { data: locale } = await supabase.from('locales').select('prize_pool').eq('id', localeId).single()
+    const prizePool = locale?.prize_pool || 0
+
+    // Count how many 'winning' prizes (not try_again) have been given out
+    const { count: winningPrizesCount } = await supabase
+        .from('treasure_hunt_prizes')
+        .select('*', { count: 'exact', head: true })
+        .eq('locale_id', localeId)
+        .neq('prize_type', 'try_again')
+
+    // Base Prize pool logic
+    let prizes = [
         { name: "10% de Descuento", type: "discount" as const, weight: 40 },
         { name: "15% de Descuento", type: "discount" as const, weight: 20 },
         { name: "20% de Descuento", type: "discount" as const, weight: 10 },
@@ -76,6 +87,13 @@ export async function generateScratchPrize(userId: string, localeId: string) {
         { name: "Masaje Relajante", type: "gift" as const, weight: 3 },
         { name: "Gracias por participar, ¡sigue intentando!", type: "try_again" as const, weight: 25 },
     ]
+
+    // If prize pool is exhausted, only allow try_again
+    if (winningPrizesCount !== null && winningPrizesCount >= prizePool) {
+        prizes = [
+            { name: "Gracias por participar, ¡sigue intentando!", type: "try_again" as const, weight: 100 }
+        ]
+    }
 
     const totalWeight = prizes.reduce((acc, p) => acc + p.weight, 0)
     let random = Math.random() * totalWeight
@@ -132,4 +150,19 @@ export async function getTreasureHuntLeaderboard() {
     }
 
     return Object.values(counts).sort((a, b) => b.count - a.count).slice(0, 10)
+}
+
+export async function redeemPrize(prizeId: string) {
+    if (!prizeId) return { success: false, error: "ID inválido" }
+
+    const { error } = await supabase
+        .from('treasure_hunt_prizes')
+        .update({ is_redeemed: true, redeemed_at: new Date().toISOString() })
+        .eq('id', prizeId)
+
+    if (error) {
+        return { success: false, error: error.message }
+    }
+
+    return { success: true }
 }

@@ -12,6 +12,8 @@ interface Locale {
     name: string
     description?: string
     image_url: string
+    prize_pool?: number
+    pin?: string
 }
 
 interface Vote {
@@ -58,8 +60,8 @@ export function AdminDashboard({ locales, votes }: AdminDashboardProps) {
     }
 
     // Calculate Stats
-    const totalVotes = votes.length
-    const voteCounts = locales.map(l => ({
+    const totalVisits = votes.length
+    const visitCounts = locales.map(l => ({
         ...l,
         count: votes.filter(v => v.locale_id === l.id).length
     })).sort((a, b) => b.count - a.count)
@@ -206,8 +208,8 @@ export function AdminDashboard({ locales, votes }: AdminDashboardProps) {
                     </div>
 
                     <div className="bg-slate-800 rounded-lg px-4 py-2 border border-slate-700">
-                        <span className="block text-xs text-slate-400 uppercase tracking-wider">Total Votos</span>
-                        <span className="text-2xl font-mono font-bold text-primary">{totalVotes}</span>
+                        <span className="block text-xs text-slate-400 uppercase tracking-wider">Total Visitas</span>
+                        <span className="text-2xl font-mono font-bold text-primary">{totalVisits}</span>
                     </div>
                 </div>
             </header>
@@ -236,7 +238,7 @@ export function AdminDashboard({ locales, votes }: AdminDashboardProps) {
 
                         <form action={handleInject} className="space-y-4">
                             <div>
-                                <label className="text-sm text-slate-400 mb-1 block">Cantidad de Votos</label>
+                                <label className="text-sm text-slate-400 mb-1 block">Cantidad de Visitas</label>
                                 <Input
                                     name="amount"
                                     type="number"
@@ -263,7 +265,7 @@ export function AdminDashboard({ locales, votes }: AdminDashboardProps) {
                                     disabled={isSaving}
                                     className="flex-1 bg-gradient-to-r from-primary to-blue-700 hover:from-blue-600 hover:to-blue-800 text-white font-bold"
                                 >
-                                    {isSaving ? "Inyectando..." : "CONFIRMAR INYECCIÓN"}
+                                    {isSaving ? "Inyectando..." : "CONFIRMAR"}
                                 </Button>
                             </div>
                         </form>
@@ -322,7 +324,7 @@ export function AdminDashboard({ locales, votes }: AdminDashboardProps) {
                                     disabled={isSaving}
                                     className="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold border-red-500"
                                 >
-                                    {isSaving ? "Eliminando..." : "BORRAR VOTOS"}
+                                    {isSaving ? "Eliminando..." : "BORRAR VISITAS"}
                                 </Button>
                             </div>
                         </form>
@@ -356,6 +358,25 @@ export function AdminDashboard({ locales, votes }: AdminDashboardProps) {
                                 className="bg-slate-950"
                                 defaultValue={editingLocale?.description || ""}
                             />
+                            
+                            <div className="grid grid-cols-2 gap-4">
+                                <Input
+                                    name="prize_pool"
+                                    type="number"
+                                    min="0"
+                                    placeholder="Total Premios (Ej: 15)"
+                                    className="bg-slate-950"
+                                    defaultValue={editingLocale?.prize_pool || "0"}
+                                    title="Cantidad total de platos/premios que regalarán"
+                                />
+                                <Input
+                                    name="pin"
+                                    placeholder="PIN (Ej: 1234)"
+                                    className="bg-slate-950 font-mono"
+                                    defaultValue={editingLocale?.pin || "1234"}
+                                    title="PIN de acceso al panel para el restaurante"
+                                />
+                            </div>
 
                             <div className="space-y-2">
                                 <label className="text-sm text-slate-400 ml-1">Logo / Imagen</label>
@@ -435,6 +456,14 @@ export function AdminDashboard({ locales, votes }: AdminDashboardProps) {
                                             </Button>
                                             <Button
                                                 variant="ghost"
+                                                onClick={() => window.open(`/admin/restaurante/${locale.id}`, '_blank')}
+                                                className="h-8 w-8 p-0 text-emerald-400 hover:text-emerald-300 hover:bg-emerald-950/30"
+                                                title="Panel del Restaurante"
+                                            >
+                                                <Lock className="w-4 h-4" />
+                                            </Button>
+                                            <Button
+                                                variant="ghost"
                                                 onClick={() => setShowingQrLocale(locale)}
                                                 className="h-8 w-8 p-0 text-white/70 hover:text-white hover:bg-white/10"
                                                 title="Mostrar Código QR"
@@ -473,26 +502,29 @@ export function AdminDashboard({ locales, votes }: AdminDashboardProps) {
                         </h2>
 
                         <div className="space-y-6">
-                            {voteCounts.map((item, index) => (
+                            {visitCounts.map((item, index) => (
                                 <div key={item.id} className="relative">
                                     <div className="flex justify-between items-end mb-1">
                                         <span className={`font-bold ${index === 0 ? 'text-yellow-400 text-lg' : 'text-slate-300'}`}>
                                             #{index + 1} {item.name}
                                         </span>
-                                        <span className="font-mono text-slate-400">{item.count} votos</span>
+                                        <div className="flex flex-col items-end">
+                                            <span className="font-mono text-slate-400">{item.count} visitas</span>
+                                            <span className="text-[10px] text-slate-500 uppercase tracking-wider">Inventario: {item.prize_pool || 0}</span>
+                                        </div>
                                     </div>
                                     <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
                                         <motion.div
                                             initial={{ width: 0 }}
-                                            animate={{ width: `${totalVotes > 0 ? (item.count / totalVotes) * 100 : 0}%` }}
+                                            animate={{ width: `${totalVisits > 0 ? (item.count / totalVisits) * 100 : 0}%` }}
                                             className={`h-full ${index === 0 ? 'bg-primary' : 'bg-slate-600'}`}
                                         />
                                     </div>
                                 </div>
                             ))}
 
-                            {voteCounts.length === 0 && (
-                                <p className="text-center text-slate-500 py-10">Aún no hay votos registrados.</p>
+                            {visitCounts.length === 0 && (
+                                <p className="text-center text-slate-500 py-10">Aún no hay visitas registradas.</p>
                             )}
                         </div>
                     </section>

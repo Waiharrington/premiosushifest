@@ -36,6 +36,8 @@ export async function addLocale(formData: FormData) {
     const name = formData.get("name") as string
     const description = formData.get("description") as string
     const imageFile = formData.get("image") as File
+    const prize_pool = parseInt((formData.get("prize_pool") as string) || "0", 10)
+    const pin = (formData.get("pin") as string) || "1234"
 
     if (!name) return { success: false, error: "El nombre es obligatorio" }
 
@@ -84,7 +86,7 @@ export async function addLocale(formData: FormData) {
 
     const { error } = await supabaseAdmin
         .from("locales")
-        .insert({ name, description, image_url })
+        .insert({ name, description, image_url, prize_pool, pin })
 
     if (error) {
         return { success: false, error: error.message }
@@ -103,6 +105,8 @@ export async function editLocale(formData: FormData) {
     const name = formData.get("name") as string
     const description = formData.get("description") as string
     const imageFile = formData.get("image") as File
+    const prize_pool = parseInt((formData.get("prize_pool") as string) || "0", 10)
+    const pin = (formData.get("pin") as string) || "1234"
 
     if (!id) return { success: false, error: "ID no válido" }
     if (!name) return { success: false, error: "El nombre es obligatorio" }
@@ -148,7 +152,7 @@ export async function editLocale(formData: FormData) {
 
     const { error } = await supabaseAdmin
         .from("locales")
-        .update({ name, description, image_url })
+        .update({ name, description, image_url, prize_pool, pin })
         .eq("id", id)
 
     if (error) {
