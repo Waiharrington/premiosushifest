@@ -121,7 +121,7 @@ export async function getTreasureHuntLeaderboard() {
     // Count visits per user
     const counts: Record<string, { name: string, count: number }> = {}
     if (data) {
-        data.forEach((v: { user_id: string, profiles: { full_name: string } | { full_name: string }[] | null }) => {
+        data.forEach((v) => {
             const uid = v.user_id
             if (!counts[uid]) {
                 const profile = Array.isArray(v.profiles) ? v.profiles[0] : v.profiles
