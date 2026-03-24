@@ -5,6 +5,8 @@ import { useState } from "react";
 import Image from "next/image";
 import { RiceParticles } from "./RiceParticles";
 import { useAuth } from "@/context/AuthContext";
+import { Turnstile } from '@marsidev/react-turnstile'
+import { verifyTurnstile } from "@/actions/auth"
 
 interface AuthModalProps {
     onClose: () => void;
@@ -22,11 +24,7 @@ export default function AuthModal({ onClose, onSuccess }: AuthModalProps) {
     
     // Security fields
     const [honeypot, setHoneypot] = useState("");
-    const [mathChallenge, setMathChallenge] = useState(() => {
-        const a = Math.floor(Math.random() * 9) + 1;
-        const b = Math.floor(Math.random() * 9) + 1;
-        return { a, b, userResult: "" };
-    });
+    const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -44,16 +42,19 @@ export default function AuthModal({ onClose, onSuccess }: AuthModalProps) {
             return; // Silent fail for bots
         }
 
-        // Bot check: Math challenge
-        if (isRegistering) {
-            if (parseInt(mathChallenge.userResult) !== (mathChallenge.a + mathChallenge.b)) {
-                setLoading(false);
-                return setError("Resultado matemático incorrecto.");
-            }
+        if (isRegistering && !turnstileToken) {
+            setLoading(false);
+            return setError("Por favor, completa la verificación de seguridad.");
         }
 
         try {
             if (isRegistering) {
+                const isValid = await verifyTurnstile(turnstileToken!);
+                if (!isValid) {
+                    setLoading(false);
+                    return setError("Fallo en la verificación de seguridad.");
+                }
+                
                 if (!trimmedName || !trimmedPhone) return setError("Nombre y teléfono obligatorios");
                 const success = await register(trimmedName, trimmedCedula, trimmedPhone);
                 if (success) { onSuccess?.(); onClose(); }
@@ -199,18 +200,6 @@ export default function AuthModal({ onClose, onSuccess }: AuthModalProps) {
                                     />
                                 </div>
 
-                                {/* Math Challenge */}
-                                <div className="space-y-1">
-                                    <label className="text-[10px] text-white/40 font-bold ml-4 uppercase tracking-widest">Seguridad: ¿Cuánto es {mathChallenge.a} + {mathChallenge.b}?</label>
-                                    <input
-                                        type="number"
-                                        placeholder="Resultado"
-                                        value={mathChallenge.userResult}
-                                        onChange={(e) => setMathChallenge(prev => ({ ...prev, userResult: e.target.value }))}
-                                        className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 outline-none focus:border-[#00B2FF] text-white text-base"
-                                    />
-                                </div>
-
                                 {/* Honeypot (Hidden) */}
                                 <input
                                     type="text"
@@ -221,6 +210,15 @@ export default function AuthModal({ onClose, onSuccess }: AuthModalProps) {
                                     className="hidden"
                                     autoComplete="off"
                                 />
+
+                                {/* Cloudflare Turnstile */}
+                                <div className="flex justify-center py-2">
+                                    <Turnstile 
+                                        siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!} 
+                                        onSuccess={(token) => setTurnstileToken(token)}
+                                        theme="dark"
+                                    />
+                                </div>
                             </div>
                         )}
                         {error && <p className="text-red-400 text-[11px] text-center font-bold uppercase">{error}</p>}
