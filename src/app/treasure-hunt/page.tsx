@@ -361,15 +361,15 @@ export default function TreasureHuntPage() {
                             className="absolute inset-0 bg-black/90 backdrop-blur-xl"
                         />
                         <motion.div
-                            initial={{ scale: 0.8, opacity: 0 }}
+                            initial={{ scale: 0.9, opacity: 0 }}
                             animate={{ scale: 1, opacity: 1 }}
                             exit={{ scale: 0.8, opacity: 0 }}
-                            className="relative w-full max-w-md bg-background border border-primary/30 rounded-[2.5rem] p-6 text-center overflow-hidden"
+                            className="bg-slate-950 border border-white/10 p-4 md:p-6 rounded-[2.5rem] w-full max-w-[400px] shadow-[0_0_50px_rgba(0,0,0,0.5)] overflow-hidden"
                         >
-                            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary via-secondary to-primary" />
-                            
-                            <p className="text-secondary font-lilita text-xl mb-2">¡NUEVO LOCAL DESBLOQUEADO!</p>
-                            <h2 className="text-3xl font-lilita uppercase text-white mb-6">{activePrizeLocale.name}</h2>
+                            <div className="text-center space-y-4">
+                                <p className="text-secondary font-lilita tracking-widest text-sm uppercase">¡Nuevo Local Desbloqueado!</p>
+                                <h2 className="text-2xl md:text-3xl font-lilita uppercase text-white">{activePrizeLocale.name}</h2>
+                            </div>
                             
                             <ScratchCard onComplete={handleScratchComplete}>
                                 <div className="absolute inset-0 w-full h-full">
