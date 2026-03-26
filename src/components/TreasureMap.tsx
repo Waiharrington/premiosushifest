@@ -69,7 +69,8 @@ export function TreasureMap({ locales, visitedIds, onLocaleClick }: TreasureMapP
                 animate={{ opacity: 1 }}
                 className="relative w-full"
                 // Assign a dynamic height based on the number of rows to give vertical space
-                style={{ height: `${Math.max(600, Math.ceil(locales.length / 3) * 160)}px` }}
+                // Assign a dynamic height based on the number of rows to give vertical space
+                style={{ height: `${Math.max(600, Math.ceil(locales.length / 3) * 130)}px` }}
             >
                 {/* Map Background */}
                 <Image
@@ -86,9 +87,9 @@ export function TreasureMap({ locales, visitedIds, onLocaleClick }: TreasureMapP
                 <path
                     d={pathData}
                     fill="none"
-                    stroke="rgba(255, 255, 255, 0.05)"
-                    strokeWidth="0.5"
-                    strokeDasharray="1 1"
+                    stroke="rgba(255, 255, 255, 0.1)"
+                    strokeWidth="3"
+                    strokeDasharray="4 4"
                 />
                 
                 {/* Active (Visited) Path Segment by Segment */}
@@ -104,11 +105,11 @@ export function TreasureMap({ locales, visitedIds, onLocaleClick }: TreasureMapP
                             x2={parseFloat(p2.x)}
                             y2={parseFloat(p2.y)}
                             stroke="#FFD700"
-                            strokeWidth="0.6"
+                            strokeWidth="4"
                             initial={{ pathLength: 0, opacity: 0 }}
-                            animate={{ pathLength: 1, opacity: 0.6 }}
+                            animate={{ pathLength: 1, opacity: 0.9 }}
                             transition={{ duration: 1, delay: i * 0.1 }}
-                            className="drop-shadow-[0_0_8px_rgba(255,215,0,0.8)]"
+                            className="drop-shadow-[0_0_15px_rgba(255,215,0,0.8)]"
                         />
                     );
                 })}
@@ -139,12 +140,12 @@ export function TreasureMap({ locales, visitedIds, onLocaleClick }: TreasureMapP
                             )}
 
                             <motion.button
-                                whileHover={{ scale: 1.2, zIndex: 20 }}
+                                whileHover={{ scale: 1.1, zIndex: 20 }}
                                 onClick={() => onLocaleClick(locale)}
                                 className={`
-                                    relative w-10 h-10 md:w-14 md:h-14 rounded-full overflow-hidden border-2 
-                                    ${isVisited ? 'border-secondary shadow-lg shadow-secondary/50 ring-2 ring-secondary/20' : 'border-white/20 grayscale brightness-50 opacity-40'}
-                                    transition-all duration-500
+                                    relative w-20 h-20 md:w-28 md:h-28 rounded-full overflow-hidden border-[4px] 
+                                    ${isVisited ? 'border-secondary shadow-[0_0_25px_rgba(255,77,0,0.8)] ring-4 ring-secondary/30' : 'border-white/20 grayscale brightness-50 opacity-60'}
+                                    transition-all duration-300
                                 `}
                             >
                                 <Image
