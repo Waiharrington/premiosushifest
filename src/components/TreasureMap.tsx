@@ -14,17 +14,28 @@ export function TreasureMap({ locales, visitedIds, onLocaleClick }: TreasureMapP
     // Coordinate mapping for 23 locales (approximate path from Chiriquí to Panamá City)
     // We'll distribute them along the "S" curve of the Isthmus
     const getCoordinates = (index: number) => {
-        // Uniform dispersion algorithm using Golden Ratio to spread 30 points across the map
-        const xSeed = (index * 0.61803398875) % 1.0;
-        const ySeed = (index * 0.38196601125) % 1.0;
-
-        // X: Spread from 5% to 95%
-        const x = 5 + xSeed * 90;
+        const total = locales.length;
+        const t = index / (total - 1 || 1); 
         
-        // Y: Spread from 15% to 85% (using all available vertical space)
-        const y = 15 + ySeed * 70;
+        // Horizontal spread (10% to 90%)
+        const x = 10 + t * 80;
         
-        return { x: `${x}%`, y: `${y}%` };
+        // Base Panama "S" Curve
+        // Matches the landmass shape from West to East
+        const curve = Math.sin(t * Math.PI * 2.2); 
+        const baseY = 52 + (curve * 18);
+        
+        // Staggered 3-track system (Top, Mid, Bottom)
+        // Offset is in percentage points
+        const track = index % 3; // 0, 1, 2
+        const trackOffset = (track - 1) * 14; 
+        
+        // Add subtle horizontal jitter to break the perfect grid look
+        const xJitter = (index % 2 === 0 ? 1 : -1) * 2;
+        
+        const y = baseY + trackOffset;
+        
+        return { x: `${x + xJitter}%`, y: `${y}%` };
     };
 
     // Calculate path for SVG
