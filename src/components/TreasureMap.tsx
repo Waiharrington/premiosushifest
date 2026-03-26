@@ -15,15 +15,44 @@ export function TreasureMap({ locales, visitedIds, onLocaleClick }: TreasureMapP
     // We'll distribute them along the "S" curve of the Isthmus
     const getCoordinates = (index: number) => {
         const total = Math.max(locales.length, 1);
-        const t = total > 1 ? index / (total - 1) : 0;
+        const itemsPerRow = Math.min(3, total); // Tres locales por fila
         
-        // Vertical path (Snake shape from top to bottom)
-        const y = 3 + (t * 94); // 3% to 97%
+        const row = Math.floor(index / itemsPerRow);
+        const col = index % itemsPerRow;
+        const totalRows = Math.ceil(total / itemsPerRow);
         
-        // We calculate waves based on number of locales to maintain a pleasant curve
-        const waveCount = Math.max(2, Math.floor(total / 5)); // A full wave every ~10 locales 
-        const x = 50 + Math.sin(t * Math.PI * waveCount) * 35; // Oscillate between 15% and 85%
+        // Rango de X con márgenes
+        const xMin = 15;
+        const xMax = 85;
+        const xRange = xMax - xMin;
+        const xStep = itemsPerRow > 1 ? xRange / (itemsPerRow - 1) : 0;
         
+        let baseX;
+        if (row % 2 === 0) {
+            // Filas pares: de izquierda a derecha
+            baseX = xMin + col * xStep;
+        } else {
+            // Filas impares: de derecha a izquierda
+            baseX = xMax - col * xStep;
+        }
+
+        // Ruido orgánico para que se vea dibujado a mano
+        const noiseX = Math.sin(index * 0.8) * 5; 
+        const noiseY = Math.cos(index * 1.2) * 1.5;
+        
+        // Rango de Y
+        const yMin = 3;
+        const yMax = 97;
+        const yRange = yMax - yMin;
+        const yStep = totalRows > 1 ? yRange / (totalRows - 1) : 0;
+        
+        // Arco ligero para los segmentos horizontales
+        const isMiddleNode = itemsPerRow > 1 ? Math.sin((col / (itemsPerRow - 1)) * Math.PI) * 1.5 : 0;
+
+        // Limitar dentro del contenedor
+        const x = Math.max(5, Math.min(95, baseX + noiseX));
+        const y = Math.max(1, Math.min(99, yMin + row * yStep + isMiddleNode + noiseY));
+
         return { x: `${x}%`, y: `${y}%` };
     };
 
@@ -39,8 +68,8 @@ export function TreasureMap({ locales, visitedIds, onLocaleClick }: TreasureMapP
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 className="relative w-full"
-                // Assign a dynamic height so the nodes have plenty of vertical space
-                style={{ height: `${Math.max(600, locales.length * 90)}px` }}
+                // Assign a dynamic height based on the number of rows to give vertical space
+                style={{ height: `${Math.max(600, Math.ceil(locales.length / 3) * 160)}px` }}
             >
                 {/* Map Background */}
                 <Image
