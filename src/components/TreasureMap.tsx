@@ -17,18 +17,21 @@ export function TreasureMap({ locales, visitedIds, onLocaleClick }: TreasureMapP
         const total = locales.length;
         const t = index / (total - 1 || 1); 
         
-        // Spread X across almost the entire map width (5% to 95%)
-        const x = 5 + t * 90;
+        // Use full width with more safety margin
+        const x = 8 + t * 84;
         
-        // Pronounced "S" shape path for Panama
-        // We use two sine waves to create more curvature and vertical space
-        const baseCurve = Math.sin(t * Math.PI * 2.2); // Main S shape
-        const secondaryWave = Math.sin(t * Math.PI * 5) * 8; // Smaller ripples to stagger nearby icons
+        // Geographic-aware S-curve for Panama with vertical spread
+        // We alternate y-offsets more aggressively for 30 icons
+        const phase = t * Math.PI * 2.2;
+        const baseCurve = Math.sin(phase);
         
-        // Vertical Jitter (alternating up/down)
-        const jitter = (index % 2 === 0 ? 1 : -1) * 6;
+        // Staggering logic: 0, 1, 2 pattern for 3 vertical levels
+        const stagger = (index % 3 - 1) * 10; 
         
-        const y = 50 + (baseCurve * 22) + jitter + secondaryWave;
+        // Small sin wave for natural "island" feel
+        const ripple = Math.sin(t * Math.PI * 8) * 4;
+        
+        const y = 50 + (baseCurve * 20) + stagger + ripple;
         
         return { x: `${x}%`, y: `${y}%` };
     };
@@ -43,7 +46,7 @@ export function TreasureMap({ locales, visitedIds, onLocaleClick }: TreasureMapP
         <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="relative w-full aspect-[16/9] mb-12 rounded-[2rem] overflow-hidden border border-white/10 shadow-3xl bg-black/40"
+            className="relative w-full min-h-[350px] md:aspect-[16/9] mb-12 rounded-[2rem] overflow-hidden border border-white/10 shadow-3xl bg-black/40"
         >
             {/* Map Background */}
             <Image
@@ -116,7 +119,7 @@ export function TreasureMap({ locales, visitedIds, onLocaleClick }: TreasureMapP
                                 whileHover={{ scale: 1.2, zIndex: 20 }}
                                 onClick={() => onLocaleClick(locale)}
                                 className={`
-                                    relative w-10 h-10 md:w-14 md:h-14 rounded-full overflow-hidden border-2 
+                                    relative w-7 h-7 md:w-10 md:h-10 rounded-full overflow-hidden border-2 
                                     ${isVisited ? 'border-secondary shadow-lg shadow-secondary/50 ring-2 ring-secondary/20' : 'border-white/20 grayscale brightness-50 opacity-40'}
                                     transition-all duration-500
                                 `}
