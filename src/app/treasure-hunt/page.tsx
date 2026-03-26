@@ -13,8 +13,9 @@ import { SponsorBackground } from "@/components/SponsorBackground"
 import { registerVisit, getTreasureHuntStatus, generateScratchPrize } from "@/actions/treasure-hunt"
 import { supabase } from "@/lib/supabase"
 import { Locale, TreasureHuntPrize } from "@/types"
-import { Trophy, QrCode, Map as MapIcon, Gift, CheckCircle2, Tag, HelpCircle, LogOut } from "lucide-react"
+import { Trophy, QrCode, Map as MapIcon, Gift, CheckCircle2, Tag, HelpCircle, LogOut, Heart, Sparkles, ArrowRight } from "lucide-react"
 import { useRouter } from "next/navigation"
+import confetti from "canvas-confetti"
 
 export default function TreasureHuntPage() {
     const router = useRouter()
@@ -27,6 +28,7 @@ export default function TreasureHuntPage() {
     const [isScannerOpen, setIsScannerOpen] = useState(false)
     const [activePrizeLocale, setActivePrizeLocale] = useState<Locale | null>(null)
     const [currentPrize, setCurrentPrize] = useState<TreasureHuntPrize | null>(null)
+    const [isScratched, setIsScratched] = useState(false)
 
     const fetchData = useCallback(async () => {
         try {
@@ -93,12 +95,19 @@ export default function TreasureHuntPage() {
     }
 
     const handleScratchComplete = () => {
-        // Feedback logic if needed
+        setIsScratched(true)
+        confetti({
+            particleCount: 150,
+            spread: 70,
+            origin: { y: 0.6 },
+            colors: ['#0066FF', '#00B2FF', '#FFFFFF', '#FFD700']
+        })
     }
 
     const closePrizeModal = () => {
         setActivePrizeLocale(null)
         setCurrentPrize(null)
+        setIsScratched(false)
     }
 
     if (authLoading || (loading && user)) {
@@ -364,48 +373,116 @@ export default function TreasureHuntPage() {
                             initial={{ scale: 0.8, opacity: 0 }}
                             animate={{ scale: 1, opacity: 1 }}
                             exit={{ scale: 0.8, opacity: 0 }}
-                            className="relative w-full max-w-md bg-background border border-primary/30 rounded-[2.5rem] p-6 text-center overflow-hidden"
+                            className="relative w-full max-w-md bg-background border border-primary/30 rounded-[2.5rem] p-6 text-center overflow-hidden shadow-[0_0_50px_rgba(0,102,255,0.3)]"
                         >
                             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary via-secondary to-primary" />
                             
-                            <p className="text-secondary font-lilita text-xl mb-2">¡NUEVO LOCAL DESBLOQUEADO!</p>
-                            <h2 className="text-3xl font-lilita uppercase text-white mb-6">{activePrizeLocale.name}</h2>
+                            <AnimatePresence mode="wait">
+                                {isScratched ? (
+                                    <motion.div
+                                        key="success-header"
+                                        initial={{ opacity: 0, y: -20 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        className="mb-4"
+                                    >
+                                        <div className="flex items-center justify-center gap-2 text-secondary mb-1">
+                                            <Sparkles className="w-5 h-5 animate-pulse" />
+                                            <span className="font-lilita text-xl tracking-widest">¡INCREÍBLE!</span>
+                                            <Sparkles className="w-5 h-5 animate-pulse" />
+                                        </div>
+                                        <h2 className="text-4xl font-lilita uppercase text-white drop-shadow-lg">¡TE GANASTE UN PREMIO!</h2>
+                                    </motion.div>
+                                ) : (
+                                    <motion.div
+                                        key="normal-header"
+                                        initial={{ opacity: 0 }}
+                                        animate={{ opacity: 1 }}
+                                        className="mb-4"
+                                    >
+                                        <p className="text-secondary font-lilita text-xl mb-1 tracking-wider">¡NUEVO LOCAL DESBLOQUEADO!</p>
+                                        <h2 className="text-3xl font-lilita uppercase text-white/90">{activePrizeLocale.name}</h2>
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
                             
-                            <ScratchCard onComplete={handleScratchComplete}>
-                                <div className="absolute inset-0 w-full h-full bg-black">
-                                    {/* Demo Prize Image Display - Full Vertical Poster */}
-                                    <div className="relative w-full h-full overflow-hidden flex items-center justify-center">
-                                        {currentPrize?.prize_name === "Proyector Smart" ? (
-                                            <Image src="/demo-prize-1.jpg" alt="Premio" fill className="object-cover" priority />
-                                        ) : currentPrize?.prize_name === "Barra de Sonido" ? (
-                                            <Image src="/demo-prize-2.jpg" alt="Premio" fill className="object-cover" priority />
-                                        ) : currentPrize?.prize_name === "Aire Acondicionado" ? (
-                                            <Image src="/demo-prize-3.jpg" alt="Premio" fill className="object-cover" priority />
-                                        ) : currentPrize?.prize_name === "Smart TV 50\"" ? (
-                                            <Image src="/demo-prize-4.jpg" alt="Premio" fill className="object-cover" priority />
-                                        ) : (
-                                            <div className="text-center p-8">
-                                                <div className="text-primary flex flex-col items-center gap-2 mb-4">
-                                                    {currentPrize?.prize_type === 'gift' ? <Gift size={80} /> : 
-                                                     currentPrize?.prize_type === 'discount' ? <Tag size={80} /> : 
-                                                     <HelpCircle size={80} />}
+                            <div className="relative group">
+                                <ScratchCard onComplete={handleScratchComplete}>
+                                    <div className="absolute inset-0 w-full h-full bg-black">
+                                        <div className="relative w-full h-full overflow-hidden flex items-center justify-center">
+                                            {currentPrize?.prize_name === "Proyector Smart" ? (
+                                                <Image src="/demo-prize-1.jpg" alt="Premio" fill className="object-cover" priority />
+                                            ) : currentPrize?.prize_name === "Barra de Sonido" ? (
+                                                <Image src="/demo-prize-2.jpg" alt="Premio" fill className="object-cover" priority />
+                                            ) : currentPrize?.prize_name === "Aire Acondicionado" ? (
+                                                <Image src="/demo-prize-3.jpg" alt="Premio" fill className="object-cover" priority />
+                                            ) : currentPrize?.prize_name === "Smart TV 50\"" ? (
+                                                <Image src="/demo-prize-4.jpg" alt="Premio" fill className="object-cover" priority />
+                                            ) : (
+                                                <div className="text-center p-8 bg-gradient-to-br from-blue-900/40 to-black h-full w-full flex flex-col items-center justify-center">
+                                                    <div className="text-primary flex flex-col items-center gap-2 mb-4">
+                                                        {currentPrize?.prize_type === 'gift' ? <Gift size={80} className="drop-shadow-[0_0_20px_rgba(0,102,255,0.5)]" /> : 
+                                                        currentPrize?.prize_type === 'discount' ? <Tag size={80} className="drop-shadow-[0_0_20px_rgba(0,102,255,0.5)]" /> : 
+                                                        <HelpCircle size={80} className="drop-shadow-[0_0_20px_rgba(0,102,255,0.5)]" />}
+                                                    </div>
+                                                    <h4 className="text-white font-lilita text-2xl uppercase tracking-wider">{currentPrize?.prize_name}</h4>
                                                 </div>
-                                                <h4 className="text-white font-lilita text-2xl uppercase">{currentPrize?.prize_name}</h4>
-                                            </div>
-                                        )}
+                                            )}
+                                        </div>
                                     </div>
-                                </div>
-                            </ScratchCard>
+                                </ScratchCard>
 
-                            <p className="mt-8 text-white/50 text-xs italic">
-                                Raspa la tarjeta para descubrir tu premio.
-                            </p>
+                                {isScratched && (
+                                    <motion.div
+                                        initial={{ opacity: 0, scale: 0.5 }}
+                                        animate={{ opacity: 1, scale: 1 }}
+                                        className="absolute -top-4 -right-4 z-50 bg-secondary text-white p-3 rounded-full shadow-xl rotate-12"
+                                    >
+                                        <Heart size={24} fill="white" className="animate-bounce" />
+                                    </motion.div>
+                                )}
+                            </div>
+
+                            <AnimatePresence mode="wait">
+                                {!isScratched ? (
+                                    <motion.p
+                                        key="instruction"
+                                        initial={{ opacity: 0 }}
+                                        animate={{ opacity: 1 }}
+                                        exit={{ opacity: 0 }}
+                                        className="mt-6 text-white/50 text-xs italic tracking-widest uppercase"
+                                    >
+                                        Raspa la tarjeta para descubrir tu premio
+                                    </motion.p>
+                                ) : (
+                                    <motion.div 
+                                        key="success-info"
+                                        initial={{ opacity: 0, scale: 0.9 }}
+                                        animate={{ opacity: 1, scale: 1 }}
+                                        className="mt-6 space-y-2"
+                                    >
+                                        <p className="text-white font-black text-xl uppercase font-lilita tracking-wide">
+                                            ¡{currentPrize?.prize_name}!
+                                        </p>
+                                        <p className="text-white/40 text-[10px] uppercase font-bold tracking-[0.2em]">
+                                            GUARDADO EN "MIS RECOMPENSAS"
+                                        </p>
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
 
                             <button
                                 onClick={closePrizeModal}
-                                className="mt-10 w-full bg-white/10 hover:bg-white/20 text-white font-lilita py-4 rounded-xl transition-colors uppercase tracking-widest text-sm"
+                                className={`mt-8 w-full font-lilita py-5 rounded-2xl transition-all uppercase tracking-[0.2em] text-sm shadow-xl flex items-center justify-center gap-2 ${
+                                    isScratched 
+                                        ? 'bg-gradient-to-r from-primary to-blue-600 hover:from-blue-500 hover:to-blue-700 text-white scale-[1.02] shadow-[0_0_30px_rgba(0,102,255,0.4)]' 
+                                        : 'bg-white/5 hover:bg-white/10 text-white/60'
+                                }`}
                             >
-                                Continuar mi viaje 🗺️
+                                {isScratched ? (
+                                    <>¡LO QUIERO! <ArrowRight size={18} /></>
+                                ) : (
+                                    "Continuar mi viaje 🗺️"
+                                )}
                             </button>
                         </motion.div>
                     </div>
