@@ -372,33 +372,26 @@ export default function TreasureHuntPage() {
                             <h2 className="text-3xl font-lilita uppercase text-white mb-6">{activePrizeLocale.name}</h2>
                             
                             <ScratchCard onComplete={handleScratchComplete}>
-                                <div className="space-y-4 py-4">
-                                    <p className="text-white/40 text-[10px] uppercase font-bold tracking-widest">¡Felicidades! Tu premio es:</p>
-                                    
-                                    {/* Demo Prize Image Display */}
-                                    <div className="flex justify-center my-4">
-                                        <div className="relative w-40 h-40 md:w-48 md:h-48 rounded-2xl overflow-hidden border-2 border-primary/30 shadow-[0_0_25px_rgba(0,178,255,0.4)] bg-white/5 flex items-center justify-center">
-                                            {currentPrize?.prize_name === "Proyector Smart" ? (
-                                                <Image src="/demo-prize-1.jpg" alt="Premio" fill className="object-cover" />
-                                            ) : currentPrize?.prize_name === "Barra de Sonido" ? (
-                                                <Image src="/demo-prize-2.jpg" alt="Premio" fill className="object-cover" />
-                                            ) : currentPrize?.prize_name === "Aire Acondicionado" ? (
-                                                <Image src="/demo-prize-3.jpg" alt="Premio" fill className="object-cover" />
-                                            ) : currentPrize?.prize_name === "Smart TV 50\"" ? (
-                                                <Image src="/demo-prize-4.jpg" alt="Premio" fill className="object-cover" />
-                                            ) : (
-                                                <div className="text-primary flex flex-col items-center gap-2">
-                                                    {currentPrize?.prize_type === 'gift' ? <Gift size={64} /> : 
-                                                     currentPrize?.prize_type === 'discount' ? <Tag size={64} /> : 
-                                                     <HelpCircle size={64} />}
-                                                </div>
-                                            )}
-                                        </div>
+                                <div className="absolute inset-0 w-full h-full">
+                                    {/* Demo Prize Image Display - Full Vertical Poster */}
+                                    <div className="relative w-full h-full overflow-hidden bg-black flex items-center justify-center">
+                                        {currentPrize?.prize_name === "Proyector Smart" ? (
+                                            <Image src="/demo-prize-1.jpg" alt="Premio" fill className="object-contain" priority />
+                                        ) : currentPrize?.prize_name === "Barra de Sonido" ? (
+                                            <Image src="/demo-prize-2.jpg" alt="Premio" fill className="object-contain" priority />
+                                        ) : currentPrize?.prize_name === "Aire Acondicionado" ? (
+                                            <Image src="/demo-prize-3.jpg" alt="Premio" fill className="object-contain" priority />
+                                        ) : currentPrize?.prize_name === "Smart TV 50\"" ? (
+                                            <Image src="/demo-prize-4.jpg" alt="Premio" fill className="object-contain" priority />
+                                        ) : (
+                                            <div className="text-primary flex flex-col items-center gap-2">
+                                                {currentPrize?.prize_type === 'gift' ? <Gift size={80} /> : 
+                                                 currentPrize?.prize_type === 'discount' ? <Tag size={80} /> : 
+                                                 <HelpCircle size={80} />}
+                                                <p className="text-white font-lilita text-xl mt-2">{currentPrize?.prize_name}</p>
+                                            </div>
+                                        )}
                                     </div>
-
-                                    <h3 className="text-2xl md:text-3xl font-lilita text-white leading-tight uppercase tracking-tight drop-shadow-lg">
-                                        {currentPrize?.prize_name || "PROCESANDO..."}
-                                    </h3>
                                 </div>
                             </ScratchCard>
 
