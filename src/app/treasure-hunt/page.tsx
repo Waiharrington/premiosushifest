@@ -502,16 +502,18 @@ export default function TreasureHuntPage() {
                             className="absolute inset-0 bg-black/95 backdrop-blur-2xl"
                         />
                         <motion.div
-                            initial={{ scale: 0.9, opacity: 0 }}
-                            animate={{ scale: 1, opacity: 1 }}
-                            exit={{ scale: 0.9, opacity: 0 }}
-                            className="relative w-full max-w-sm aspect-[3/4] bg-background border border-white/20 rounded-[2.5rem] overflow-hidden shadow-[0_0_60px_rgba(0,0,0,1)]"
+                            initial={{ scale: 0.9, y: 20, opacity: 0 }}
+                            animate={{ scale: 1, y: 0, opacity: 1 }}
+                            exit={{ scale: 0.9, y: 20, opacity: 0 }}
+                            className="relative w-full max-w-sm aspect-[3/4] bg-background border border-white/20 rounded-[2.5rem] overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.8)]"
                         >
+                            {/* Close Button - High Contrast Glassmorphism */}
                             <button 
                                 onClick={() => setViewingPrize(null)}
-                                className="absolute top-6 right-6 z-50 bg-black/50 backdrop-blur-md p-2 rounded-full text-white/70 hover:text-white transition-colors"
+                                className="absolute top-5 right-5 z-[130] bg-white/20 backdrop-blur-xl p-3 rounded-full text-white shadow-lg hover:bg-white/30 transition-all active:scale-95 group"
+                                aria-label="Cerrar"
                             >
-                                <X size={20} />
+                                <X size={24} className="group-hover:rotate-90 transition-transform duration-300" />
                             </button>
 
                             <div className="relative w-full h-full flex items-center justify-center">
@@ -524,18 +526,28 @@ export default function TreasureHuntPage() {
                                 ) : viewingPrize.prize_name === "Smart TV 50\"" ? (
                                     <Image src="/demo-prize-4.jpg" alt="Premio" fill className="object-cover" priority />
                                 ) : (
-                                    <div className="text-center p-8 bg-gradient-to-br from-blue-900/40 to-black h-full w-full flex flex-col items-center justify-center">
-                                        <Gift className="text-primary w-20 h-20 mb-4 drop-shadow-[0_0_20px_rgba(0,102,255,0.5)]" />
-                                        <h4 className="text-white font-lilita text-2xl uppercase">{viewingPrize.prize_name}</h4>
-                                        <p className="mt-4 text-white/40 text-[10px] uppercase font-bold tracking-widest">Premio Reclamado</p>
+                                    /* Fallback UI - Clean & High Contrast */
+                                    <div className="text-center p-10 bg-gradient-to-t from-blue-950 via-blue-900 to-primary/40 h-full w-full flex flex-col items-center justify-center">
+                                        <div className="bg-white/10 p-8 rounded-full mb-6 backdrop-blur-sm border border-white/10">
+                                            <Gift className="text-white w-24 h-24 drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]" />
+                                        </div>
+                                        <h3 className="text-white font-lilita text-4xl uppercase tracking-wider drop-shadow-lg leading-tight">
+                                            {viewingPrize.prize_name}
+                                        </h3>
+                                        <div className="mt-8 px-6 py-2 bg-secondary/80 rounded-full">
+                                            <p className="text-white font-lilita text-sm uppercase tracking-[0.2em]">CUPÓN DISPONIBLE</p>
+                                        </div>
                                     </div>
                                 )}
                             </div>
 
-                            <div className="absolute bottom-0 left-0 w-full p-8 bg-gradient-to-t from-black via-black/80 to-transparent">
-                                <p className="text-secondary font-lilita text-sm mb-1 uppercase tracking-widest">Premio Desbloqueado</p>
-                                <h3 className="text-2xl font-black text-white uppercase font-lilita tracking-tight">{viewingPrize.prize_name}</h3>
-                            </div>
+                            {/* Only show overlay if NOT a poster image (Posters already have text) */}
+                            {!["Proyector Smart", "Barra de Sonido", "Aire Acondicionado", "Smart TV 50\""].includes(viewingPrize.prize_name) && (
+                                <div className="absolute bottom-0 left-0 w-full p-8 bg-gradient-to-t from-black via-black/80 to-transparent">
+                                    <p className="text-secondary font-lilita text-sm mb-1 uppercase tracking-widest">Premio Desbloqueado</p>
+                                    <h3 className="text-2xl font-black text-white uppercase font-lilita tracking-tight">{viewingPrize.prize_name}</h3>
+                                </div>
+                            )}
                         </motion.div>
                     </div>
                 )}
