@@ -14,16 +14,15 @@ export function TreasureMap({ locales, visitedIds, onLocaleClick }: TreasureMapP
     // Coordinate mapping for 23 locales (approximate path from Chiriquí to Panamá City)
     // We'll distribute them along the "S" curve of the Isthmus
     const getCoordinates = (index: number) => {
-        const total = Math.max(locales.length, 23);
-        const t = index / (total - 1); // 0 to 1
+        const total = Math.max(locales.length, 1);
+        const t = total > 1 ? index / (total - 1) : 0;
         
-        // Approximate Panama "S" shape path
-        // X goes from West to East (12% to 88%)
-        const x = 12 + t * 76;
+        // Vertical path (Snake shape from top to bottom)
+        const y = 3 + (t * 94); // 3% to 97%
         
-        // Y follows a wave/path
-        // Base line is around 50%. We add some curves.
-        const y = 50 + Math.sin(t * Math.PI * 2.5) * 15 + (Math.cos(t * Math.PI) * 10);
+        // We calculate waves based on number of locales to maintain a pleasant curve
+        const waveCount = Math.max(2, Math.floor(total / 5)); // A full wave every ~10 locales 
+        const x = 50 + Math.sin(t * Math.PI * waveCount) * 35; // Oscillate between 15% and 85%
         
         return { x: `${x}%`, y: `${y}%` };
     };
@@ -35,19 +34,22 @@ export function TreasureMap({ locales, visitedIds, onLocaleClick }: TreasureMapP
     }).join(' ');
 
     return (
-        <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="relative w-full aspect-[16/9] mb-12 rounded-[2rem] overflow-hidden border border-white/10 shadow-3xl bg-black/40"
-        >
-            {/* Map Background */}
-            <Image
-                src="/panama-map.png"
-                alt="Mapa de Panamá"
-                fill
-                className="object-cover opacity-60 mix-blend-lighten"
-                priority
-            />
+        <div className="relative w-full max-h-[70vh] overflow-y-auto overflow-x-hidden rounded-[2rem] border border-white/10 shadow-3xl bg-black/40 mb-12 scroll-smooth" style={{ scrollbarWidth: 'thin', scrollbarColor: 'rgba(255,255,255,0.2) transparent' }}>
+            <motion.div 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="relative w-full"
+                // Assign a dynamic height so the nodes have plenty of vertical space
+                style={{ height: `${Math.max(600, locales.length * 90)}px` }}
+            >
+                {/* Map Background */}
+                <Image
+                    src="/panama-map.png"
+                    alt="Mapa de Panamá"
+                    fill
+                    className="object-cover object-[center_top] opacity-40 mix-blend-lighten"
+                    priority
+                />
 
             {/* SVG Path Layer */}
             <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 100 100" preserveAspectRatio="none">
@@ -139,6 +141,7 @@ export function TreasureMap({ locales, visitedIds, onLocaleClick }: TreasureMapP
                     </motion.div>
                 );
             })}
-        </motion.div>
+            </motion.div>
+        </div>
     );
 }
