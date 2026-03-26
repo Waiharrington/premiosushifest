@@ -59,6 +59,7 @@ export default function TreasureHuntPage() {
     }, [user, authLoading])
 
     const [prizeLoading, setPrizeLoading] = useState(false)
+    const [prizeVisitNumber, setPrizeVisitNumber] = useState(1)
 
     const handleScan = async (decodedText: string) => {
         // ... decodedText logic ...
@@ -83,6 +84,7 @@ export default function TreasureHuntPage() {
                 const prizeRes = await generateScratchPrize(user.id, locale.id)
                 if (prizeRes.success && prizeRes.prize) {
                     setCurrentPrize(prizeRes.prize as TreasureHuntPrize)
+                    if (prizeRes.visitNumber) setPrizeVisitNumber(prizeRes.visitNumber)
                 } else {
                     alert(prizeRes.error || "Ocurrió un error al generar tu premio. Por favor intenta de nuevo.")
                     setActivePrizeLocale(null)
@@ -460,26 +462,31 @@ export default function TreasureHuntPage() {
                                                                 <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin" />
                                                                 <p className="font-lilita text-white/60 uppercase tracking-widest text-xs">Preparando tu regalo...</p>
                                                             </div>
-                                                        ) : currentPrize?.prize_name === "Proyector Smart" ? (
-                                                            <Image src="/demo-prize-1.jpg" alt="Premio" fill className="object-cover" priority />
-                                                        ) : currentPrize?.prize_name === "Barra de Sonido" ? (
-                                                            <Image src="/demo-prize-2.jpg" alt="Premio" fill className="object-cover" priority />
-                                                        ) : currentPrize?.prize_name === "Aire Acondicionado" ? (
-                                                            <Image src="/demo-prize-3.jpg" alt="Premio" fill className="object-cover" priority />
-                                                        ) : currentPrize?.prize_name === "Smart TV 50\"" ? (
-                                                            <Image src="/demo-prize-4.jpg" alt="Premio" fill className="object-cover" priority />
-                                                        ) : currentPrize?.prize_image ? (
-                                                            <Image src={currentPrize.prize_image} alt="Premio" fill className="object-cover" priority />
+                                                        ) : currentPrize?.prize_type === 'gift' ? (
+                                                            // Grand prize - show 1 of 4 prize posters based on visitNumber
+                                                            <Image
+                                                                src={`/demo-prize-${((prizeVisitNumber - 1) % 4) + 1}.jpg`}
+                                                                alt="Premio"
+                                                                fill
+                                                                className="object-cover"
+                                                                priority
+                                                            />
+                                                        ) : currentPrize?.prize_type === 'discount' ? (
+                                                            // Discount - cycle through 3 discount images
+                                                            <Image
+                                                                src={`/discount-${((prizeVisitNumber - 1) % 3) + 1}.jpeg`}
+                                                                alt="Descuento"
+                                                                fill
+                                                                className="object-cover"
+                                                                priority
+                                                            />
                                                         ) : (
                                                             <div className="text-center p-8 bg-gradient-to-br from-blue-900/40 to-black h-full w-full flex flex-col items-center justify-center">
-                                                                <div className="text-primary flex flex-col items-center gap-2 mb-4">
-                                                                    {currentPrize?.prize_type === 'gift' ? <Gift size={80} className="drop-shadow-[0_0_20px_rgba(0,102,255,0.5)]" /> : 
-                                                                    <Tag size={80} className="drop-shadow-[0_0_20px_rgba(0,102,255,0.5)]" />}
-                                                                </div>
-                                                                <h4 className="text-white font-lilita text-2xl uppercase tracking-wider">{currentPrize?.prize_name || '...'}</h4>
-                                                                <p className="mt-4 text-white/40 text-[10px] uppercase font-bold tracking-widest">Raspa para descubrir</p>
+                                                                <Gift size={80} className="text-primary drop-shadow-[0_0_20px_rgba(0,102,255,0.5)]" />
+                                                                <h4 className="text-white font-lilita text-2xl uppercase tracking-wider mt-4">Tu Premio</h4>
                                                             </div>
                                                         )}
+
                                                     </div>
                                                 </div>
                                             </ScratchCard>

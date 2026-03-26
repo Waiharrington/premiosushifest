@@ -98,25 +98,14 @@ export async function generateScratchPrize(userId: string, localeId: string) {
 
         let prizeName = "";
         let prizeType: 'gift' | 'discount' = 'discount';
-        let prizeImage = "";
 
         if (isPrizeScan) {
-            const demoPrizes = [
-                { name: "Proyector Smart", image: "/demo-prize-1.jpg" },
-                { name: "Barra de Sonido", image: "/demo-prize-2.jpg" },
-                { name: "Aire Acondicionado", image: "/demo-prize-3.jpg" },
-                { name: "Smart TV 50\"", image: "/demo-prize-4.jpg" },
-            ];
-            const randomPrize = demoPrizes[Math.floor(Math.random() * demoPrizes.length)];
-            prizeName = randomPrize.name;
+            const demoPrizeNames = ["Proyector Smart", "Barra de Sonido", "Aire Acondicionado", "Smart TV 50\""];
+            prizeName = demoPrizeNames[Math.floor(Math.random() * demoPrizeNames.length)];
             prizeType = 'gift';
-            prizeImage = randomPrize.image;
         } else {
             prizeName = "DESCUENTO ESPECIAL";
             prizeType = 'discount';
-            // Cycle through the 3 discount images
-            const discountIndex = ((visitNumber - 1) % 3) + 1;
-            prizeImage = `/discount-${discountIndex}.jpeg`;
         }
         
         const { data: newPrize, error } = await supabase
@@ -126,23 +115,24 @@ export async function generateScratchPrize(userId: string, localeId: string) {
                 locale_id: localeId,
                 prize_name: prizeName,
                 prize_type: prizeType,
-                prize_image: prizeImage
             })
             .select()
             .single();
  
         if (error) {
             console.error("Error saving demo prize:", error);
-            return { success: false, error: "No se pudo generar el premio demo" };
+            return { success: false, error: "Error al guardar el premio: " + error.message };
         }
  
+        // Return visitNumber so the frontend can pick the right discount image (1-3 cycling)
         revalidatePath("/treasure-hunt");
-        return { success: true, prize: newPrize as TreasureHuntPrize };
+        return { success: true, prize: newPrize as TreasureHuntPrize, visitNumber };
     }
 
     // Normal logic is currently disabled in favor of DEMO_MODE
-    return { success: false, error: "Modo Demo activo. No se pudo generar premio normal." };
+    return { success: false, error: "Modo Demo activo." };
 }
+
 
 export async function getTreasureHuntLeaderboard() {
     // Logic to find users with most visits
