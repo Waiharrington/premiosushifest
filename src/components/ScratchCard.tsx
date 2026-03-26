@@ -37,6 +37,7 @@ export function ScratchCard({
         
         const ctx = canvas.getContext('2d')
         if (ctx) {
+            ctx.clearRect(0, 0, width, height)
             const gradient = ctx.createLinearGradient(0, 0, width, height)
             gradient.addColorStop(0, '#0052cc')
             gradient.addColorStop(1, '#0070f3')
@@ -154,7 +155,7 @@ export function ScratchCard({
                         initial={{ opacity: 1 }}
                         exit={{ opacity: 0, scale: 1.1 }}
                         transition={{ duration: 0.5 }}
-                        className="absolute inset-0 touch-none cursor-pointer z-20"
+                        className="absolute inset-0 w-full h-full touch-none cursor-pointer z-20"
                         onMouseDown={handleStart}
                         onMouseMove={handleMove}
                         onMouseUp={handleEnd}
