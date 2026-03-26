@@ -14,45 +14,17 @@ export function TreasureMap({ locales, visitedIds, onLocaleClick }: TreasureMapP
     // Coordinate mapping for 23 locales (approximate path from Chiriquí to Panamá City)
     // We'll distribute them along the "S" curve of the Isthmus
     const getCoordinates = (index: number) => {
-        const total = Math.max(locales.length, 1);
-        const itemsPerRow = Math.min(3, total); // Tres locales por fila
+        const total = Math.max(locales.length, 23);
+        const t = index / (total - 1); // 0 to 1
         
-        const row = Math.floor(index / itemsPerRow);
-        const col = index % itemsPerRow;
-        const totalRows = Math.ceil(total / itemsPerRow);
+        // Approximate Panama "S" shape path
+        // X goes from West to East (12% to 88%)
+        const x = 12 + t * 76;
         
-        // Rango de X con márgenes
-        const xMin = 15;
-        const xMax = 85;
-        const xRange = xMax - xMin;
-        const xStep = itemsPerRow > 1 ? xRange / (itemsPerRow - 1) : 0;
+        // Y follows a wave/path
+        // Base line is around 50%. We add some curves.
+        const y = 50 + Math.sin(t * Math.PI * 2.5) * 15 + (Math.cos(t * Math.PI) * 10);
         
-        let baseX;
-        if (row % 2 === 0) {
-            // Filas pares: de izquierda a derecha
-            baseX = xMin + col * xStep;
-        } else {
-            // Filas impares: de derecha a izquierda
-            baseX = xMax - col * xStep;
-        }
-
-        // Ruido orgánico para que se vea dibujado a mano
-        const noiseX = Math.sin(index * 0.8) * 5; 
-        const noiseY = Math.cos(index * 1.2) * 1.5;
-        
-        // Rango de Y (Margen superior aumentado para evitar que se corten los logos grandes)
-        const yMin = 10;
-        const yMax = 97;
-        const yRange = yMax - yMin;
-        const yStep = totalRows > 1 ? yRange / (totalRows - 1) : 0;
-        
-        // Arco ligero para los segmentos horizontales
-        const isMiddleNode = itemsPerRow > 1 ? Math.sin((col / (itemsPerRow - 1)) * Math.PI) * 1.5 : 0;
-
-        // Limitar dentro del contenedor
-        const x = Math.max(5, Math.min(95, baseX + noiseX));
-        const y = Math.max(1, Math.min(99, yMin + row * yStep + isMiddleNode + noiseY));
-
         return { x: `${x}%`, y: `${y}%` };
     };
 
@@ -63,23 +35,19 @@ export function TreasureMap({ locales, visitedIds, onLocaleClick }: TreasureMapP
     }).join(' ');
 
     return (
-        <div className="relative w-full max-h-[70vh] overflow-y-auto overflow-x-hidden rounded-[2rem] border border-white/10 shadow-3xl bg-black/40 mb-12 scroll-smooth" style={{ scrollbarWidth: 'thin', scrollbarColor: 'rgba(255,255,255,0.2) transparent' }}>
-            <motion.div 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="relative w-full"
-                // Assign a dynamic height based on the number of rows to give vertical space
-                // Assign a dynamic height based on the number of rows to give vertical space
-                style={{ height: `${Math.max(600, Math.ceil(locales.length / 3) * 130)}px` }}
-            >
-                {/* Map Background */}
-                <Image
-                    src="/panama-map.png"
-                    alt="Mapa de Panamá"
-                    fill
-                    className="object-cover object-[center_top] opacity-40 mix-blend-lighten"
-                    priority
-                />
+        <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="relative w-full aspect-[16/9] mb-12 rounded-[2rem] overflow-hidden border border-white/10 shadow-3xl bg-black/40"
+        >
+            {/* Map Background */}
+            <Image
+                src="/panama-map.png"
+                alt="Mapa de Panamá"
+                fill
+                className="object-cover opacity-60 mix-blend-lighten"
+                priority
+            />
 
             {/* SVG Path Layer */}
             <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 100 100" preserveAspectRatio="none">
@@ -87,9 +55,9 @@ export function TreasureMap({ locales, visitedIds, onLocaleClick }: TreasureMapP
                 <path
                     d={pathData}
                     fill="none"
-                    stroke="rgba(255, 255, 255, 0.1)"
-                    strokeWidth="3"
-                    strokeDasharray="4 4"
+                    stroke="rgba(255, 255, 255, 0.05)"
+                    strokeWidth="0.5"
+                    strokeDasharray="1 1"
                 />
                 
                 {/* Active (Visited) Path Segment by Segment */}
@@ -105,11 +73,11 @@ export function TreasureMap({ locales, visitedIds, onLocaleClick }: TreasureMapP
                             x2={parseFloat(p2.x)}
                             y2={parseFloat(p2.y)}
                             stroke="#FFD700"
-                            strokeWidth="4"
+                            strokeWidth="0.6"
                             initial={{ pathLength: 0, opacity: 0 }}
-                            animate={{ pathLength: 1, opacity: 0.9 }}
+                            animate={{ pathLength: 1, opacity: 0.6 }}
                             transition={{ duration: 1, delay: i * 0.1 }}
-                            className="drop-shadow-[0_0_15px_rgba(255,215,0,0.8)]"
+                            className="drop-shadow-[0_0_8px_rgba(255,215,0,0.8)]"
                         />
                     );
                 })}
@@ -140,12 +108,12 @@ export function TreasureMap({ locales, visitedIds, onLocaleClick }: TreasureMapP
                             )}
 
                             <motion.button
-                                whileHover={{ scale: 1.1, zIndex: 20 }}
+                                whileHover={{ scale: 1.2, zIndex: 20 }}
                                 onClick={() => onLocaleClick(locale)}
                                 className={`
-                                    relative w-20 h-20 md:w-28 md:h-28 rounded-full overflow-hidden border-[4px] 
-                                    ${isVisited ? 'border-secondary shadow-[0_0_25px_rgba(255,77,0,0.8)] ring-4 ring-secondary/30' : 'border-white/20 grayscale brightness-50 opacity-60'}
-                                    transition-all duration-300
+                                    relative w-10 h-10 md:w-14 md:h-14 rounded-full overflow-hidden border-2 
+                                    ${isVisited ? 'border-secondary shadow-lg shadow-secondary/50 ring-2 ring-secondary/20' : 'border-white/20 grayscale brightness-50 opacity-40'}
+                                    transition-all duration-500
                                 `}
                             >
                                 <Image
@@ -171,7 +139,6 @@ export function TreasureMap({ locales, visitedIds, onLocaleClick }: TreasureMapP
                     </motion.div>
                 );
             })}
-            </motion.div>
-        </div>
+        </motion.div>
     );
 }
