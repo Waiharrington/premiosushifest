@@ -40,8 +40,8 @@ export function TreasureMap({ locales, visitedIds, onLocaleClick }: TreasureMapP
         const noiseX = Math.sin(index * 0.8) * 5; 
         const noiseY = Math.cos(index * 1.2) * 1.5;
         
-        // Rango de Y
-        const yMin = 3;
+        // Rango de Y (Margen superior aumentado para evitar que se corten los logos grandes)
+        const yMin = 10;
         const yMax = 97;
         const yRange = yMax - yMin;
         const yStep = totalRows > 1 ? yRange / (totalRows - 1) : 0;
