@@ -13,7 +13,7 @@ import { SponsorBackground } from "@/components/SponsorBackground"
 import { registerVisit, getTreasureHuntStatus, generateScratchPrize } from "@/actions/treasure-hunt"
 import { supabase } from "@/lib/supabase"
 import { Locale, TreasureHuntPrize } from "@/types"
-import { Trophy, QrCode, Map as MapIcon, Gift, CheckCircle2, Tag, HelpCircle, LogOut, Heart, Sparkles, ArrowRight } from "lucide-react"
+import { Trophy, QrCode, Map as MapIcon, Gift, CheckCircle2, Tag, HelpCircle, LogOut, Heart, Sparkles, ArrowRight, X } from "lucide-react"
 import { useRouter } from "next/navigation"
 import confetti from "canvas-confetti"
 
@@ -29,6 +29,7 @@ export default function TreasureHuntPage() {
     const [activePrizeLocale, setActivePrizeLocale] = useState<Locale | null>(null)
     const [currentPrize, setCurrentPrize] = useState<TreasureHuntPrize | null>(null)
     const [isScratched, setIsScratched] = useState(false)
+    const [viewingPrize, setViewingPrize] = useState<TreasureHuntPrize | null>(null)
 
     const fetchData = useCallback(async () => {
         try {
@@ -295,7 +296,8 @@ export default function TreasureHuntPage() {
                                     return (
                                         <div 
                                             key={prize.id} 
-                                            className={`relative overflow-hidden rounded-2xl border p-4 flex items-center gap-4 transition-all duration-300 ${
+                                            onClick={() => setViewingPrize(prize)}
+                                            className={`relative overflow-hidden rounded-2xl border p-4 flex items-center gap-4 transition-all duration-300 cursor-pointer hover:scale-[1.02] active:scale-[0.98] ${
                                                 isRedeemed 
                                                     ? 'bg-slate-900/80 border-slate-800 grayscale opacity-70' 
                                                     : 'bg-gradient-to-br from-blue-900/60 to-primary/30 border-primary/50 shadow-[0_4px_20px_rgba(0,102,255,0.3)] backdrop-blur-md'
@@ -484,6 +486,56 @@ export default function TreasureHuntPage() {
                                     "Continuar mi viaje 🗺️"
                                 )}
                             </button>
+                        </motion.div>
+                    </div>
+                )}
+            </AnimatePresence>
+            {/* Prize Viewer Modal (For already earned prizes) */}
+            <AnimatePresence>
+                {viewingPrize && (
+                    <div className="fixed inset-0 z-[120] flex items-center justify-center p-4">
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            onClick={() => setViewingPrize(null)}
+                            className="absolute inset-0 bg-black/95 backdrop-blur-2xl"
+                        />
+                        <motion.div
+                            initial={{ scale: 0.9, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            exit={{ scale: 0.9, opacity: 0 }}
+                            className="relative w-full max-w-sm aspect-[3/4] bg-background border border-white/20 rounded-[2.5rem] overflow-hidden shadow-[0_0_60px_rgba(0,0,0,1)]"
+                        >
+                            <button 
+                                onClick={() => setViewingPrize(null)}
+                                className="absolute top-6 right-6 z-50 bg-black/50 backdrop-blur-md p-2 rounded-full text-white/70 hover:text-white transition-colors"
+                            >
+                                <X size={20} />
+                            </button>
+
+                            <div className="relative w-full h-full flex items-center justify-center">
+                                {viewingPrize.prize_name === "Proyector Smart" ? (
+                                    <Image src="/demo-prize-1.jpg" alt="Premio" fill className="object-cover" priority />
+                                ) : viewingPrize.prize_name === "Barra de Sonido" ? (
+                                    <Image src="/demo-prize-2.jpg" alt="Premio" fill className="object-cover" priority />
+                                ) : viewingPrize.prize_name === "Aire Acondicionado" ? (
+                                    <Image src="/demo-prize-3.jpg" alt="Premio" fill className="object-cover" priority />
+                                ) : viewingPrize.prize_name === "Smart TV 50\"" ? (
+                                    <Image src="/demo-prize-4.jpg" alt="Premio" fill className="object-cover" priority />
+                                ) : (
+                                    <div className="text-center p-8 bg-gradient-to-br from-blue-900/40 to-black h-full w-full flex flex-col items-center justify-center">
+                                        <Gift className="text-primary w-20 h-20 mb-4 drop-shadow-[0_0_20px_rgba(0,102,255,0.5)]" />
+                                        <h4 className="text-white font-lilita text-2xl uppercase">{viewingPrize.prize_name}</h4>
+                                        <p className="mt-4 text-white/40 text-[10px] uppercase font-bold tracking-widest">Premio Reclamado</p>
+                                    </div>
+                                )}
+                            </div>
+
+                            <div className="absolute bottom-0 left-0 w-full p-8 bg-gradient-to-t from-black via-black/80 to-transparent">
+                                <p className="text-secondary font-lilita text-sm mb-1 uppercase tracking-widest">Premio Desbloqueado</p>
+                                <h3 className="text-2xl font-black text-white uppercase font-lilita tracking-tight">{viewingPrize.prize_name}</h3>
+                            </div>
                         </motion.div>
                     </div>
                 )}
