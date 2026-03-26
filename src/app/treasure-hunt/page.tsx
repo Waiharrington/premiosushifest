@@ -30,6 +30,7 @@ export default function TreasureHuntPage() {
     const [currentPrize, setCurrentPrize] = useState<TreasureHuntPrize | null>(null)
     const [isScratched, setIsScratched] = useState(false)
     const [viewingPrize, setViewingPrize] = useState<TreasureHuntPrize | null>(null)
+    const [viewingPrizeIndex, setViewingPrizeIndex] = useState(1)
 
     const fetchData = useCallback(async () => {
         try {
@@ -293,14 +294,14 @@ export default function TreasureHuntPage() {
                                 <Gift className="text-primary w-6 h-6" /> Mis Recompensas
                             </h2>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                {prizes.filter(p => p.prize_type !== 'try_again').map(prize => {
+                                {prizes.filter(p => p.prize_type !== 'try_again').map((prize, idx) => {
                                     const locale = locales.find(l => l.id === prize.locale_id)
                                     const isRedeemed = prize.is_redeemed
                                     
                                     return (
                                         <div 
                                             key={prize.id} 
-                                            onClick={() => setViewingPrize(prize)}
+                                            onClick={() => { setViewingPrize(prize); setViewingPrizeIndex(idx + 1) }}
                                             className={`relative overflow-hidden rounded-2xl border p-4 flex items-center gap-4 transition-all duration-300 cursor-pointer hover:scale-[1.02] active:scale-[0.98] ${
                                                 isRedeemed 
                                                     ? 'bg-slate-900/80 border-slate-800 grayscale opacity-70' 
@@ -545,45 +546,36 @@ export default function TreasureHuntPage() {
                             </button>
 
                             <div className="relative w-full h-full flex items-center justify-center">
-                                {viewingPrize.prize_image ? (
-                                    <Image src={viewingPrize.prize_image} alt="Premio" fill className="object-cover" priority />
-                                ) : viewingPrize.prize_name === "Proyector Smart" ? (
-                                    <Image src="/demo-prize-1.jpg" alt="Premio" fill className="object-cover" priority />
-                                ) : viewingPrize.prize_name === "Barra de Sonido" ? (
-                                    <Image src="/demo-prize-2.jpg" alt="Premio" fill className="object-cover" priority />
-                                ) : viewingPrize.prize_name === "Aire Acondicionado" ? (
-                                    <Image src="/demo-prize-3.jpg" alt="Premio" fill className="object-cover" priority />
-                                ) : viewingPrize.prize_name === "Smart TV 50\"" ? (
-                                    <Image src="/demo-prize-4.jpg" alt="Premio" fill className="object-cover" priority />
+                                {viewingPrize.prize_type === 'gift' ? (
+                                    <Image
+                                        src={`/demo-prize-${((viewingPrizeIndex - 1) % 4) + 1}.jpg`}
+                                        alt="Premio"
+                                        fill
+                                        className="object-cover"
+                                        priority
+                                    />
+                                ) : viewingPrize.prize_type === 'discount' ? (
+                                    <Image
+                                        src={`/discount-${((viewingPrizeIndex - 1) % 3) + 1}.jpeg`}
+                                        alt="Descuento"
+                                        fill
+                                        className="object-cover"
+                                        priority
+                                    />
                                 ) : (
-                                    /* Fallback UI - Clean & High Contrast */
                                     <div className="text-center p-10 bg-gradient-to-t from-blue-950 via-blue-900 to-primary/40 h-full w-full flex flex-col items-center justify-center">
                                         <div className="bg-white/10 p-8 rounded-full mb-6 backdrop-blur-sm border border-white/10">
-                                            {viewingPrize.prize_type === 'gift' ? (
-                                                <Gift className="text-white w-24 h-24 drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]" />
-                                            ) : (
-                                                <Tag className="text-white w-24 h-24 drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]" />
-                                            )}
+                                            <Gift className="text-white w-24 h-24 drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]" />
                                         </div>
                                         <h3 className="text-white font-lilita text-4xl uppercase tracking-wider drop-shadow-lg leading-tight">
                                             {viewingPrize.prize_name}
                                         </h3>
-                                        <div className="mt-8 px-6 py-2 bg-secondary/80 rounded-full">
-                                            <p className="text-white font-lilita text-sm uppercase tracking-[0.2em]">CUPÓN DISPONIBLE</p>
-                                        </div>
                                     </div>
                                 )}
                             </div>
 
-                            {/* Only show overlay if MUST (e.g. no image or not one of the special ones) */}
-                            {(!viewingPrize.prize_image && !["Proyector Smart", "Barra de Sonido", "Aire Acondicionado", "Smart TV 50\""].includes(viewingPrize.prize_name)) && (
-                                <div className="absolute bottom-0 left-0 w-full p-8 bg-gradient-to-t from-black via-black/80 to-transparent">
-                                    <p className="text-secondary font-lilita text-sm mb-1 uppercase tracking-widest">
-                                        {viewingPrize.prize_type === 'gift' ? 'Premio Desbloqueado' : 'Descuento Activo'}
-                                    </p>
-                                    <h3 className="text-2xl font-black text-white uppercase font-lilita tracking-tight">{viewingPrize.prize_name}</h3>
-                                </div>
-                            )}
+
+
                         </motion.div>
                     </div>
                 )}
