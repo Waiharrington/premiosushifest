@@ -378,14 +378,14 @@ export default function TreasureHuntPage() {
                                     {/* Demo Prize Image Display */}
                                     <div className="flex justify-center my-4">
                                         <div className="relative w-40 h-40 md:w-48 md:h-48 rounded-2xl overflow-hidden border-2 border-primary/30 shadow-[0_0_25px_rgba(0,178,255,0.4)] bg-white/5 flex items-center justify-center">
-                                            {currentPrize?.prize_name === "Sushifest Plate Special" ? (
-                                                <Image src="/demo-prize-1.png" alt="Premio" fill className="object-cover" />
-                                            ) : currentPrize?.prize_name === "Sponsor Gift Pack" ? (
-                                                <Image src="/demo-prize-2.png" alt="Premio" fill className="object-cover" />
-                                            ) : currentPrize?.prize_name === "Coca-Cola Refreshment" ? (
-                                                <Image src="/demo-prize-3.png" alt="Premio" fill className="object-cover" />
-                                            ) : currentPrize?.prize_name === "Premium Sushi Roll" ? (
-                                                <Image src="/demo-prize-4.png" alt="Premio" fill className="object-cover" />
+                                            {currentPrize?.prize_name === "Proyector Smart" ? (
+                                                <Image src="/demo-prize-1.jpg" alt="Premio" fill className="object-cover" />
+                                            ) : currentPrize?.prize_name === "Barra de Sonido" ? (
+                                                <Image src="/demo-prize-2.jpg" alt="Premio" fill className="object-cover" />
+                                            ) : currentPrize?.prize_name === "Aire Acondicionado" ? (
+                                                <Image src="/demo-prize-3.jpg" alt="Premio" fill className="object-cover" />
+                                            ) : currentPrize?.prize_name === "Smart TV 50\"" ? (
+                                                <Image src="/demo-prize-4.jpg" alt="Premio" fill className="object-cover" />
                                             ) : (
                                                 <div className="text-primary flex flex-col items-center gap-2">
                                                     {currentPrize?.prize_type === 'gift' ? <Gift size={64} /> : 

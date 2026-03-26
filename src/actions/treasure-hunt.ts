@@ -88,10 +88,10 @@ export async function generateScratchPrize(userId: string, localeId: string) {
 
     if (DEMO_MODE) {
         const demoPrizes = [
-            { name: "Sushifest Plate Special", image: "/demo-prize-1.png" },
-            { name: "Sponsor Gift Pack", image: "/demo-prize-2.png" },
-            { name: "Coca-Cola Refreshment", image: "/demo-prize-3.png" },
-            { name: "Premium Sushi Roll", image: "/demo-prize-4.png" },
+            { name: "Proyector Smart", image: "/demo-prize-1.jpg" },
+            { name: "Barra de Sonido", image: "/demo-prize-2.jpg" },
+            { name: "Aire Acondicionado", image: "/demo-prize-3.jpg" },
+            { name: "Smart TV 50\"", image: "/demo-prize-4.jpg" },
         ];
         
         const randomPrize = demoPrizes[Math.floor(Math.random() * demoPrizes.length)];
