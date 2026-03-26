@@ -14,24 +14,15 @@ export function TreasureMap({ locales, visitedIds, onLocaleClick }: TreasureMapP
     // Coordinate mapping for 23 locales (approximate path from Chiriquí to Panamá City)
     // We'll distribute them along the "S" curve of the Isthmus
     const getCoordinates = (index: number) => {
-        const total = locales.length;
-        const t = index / (total - 1 || 1); 
+        // Uniform dispersion algorithm using Golden Ratio to spread 30 points across the map
+        const xSeed = (index * 0.61803398875) % 1.0;
+        const ySeed = (index * 0.38196601125) % 1.0;
+
+        // X: Spread from 5% to 95%
+        const x = 5 + xSeed * 90;
         
-        // Use full width with more safety margin
-        const x = 8 + t * 84;
-        
-        // Geographic-aware S-curve for Panama with vertical spread
-        // We alternate y-offsets more aggressively for 30 icons
-        const phase = t * Math.PI * 2.2;
-        const baseCurve = Math.sin(phase);
-        
-        // Staggering logic: 0, 1, 2 pattern for 3 vertical levels
-        const stagger = (index % 3 - 1) * 10; 
-        
-        // Small sin wave for natural "island" feel
-        const ripple = Math.sin(t * Math.PI * 8) * 4;
-        
-        const y = 50 + (baseCurve * 20) + stagger + ripple;
+        // Y: Spread from 15% to 85% (using all available vertical space)
+        const y = 15 + ySeed * 70;
         
         return { x: `${x}%`, y: `${y}%` };
     };
@@ -119,7 +110,7 @@ export function TreasureMap({ locales, visitedIds, onLocaleClick }: TreasureMapP
                                 whileHover={{ scale: 1.2, zIndex: 20 }}
                                 onClick={() => onLocaleClick(locale)}
                                 className={`
-                                    relative w-7 h-7 md:w-10 md:h-10 rounded-full overflow-hidden border-2 
+                                    relative w-10 h-10 md:w-12 md:h-12 rounded-full overflow-hidden border-2 
                                     ${isVisited ? 'border-secondary shadow-lg shadow-secondary/50 ring-2 ring-secondary/20' : 'border-white/20 grayscale brightness-50 opacity-40'}
                                     transition-all duration-500
                                 `}
