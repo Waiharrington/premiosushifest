@@ -65,18 +65,18 @@ export default function Home() {
                         priority
                     />
 
-                    {/* Golden crown below logo */}
+                    {/* Golden crown below logo - Pedestal position with breathing room */}
                     <motion.div
-                        animate={{ y: [0, -8, 0], scale: [1, 1.1, 1], rotate: [0, 3, 0] }}
+                        animate={{ y: [0, -4, 0], scale: [1, 1.05, 1], rotate: [0, 2, 0] }}
                         transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                        className="absolute -bottom-4 left-1/2 -translate-x-1/2 z-20 w-52"
+                        className="absolute top-[102%] left-1/2 -translate-x-1/2 z-[30] w-[100%] max-w-[200px]"
                     >
                         <Image 
                             src="/crown.png" 
                             alt="Corona" 
                             width={200} 
                             height={160} 
-                            className="w-full drop-shadow-[0_10px_30px_rgba(255,183,0,0.7)]"
+                            className="w-full drop-shadow-[0_15px_45px_rgba(255,183,0,0.9)]"
                         />
                     </motion.div>
                 </motion.div>
@@ -95,7 +95,7 @@ export default function Home() {
                             className="text-5xl md:text-7xl font-lilita uppercase tracking-tight leading-[0.9] text-white my-2"
                             style={{ textShadow: '0 8px 32px rgba(0,0,0,0.8), 0 0 50px rgba(0,0,0,1)' }}
                         >
-                            ¡GANA <span className="text-primary italic">PREMIOS</span> MIERCOLES!
+                            ¡GANA <span className="text-secondary italic">PREMIOS</span> INCREIBLES!
                         </h1>
                         <p className="text-white/70 text-sm md:text-base font-medium tracking-wide max-w-[400px] mx-auto leading-relaxed">
                             Explora la ciudad, descubre nuevos sabores y desbloquea descuentos exclusivos en cada restaurante que visites.
