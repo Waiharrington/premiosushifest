@@ -15,27 +15,27 @@ export function TreasureMap({ locales, visitedIds, onLocaleClick }: TreasureMapP
     // We'll distribute them along the "S" curve of the Isthmus
     const getCoordinates = (index: number) => {
         const total = locales.length;
-        const t = index / (total - 1 || 1); 
         
-        // Horizontal spread (10% to 90%)
-        const x = 10 + t * 80;
+        // Deterministic shuffle using a coprime multiplier (17 and 30 are coprimes)
+        // This ensures branch locations (e.g. Zen Sushi 1, 2, 3) are spread apart
+        const shuffledIndex = (index * 17) % total;
+        const t = shuffledIndex / (total - 1 || 1); 
         
-        // Base Panama "S" Curve
-        // Matches the landmass shape from West to East
-        const curve = Math.sin(t * Math.PI * 2.2); 
-        const baseY = 52 + (curve * 18);
+        // Track-based horizontal staggered layout
+        const track = shuffledIndex % 3; // 0, 1, 2
         
-        // Staggered 3-track system (Top, Mid, Bottom)
-        // Offset is in percentage points
-        const track = index % 3; // 0, 1, 2
-        const trackOffset = (track - 1) * 14; 
+        // Wider horizontal spread (5% to 95%) with track-based offset to prevent vertical alignment
+        const xBase = 5 + t * 90;
+        const xOffset = (track - 1) * 3; // Slight horizontal shift per track
         
-        // Add subtle horizontal jitter to break the perfect grid look
-        const xJitter = (index % 2 === 0 ? 1 : -1) * 2;
+        // Balanced Panama S-curve for the base Y
+        const curve = Math.sin(t * Math.PI * 2.1); 
+        const baseY = 50 + (curve * 15);
         
-        const y = baseY + trackOffset;
+        // Clean vertical gaps for the 3 tracks (18% safety gap)
+        const yOffset = (track - 1) * 18;
         
-        return { x: `${x + xJitter}%`, y: `${y}%` };
+        return { x: `${xBase + xOffset}%`, y: `${baseY + yOffset}%` };
     };
 
     // Calculate path for SVG
@@ -121,8 +121,8 @@ export function TreasureMap({ locales, visitedIds, onLocaleClick }: TreasureMapP
                                 whileHover={{ scale: 1.2, zIndex: 20 }}
                                 onClick={() => onLocaleClick(locale)}
                                 className={`
-                                    relative w-10 h-10 md:w-12 md:h-12 rounded-full overflow-hidden border-2 
-                                    ${isVisited ? 'border-secondary shadow-lg shadow-secondary/50 ring-2 ring-secondary/20' : 'border-white/20 grayscale brightness-50 opacity-40'}
+                                    relative w-11 h-11 md:w-14 md:h-14 rounded-full overflow-hidden border-2 
+                                    ${isVisited ? 'border-secondary shadow-[0_0_20px_rgba(255,183,0,0.6)] ring-4 ring-secondary/20' : 'border-white/20 grayscale brightness-50 opacity-40'}
                                     transition-all duration-500
                                 `}
                             >
