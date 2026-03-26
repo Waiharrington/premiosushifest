@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useRef, useEffect, useState } from 'react'
+import React, { useRef, useEffect, useState, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 
 interface ScratchCardProps {
@@ -13,7 +13,7 @@ interface ScratchCardProps {
 export function ScratchCard({ 
     onComplete, 
     children, 
-    brushSize = 35, 
+    brushSize = 30, 
     percentageToComplete = 50 
 }: ScratchCardProps) {
     const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -21,69 +21,69 @@ export function ScratchCard({
     const [isComplete, setIsComplete] = useState(false)
     const [isDrawing, setIsDrawing] = useState(false)
 
-    useEffect(() => {
+    const resize = useCallback(() => {
         const canvas = canvasRef.current
         const container = containerRef.current
         if (!canvas || !container) return
 
+        const rect = container.getBoundingClientRect()
+        const width = rect.width
+        const height = rect.height
+
+        if (width === 0 || height === 0) return
+
+        canvas.width = width
+        canvas.height = height
+        
         const ctx = canvas.getContext('2d')
-        if (!ctx) return
-
-        const drawLayer = () => {
-            const rect = container.getBoundingClientRect()
-            if (rect.width === 0 || rect.height === 0) return
-
-            const dpr = window.devicePixelRatio || 1
-            canvas.width = rect.width * dpr
-            canvas.height = rect.height * dpr
-            ctx.scale(dpr, dpr)
+        if (ctx) {
+            const gradient = ctx.createLinearGradient(0, 0, width, height)
+            gradient.addColorStop(0, '#0052cc')
+            gradient.addColorStop(1, '#0070f3')
             
-            canvas.style.width = `${rect.width}px`
-            canvas.style.height = `${rect.height}px`
-            
-            // Fill with brand primary gradient
-            const gradient = ctx.createLinearGradient(0, 0, rect.width, rect.height)
-            gradient.addColorStop(0, '#0066FF')
-            gradient.addColorStop(1, '#00B2FF')
             ctx.fillStyle = gradient
-            ctx.fillRect(0, 0, rect.width, rect.height)
-
-            // Add some subtle pattern/texture
-            ctx.strokeStyle = 'rgba(255,255,255,0.1)'
-            ctx.setLineDash([5, 10])
-            for(let i=0; i<rect.width+rect.height; i+=20) {
-                ctx.beginPath()
-                ctx.moveTo(i, 0)
-                ctx.lineTo(0, i)
-                ctx.stroke()
-            }
-            ctx.setLineDash([])
-
-            // Add center text
-            ctx.font = 'bold 24px Lilita One, system-ui'
-            ctx.fillStyle = '#FFFFFF'
+            ctx.fillRect(0, 0, width, height)
+            
+            ctx.font = '24px Lilita One, sans-serif'
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.4)'
             ctx.textAlign = 'center'
-            ctx.shadowColor = 'rgba(0,0,0,0.3)'
-            ctx.shadowBlur = 10
-            ctx.fillText('¡RASPA AQUÍ', rect.width / 2, rect.height / 2 - 10)
-            ctx.fillText('PARA GANAR!', rect.width / 2, rect.height / 2 + 25)
+            ctx.fillText('¡RASPA AQUÍ!', width / 2, height / 2)
+            ctx.font = '12px sans-serif'
+            ctx.fillText('PARA DESCUBRIR TU PREMIO', width / 2, height / 2 + 30)
         }
+    }, [])
 
-        const resizeObserver = new ResizeObserver(() => {
-            if (!isComplete) drawLayer()
+    useEffect(() => {
+        resize()
+        
+        const container = containerRef.current
+        if (!container) return
+
+        const observer = new ResizeObserver(() => {
+            resize()
         })
+        observer.observe(container)
 
-        resizeObserver.observe(container)
-        return () => resizeObserver.disconnect()
-    }, [isComplete])
+        window.addEventListener('resize', resize)
+        return () => {
+            observer.disconnect()
+            window.removeEventListener('resize', resize)
+        }
+    }, [resize])
 
     const getPos = (e: React.MouseEvent | React.TouchEvent | MouseEvent | TouchEvent) => {
         const canvas = canvasRef.current
         if (!canvas) return { x: 0, y: 0 }
         const rect = canvas.getBoundingClientRect()
-        
-        const clientX = 'touches' in e ? e.touches[0].clientX : (e as MouseEvent).clientX
-        const clientY = 'touches' in e ? e.touches[0].clientY : (e as MouseEvent).clientY
+
+        let clientX, clientY
+        if ('touches' in e) {
+            clientX = e.touches[0].clientX
+            clientY = e.touches[0].clientY
+        } else {
+            clientX = (e as MouseEvent).clientX
+            clientY = (e as MouseEvent).clientY
+        }
         
         return {
             x: clientX - rect.left,
@@ -96,7 +96,6 @@ export function ScratchCard({
         const ctx = canvas?.getContext('2d')
         if (!ctx || !canvas) return
 
-        const dpr = window.devicePixelRatio || 1
         ctx.globalCompositeOperation = 'destination-out'
         ctx.beginPath()
         ctx.arc(x, y, brushSize, 0, Math.PI * 2)
@@ -111,7 +110,6 @@ export function ScratchCard({
         const ctx = canvas?.getContext('2d')
         if (!ctx || !canvas) return
 
-        const dpr = window.devicePixelRatio || 1
         const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
         const pixels = imageData.data
         let count = 0
@@ -139,23 +137,24 @@ export function ScratchCard({
         scratch(pos.x, pos.y)
     }
 
-    const handleEnd = () => setIsDrawing(false)
+    const handleEnd = () => {
+        setIsDrawing(false)
+    }
 
     return (
-        <div ref={containerRef} className="relative w-full aspect-[9/16] bg-black rounded-3xl overflow-hidden border border-white/10 group shadow-2xl mx-auto">
-            {/* Content underneath */}
-            <div className="absolute inset-0 flex items-center justify-center p-0 text-center overflow-hidden">
+        <div ref={containerRef} className="relative w-full aspect-[3/4] bg-white/5 backdrop-blur-xl rounded-3xl overflow-hidden border border-white/10 group shadow-2xl mx-auto max-w-[320px]">
+            <div className="absolute inset-0 flex items-center justify-center p-0 text-center">
                 {children}
             </div>
 
-            {/* Scratch layer */}
             <AnimatePresence>
                 {!isComplete && (
                     <motion.canvas
                         ref={canvasRef}
-                        exit={{ opacity: 0, scale: 1.05 }}
+                        initial={{ opacity: 1 }}
+                        exit={{ opacity: 0, scale: 1.1 }}
                         transition={{ duration: 0.5 }}
-                        className="absolute inset-0 touch-none cursor-pointer z-10"
+                        className="absolute inset-0 touch-none cursor-pointer z-20"
                         onMouseDown={handleStart}
                         onMouseMove={handleMove}
                         onMouseUp={handleEnd}
