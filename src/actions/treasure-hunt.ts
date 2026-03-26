@@ -83,50 +83,41 @@ export async function generateScratchPrize(userId: string, localeId: string) {
     const giftCount = winningPrizes?.filter(p => p.prize_type === 'gift').length || 0
     const discountCount = winningPrizes?.filter(p => p.prize_type === 'discount').length || 0
 
-    // Base Prize pool logic (Normal Scratch only awards DISCOUNTS)
-    let prizes = [
-        { name: "10% de Descuento", type: "discount" as const, weight: 45 },
-        { name: "15% de Descuento", type: "discount" as const, weight: 20 },
-        { name: "20% de Descuento", type: "discount" as const, weight: 10 },
-        { name: "Gracias por participar, ¡sigue intentando!", type: "try_again" as const, weight: 25 },
-    ]
+    // DEMO MODE TOGGLE
+    const DEMO_MODE = true;
 
-    // If discount pool is exhausted, remove discounts
-    if (discountCount >= discountPool) {
-        prizes = prizes.filter(p => p.type !== 'discount')
-    }
+    if (DEMO_MODE) {
+        const demoPrizes = [
+            { name: "Sushifest Plate Special", image: "/demo-prize-1.png" },
+            { name: "Sponsor Gift Pack", image: "/demo-prize-2.png" },
+            { name: "Coca-Cola Refreshment", image: "/demo-prize-3.png" },
+            { name: "Premium Sushi Roll", image: "/demo-prize-4.png" },
+        ];
+        
+        const randomPrize = demoPrizes[Math.floor(Math.random() * demoPrizes.length)];
+        
+        const { data: newPrize, error } = await supabase
+            .from('treasure_hunt_prizes')
+            .insert({
+                user_id: userId,
+                locale_id: localeId,
+                prize_name: randomPrize.name,
+                prize_type: 'gift'
+            })
+            .select()
+            .single();
 
-    const totalWeight = prizes.reduce((acc, p) => acc + p.weight, 0)
-    let random = Math.random() * totalWeight
-    let selectedPrize = prizes[prizes.length - 1]
-
-    for (const p of prizes) {
-        if (random < p.weight) {
-            selectedPrize = p
-            break
+        if (error) {
+            console.error("Error saving demo prize:", error);
+            return { success: false, error: "No se pudo generar el premio demo" };
         }
-        random -= p.weight
+
+        revalidatePath("/treasure-hunt");
+        return { success: true, prize: newPrize as TreasureHuntPrize };
     }
 
-    // Save prize
-    const { data: newPrize, error } = await supabase
-        .from('treasure_hunt_prizes')
-        .insert({
-            user_id: userId,
-            locale_id: localeId,
-            prize_name: selectedPrize.name,
-            prize_type: selectedPrize.type
-        })
-        .select()
-        .single()
-
-    if (error) {
-        console.error("Error saving prize:", error)
-        return { success: false, error: "No se pudo generar el premio" }
-    }
-
-    revalidatePath("/treasure-hunt")
-    return { success: true, prize: newPrize as TreasureHuntPrize }
+    // Normal logic is currently disabled in favor of DEMO_MODE
+    return { success: false, error: "Modo Demo activo. No se pudo generar premio normal." };
 }
 
 export async function getTreasureHuntLeaderboard() {

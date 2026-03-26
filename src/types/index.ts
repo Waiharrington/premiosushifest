@@ -43,5 +43,8 @@ export interface TreasureHuntPrize {
     locale_id: string;
     prize_name: string;
     prize_type: 'discount' | 'gift' | 'try_again';
+    prize_image?: string;
+    is_redeemed?: boolean;
+    redeemed_at?: string;
     created_at: string;
 }
