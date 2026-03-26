@@ -129,7 +129,7 @@ export function ScratchCard({
     }
 
     return (
-        <div className="relative w-full aspect-[4/3] bg-white/5 backdrop-blur-xl rounded-3xl overflow-hidden border border-white/10 group shadow-2xl">
+        <div className="relative w-full aspect-video bg-white/5 backdrop-blur-xl rounded-3xl overflow-hidden border border-white/10 group shadow-2xl">
             {/* Content underneath */}
             <div className="absolute inset-0 flex items-center justify-center p-6 text-center">
                 {children}

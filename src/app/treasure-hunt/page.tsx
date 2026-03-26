@@ -364,7 +364,7 @@ export default function TreasureHuntPage() {
                             initial={{ scale: 0.8, opacity: 0 }}
                             animate={{ scale: 1, opacity: 1 }}
                             exit={{ scale: 0.8, opacity: 0 }}
-                            className="relative w-full max-w-md bg-background border border-primary/30 rounded-[2.5rem] p-8 text-center overflow-hidden"
+                            className="relative w-full max-w-md bg-background border border-primary/30 rounded-[2.5rem] p-6 text-center overflow-hidden"
                         >
                             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary via-secondary to-primary" />
                             
