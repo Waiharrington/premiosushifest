@@ -5,8 +5,6 @@ import { useState } from "react";
 import Image from "next/image";
 import { RiceParticles } from "./RiceParticles";
 import { useAuth } from "@/context/AuthContext";
-import { Turnstile } from '@marsidev/react-turnstile'
-import { verifyTurnstile } from "@/actions/auth"
 
 interface AuthModalProps {
     onClose: () => void;
@@ -24,7 +22,6 @@ export default function AuthModal({ onClose, onSuccess }: AuthModalProps) {
     
     // Security fields
     const [honeypot, setHoneypot] = useState("");
-    const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -42,19 +39,8 @@ export default function AuthModal({ onClose, onSuccess }: AuthModalProps) {
             return; // Silent fail for bots
         }
 
-        if (isRegistering && !turnstileToken) {
-            setLoading(false);
-            return setError("Por favor, completa la verificación de seguridad.");
-        }
-
         try {
             if (isRegistering) {
-                const isValid = await verifyTurnstile(turnstileToken!);
-                if (!isValid) {
-                    setLoading(false);
-                    return setError("Fallo en la verificación de seguridad.");
-                }
-                
                 if (!trimmedName || !trimmedPhone) return setError("Nombre y teléfono obligatorios");
                 const success = await register(trimmedName, trimmedCedula, trimmedPhone);
                 if (success) { onSuccess?.(); onClose(); }
@@ -210,15 +196,6 @@ export default function AuthModal({ onClose, onSuccess }: AuthModalProps) {
                                     className="hidden"
                                     autoComplete="off"
                                 />
-
-                                {/* Cloudflare Turnstile */}
-                                <div className="flex justify-center py-2">
-                                    <Turnstile 
-                                        siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!} 
-                                        onSuccess={(token) => setTurnstileToken(token)}
-                                        theme="dark"
-                                    />
-                                </div>
                             </div>
                         )}
                         {error && <p className="text-red-400 text-[11px] text-center font-bold uppercase">{error}</p>}
