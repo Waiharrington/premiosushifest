@@ -14,16 +14,21 @@ export function TreasureMap({ locales, visitedIds, onLocaleClick }: TreasureMapP
     // Coordinate mapping for 23 locales (approximate path from Chiriquí to Panamá City)
     // We'll distribute them along the "S" curve of the Isthmus
     const getCoordinates = (index: number) => {
-        const total = Math.max(locales.length, 23);
-        const t = index / (total - 1); // 0 to 1
+        const total = locales.length;
+        const t = index / (total - 1 || 1); 
         
-        // Approximate Panama "S" shape path
-        // X goes from West to East (12% to 88%)
-        const x = 12 + t * 76;
+        // Spread X across almost the entire map width (5% to 95%)
+        const x = 5 + t * 90;
         
-        // Y follows a wave/path
-        // Base line is around 50%. We add some curves.
-        const y = 50 + Math.sin(t * Math.PI * 2.5) * 15 + (Math.cos(t * Math.PI) * 10);
+        // Pronounced "S" shape path for Panama
+        // We use two sine waves to create more curvature and vertical space
+        const baseCurve = Math.sin(t * Math.PI * 2.2); // Main S shape
+        const secondaryWave = Math.sin(t * Math.PI * 5) * 8; // Smaller ripples to stagger nearby icons
+        
+        // Vertical Jitter (alternating up/down)
+        const jitter = (index % 2 === 0 ? 1 : -1) * 6;
+        
+        const y = 50 + (baseCurve * 22) + jitter + secondaryWave;
         
         return { x: `${x}%`, y: `${y}%` };
     };
