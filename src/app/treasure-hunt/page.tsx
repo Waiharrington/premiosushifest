@@ -372,120 +372,134 @@ export default function TreasureHuntPage() {
                             className="absolute inset-0 bg-black/90 backdrop-blur-xl"
                         />
                         <motion.div
-                            initial={{ scale: 0.8, opacity: 0 }}
+                            initial={{ scale: 0.9, opacity: 0 }}
                             animate={{ scale: 1, opacity: 1 }}
-                            exit={{ scale: 0.8, opacity: 0 }}
-                            className="relative w-full max-w-md bg-background border border-primary/30 rounded-[2.5rem] p-6 text-center overflow-hidden shadow-[0_0_50px_rgba(0,102,255,0.3)]"
+                            className="relative w-full max-w-lg bg-[#000B2A]/90 backdrop-blur-3xl border border-white/10 rounded-[3rem] p-10 shadow-[0_0_100px_rgba(0,71,255,0.3)] overflow-hidden"
                         >
                             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary via-secondary to-primary" />
                             
                             <AnimatePresence mode="wait">
-                                {isScratched ? (
+                                {isScratched && currentPrize ? (
                                     <motion.div
-                                        key="success-header"
-                                        initial={{ opacity: 0, y: -20 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        className="mb-4"
+                                        key="success-content"
+                                        initial={{ opacity: 0, scale: 0.95 }}
+                                        animate={{ opacity: 1, scale: 1 }}
+                                        className="text-center"
                                     >
-                                        <div className="flex items-center justify-center gap-2 text-secondary mb-1">
+                                        <div className="flex items-center justify-center gap-2 text-secondary mb-4">
                                             <Sparkles className="w-5 h-5 animate-pulse" />
-                                            <span className="font-lilita text-xl tracking-widest">¡INCREÍBLE!</span>
+                                            <span className="font-lilita text-xl tracking-widest uppercase">
+                                                {currentPrize.prize_type === 'gift' ? '¡INCREÍBLE!' : '¡GENIAL!'}
+                                            </span>
                                             <Sparkles className="w-5 h-5 animate-pulse" />
                                         </div>
-                                        <h2 className="text-4xl font-lilita uppercase text-white drop-shadow-lg">¡TE GANASTE UN PREMIO!</h2>
+
+                                        <h2 className="text-4xl font-black text-white italic tracking-tighter mb-2 font-lilita uppercase leading-tight">
+                                            {currentPrize.prize_type === 'gift' ? '¡TE GANASTE UN PREMIO!' : '¡TIENES UN DESCUENTO!'}
+                                        </h2>
+                                        <p className="text-blue-200 text-sm uppercase tracking-[0.3em] font-bold mb-8">
+                                            {currentPrize.prize_type === 'gift' ? 'NUEVO REGALO DESBLOQUEADO' : 'CUPÓN DE DESCUENTO ACTIVO'}
+                                        </p>
+
+                                        {/* Prize Image/Icon */}
+                                        <div className="relative w-full aspect-square max-w-[280px] mx-auto mb-8 group">
+                                            <div className="absolute inset-0 bg-primary/20 rounded-3xl blur-2xl group-hover:bg-primary/30 transition-colors" />
+                                            <div className="relative h-full w-full bg-white/5 backdrop-blur-md rounded-3xl border border-white/10 flex items-center justify-center overflow-hidden shadow-2xl">
+                                                {currentPrize.prize_image ? (
+                                                    <Image 
+                                                        src={currentPrize.prize_image} 
+                                                        alt="Premio" 
+                                                        fill 
+                                                        className="object-cover"
+                                                    />
+                                                ) : (
+                                                    <Trophy className="text-secondary w-24 h-24 drop-shadow-[0_0_20px_rgba(255,122,0,0.5)]" />
+                                                )}
+                                            </div>
+                                        </div>
+
+                                        <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 mb-8 transform hover:scale-[1.02] transition-transform">
+                                            <p className="text-secondary font-lilita text-xs mb-2 uppercase tracking-widest">Contenido del Cupón</p>
+                                            <h3 className="text-2xl font-black text-white uppercase font-lilita tracking-tight">
+                                                {currentPrize.prize_name}
+                                            </h3>
+                                        </div>
+
+                                        <button
+                                            onClick={() => {
+                                                setActivePrizeLocale(null)
+                                                setCurrentPrize(null)
+                                                setIsScratched(false)
+                                            }}
+                                            className="w-full bg-primary hover:bg-primary/90 text-white font-lilita text-xl py-5 rounded-2xl shadow-[0_10px_30px_rgba(0,71,255,0.4)] transition-all active:scale-[0.98] group flex items-center justify-center gap-3"
+                                        >
+                                            {currentPrize.prize_type === 'gift' ? '¡LO QUIERO!' : '¡GENIAL!'}
+                                            <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
+                                        </button>
                                     </motion.div>
                                 ) : (
                                     <motion.div
-                                        key="normal-header"
+                                        key="normal-content"
                                         initial={{ opacity: 0 }}
                                         animate={{ opacity: 1 }}
-                                        className="mb-4"
+                                        className="text-center"
                                     >
-                                        <p className="text-secondary font-lilita text-xl mb-1 tracking-wider">¡NUEVO LOCAL DESBLOQUEADO!</p>
-                                        <h2 className="text-3xl font-lilita uppercase text-white/90">{activePrizeLocale.name}</h2>
-                                    </motion.div>
-                                )}
-                            </AnimatePresence>
-                            
-                            <div className="relative group">
-                                <ScratchCard onComplete={handleScratchComplete}>
-                                    <div className="absolute inset-0 w-full h-full bg-black">
-                                        <div className="relative w-full h-full overflow-hidden flex items-center justify-center">
-                                            {currentPrize?.prize_name === "Proyector Smart" ? (
-                                                <Image src="/demo-prize-1.jpg" alt="Premio" fill className="object-cover" priority />
-                                            ) : currentPrize?.prize_name === "Barra de Sonido" ? (
-                                                <Image src="/demo-prize-2.jpg" alt="Premio" fill className="object-cover" priority />
-                                            ) : currentPrize?.prize_name === "Aire Acondicionado" ? (
-                                                <Image src="/demo-prize-3.jpg" alt="Premio" fill className="object-cover" priority />
-                                            ) : currentPrize?.prize_name === "Smart TV 50\"" ? (
-                                                <Image src="/demo-prize-4.jpg" alt="Premio" fill className="object-cover" priority />
-                                            ) : (
-                                                <div className="text-center p-8 bg-gradient-to-br from-blue-900/40 to-black h-full w-full flex flex-col items-center justify-center">
-                                                    <div className="text-primary flex flex-col items-center gap-2 mb-4">
-                                                        {currentPrize?.prize_type === 'gift' ? <Gift size={80} className="drop-shadow-[0_0_20px_rgba(0,102,255,0.5)]" /> : 
-                                                        currentPrize?.prize_type === 'discount' ? <Tag size={80} className="drop-shadow-[0_0_20px_rgba(0,102,255,0.5)]" /> : 
-                                                        <HelpCircle size={80} className="drop-shadow-[0_0_20px_rgba(0,102,255,0.5)]" />}
+                                        <div className="mb-6">
+                                            <p className="text-secondary font-lilita text-xl mb-1 tracking-wider">¡NUEVO LOCAL DESBLOQUEADO!</p>
+                                            <h2 className="text-3xl font-lilita uppercase text-white/90">{activePrizeLocale?.name}</h2>
+                                        </div>
+
+                                        <div className="relative group mb-6">
+                                            <ScratchCard onComplete={handleScratchComplete}>
+                                                <div className="absolute inset-0 w-full h-full bg-black">
+                                                    <div className="relative w-full h-full overflow-hidden flex items-center justify-center">
+                                                        {currentPrize?.prize_name === "Proyector Smart" ? (
+                                                            <Image src="/demo-prize-1.jpg" alt="Premio" fill className="object-cover" priority />
+                                                        ) : currentPrize?.prize_name === "Barra de Sonido" ? (
+                                                            <Image src="/demo-prize-2.jpg" alt="Premio" fill className="object-cover" priority />
+                                                        ) : currentPrize?.prize_name === "Aire Acondicionado" ? (
+                                                            <Image src="/demo-prize-3.jpg" alt="Premio" fill className="object-cover" priority />
+                                                        ) : currentPrize?.prize_name === "Smart TV 50\"" ? (
+                                                            <Image src="/demo-prize-4.jpg" alt="Premio" fill className="object-cover" priority />
+                                                        ) : currentPrize?.prize_image ? (
+                                                            <Image src={currentPrize.prize_image} alt="Premio" fill className="object-cover" priority />
+                                                        ) : (
+                                                            <div className="text-center p-8 bg-gradient-to-br from-blue-900/40 to-black h-full w-full flex flex-col items-center justify-center">
+                                                                <div className="text-primary flex flex-col items-center gap-2 mb-4">
+                                                                    {currentPrize?.prize_type === 'gift' ? <Gift size={80} className="drop-shadow-[0_0_20px_rgba(0,102,255,0.5)]" /> : 
+                                                                    <Tag size={80} className="drop-shadow-[0_0_20px_rgba(0,102,255,0.5)]" />}
+                                                                </div>
+                                                                <h4 className="text-white font-lilita text-2xl uppercase tracking-wider">{currentPrize?.prize_name || '...'}</h4>
+                                                                <p className="mt-4 text-white/40 text-[10px] uppercase font-bold tracking-widest">Raspa para descubrir</p>
+                                                            </div>
+                                                        )}
                                                     </div>
-                                                    <h4 className="text-white font-lilita text-2xl uppercase tracking-wider">{currentPrize?.prize_name}</h4>
                                                 </div>
+                                            </ScratchCard>
+                                            {isScratched && (
+                                                <motion.div
+                                                    initial={{ opacity: 0, scale: 0.5 }}
+                                                    animate={{ opacity: 1, scale: 1 }}
+                                                    className="absolute -top-4 -right-4 z-50 bg-secondary text-white p-3 rounded-full shadow-xl rotate-12"
+                                                >
+                                                    <Heart size={24} fill="white" className="animate-bounce" />
+                                                </motion.div>
                                             )}
                                         </div>
-                                    </div>
-                                </ScratchCard>
 
-                                {isScratched && (
-                                    <motion.div
-                                        initial={{ opacity: 0, scale: 0.5 }}
-                                        animate={{ opacity: 1, scale: 1 }}
-                                        className="absolute -top-4 -right-4 z-50 bg-secondary text-white p-3 rounded-full shadow-xl rotate-12"
-                                    >
-                                        <Heart size={24} fill="white" className="animate-bounce" />
-                                    </motion.div>
-                                )}
-                            </div>
+                                        <p className="text-white/50 text-xs italic tracking-widest uppercase mb-8">
+                                            Raspa la tarjeta para descubrir tu premio
+                                        </p>
 
-                            <AnimatePresence mode="wait">
-                                {!isScratched ? (
-                                    <motion.p
-                                        key="instruction"
-                                        initial={{ opacity: 0 }}
-                                        animate={{ opacity: 1 }}
-                                        exit={{ opacity: 0 }}
-                                        className="mt-6 text-white/50 text-xs italic tracking-widest uppercase"
-                                    >
-                                        Raspa la tarjeta para descubrir tu premio
-                                    </motion.p>
-                                ) : (
-                                    <motion.div 
-                                        key="success-info"
-                                        initial={{ opacity: 0, scale: 0.9 }}
-                                        animate={{ opacity: 1, scale: 1 }}
-                                        className="mt-6 space-y-2"
-                                    >
-                                        <p className="text-white font-black text-xl uppercase font-lilita tracking-wide">
-                                            ¡{currentPrize?.prize_name}!
-                                        </p>
-                                        <p className="text-white/40 text-[10px] uppercase font-bold tracking-[0.2em]">
-                                            GUARDADO EN "MIS RECOMPENSAS"
-                                        </p>
+                                        <button
+                                            onClick={() => setActivePrizeLocale(null)}
+                                            className="w-full bg-white/5 hover:bg-white/10 text-white/60 font-lilita py-5 rounded-2xl transition-all uppercase tracking-[0.2em] text-sm"
+                                        >
+                                            Continuar mi viaje 🗺️
+                                        </button>
                                     </motion.div>
                                 )}
                             </AnimatePresence>
-
-                            <button
-                                onClick={closePrizeModal}
-                                className={`mt-8 w-full font-lilita py-5 rounded-2xl transition-all uppercase tracking-[0.2em] text-sm shadow-xl flex items-center justify-center gap-2 ${
-                                    isScratched 
-                                        ? 'bg-gradient-to-r from-primary to-blue-600 hover:from-blue-500 hover:to-blue-700 text-white scale-[1.02] shadow-[0_0_30px_rgba(0,102,255,0.4)]' 
-                                        : 'bg-white/5 hover:bg-white/10 text-white/60'
-                                }`}
-                            >
-                                {isScratched ? (
-                                    <>¡LO QUIERO! <ArrowRight size={18} /></>
-                                ) : (
-                                    "Continuar mi viaje 🗺️"
-                                )}
-                            </button>
                         </motion.div>
                     </div>
                 )}
@@ -517,7 +531,9 @@ export default function TreasureHuntPage() {
                             </button>
 
                             <div className="relative w-full h-full flex items-center justify-center">
-                                {viewingPrize.prize_name === "Proyector Smart" ? (
+                                {viewingPrize.prize_image ? (
+                                    <Image src={viewingPrize.prize_image} alt="Premio" fill className="object-cover" priority />
+                                ) : viewingPrize.prize_name === "Proyector Smart" ? (
                                     <Image src="/demo-prize-1.jpg" alt="Premio" fill className="object-cover" priority />
                                 ) : viewingPrize.prize_name === "Barra de Sonido" ? (
                                     <Image src="/demo-prize-2.jpg" alt="Premio" fill className="object-cover" priority />
@@ -529,7 +545,11 @@ export default function TreasureHuntPage() {
                                     /* Fallback UI - Clean & High Contrast */
                                     <div className="text-center p-10 bg-gradient-to-t from-blue-950 via-blue-900 to-primary/40 h-full w-full flex flex-col items-center justify-center">
                                         <div className="bg-white/10 p-8 rounded-full mb-6 backdrop-blur-sm border border-white/10">
-                                            <Gift className="text-white w-24 h-24 drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]" />
+                                            {viewingPrize.prize_type === 'gift' ? (
+                                                <Gift className="text-white w-24 h-24 drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]" />
+                                            ) : (
+                                                <Tag className="text-white w-24 h-24 drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]" />
+                                            )}
                                         </div>
                                         <h3 className="text-white font-lilita text-4xl uppercase tracking-wider drop-shadow-lg leading-tight">
                                             {viewingPrize.prize_name}
@@ -541,10 +561,12 @@ export default function TreasureHuntPage() {
                                 )}
                             </div>
 
-                            {/* Only show overlay if NOT a poster image (Posters already have text) */}
-                            {!["Proyector Smart", "Barra de Sonido", "Aire Acondicionado", "Smart TV 50\""].includes(viewingPrize.prize_name) && (
+                            {/* Only show overlay if MUST (e.g. no image or not one of the special ones) */}
+                            {(!viewingPrize.prize_image && !["Proyector Smart", "Barra de Sonido", "Aire Acondicionado", "Smart TV 50\""].includes(viewingPrize.prize_name)) && (
                                 <div className="absolute bottom-0 left-0 w-full p-8 bg-gradient-to-t from-black via-black/80 to-transparent">
-                                    <p className="text-secondary font-lilita text-sm mb-1 uppercase tracking-widest">Premio Desbloqueado</p>
+                                    <p className="text-secondary font-lilita text-sm mb-1 uppercase tracking-widest">
+                                        {viewingPrize.prize_type === 'gift' ? 'Premio Desbloqueado' : 'Descuento Activo'}
+                                    </p>
                                     <h3 className="text-2xl font-black text-white uppercase font-lilita tracking-tight">{viewingPrize.prize_name}</h3>
                                 </div>
                             )}

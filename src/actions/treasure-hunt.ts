@@ -85,33 +85,57 @@ export async function generateScratchPrize(userId: string, localeId: string) {
 
     // DEMO MODE TOGGLE
     const DEMO_MODE = true;
-
+ 
     if (DEMO_MODE) {
-        const demoPrizes = [
-            { name: "Proyector Smart", image: "/demo-prize-1.jpg" },
-            { name: "Barra de Sonido", image: "/demo-prize-2.jpg" },
-            { name: "Aire Acondicionado", image: "/demo-prize-3.jpg" },
-            { name: "Smart TV 50\"", image: "/demo-prize-4.jpg" },
-        ];
+        // Count total visits for this user to determine if it's a prize or discount scan
+        const { count: totalVisits } = await supabase
+            .from('treasure_hunt_visits')
+            .select('*', { count: 'exact', head: true })
+            .eq('user_id', userId);
         
-        const randomPrize = demoPrizes[Math.floor(Math.random() * demoPrizes.length)];
+        const visitNumber = totalVisits || 1;
+        const isPrizeScan = visitNumber % 5 === 0;
+
+        let prizeName = "";
+        let prizeType: 'gift' | 'discount' = 'discount';
+        let prizeImage = "";
+
+        if (isPrizeScan) {
+            const demoPrizes = [
+                { name: "Proyector Smart", image: "/demo-prize-1.jpg" },
+                { name: "Barra de Sonido", image: "/demo-prize-2.jpg" },
+                { name: "Aire Acondicionado", image: "/demo-prize-3.jpg" },
+                { name: "Smart TV 50\"", image: "/demo-prize-4.jpg" },
+            ];
+            const randomPrize = demoPrizes[Math.floor(Math.random() * demoPrizes.length)];
+            prizeName = randomPrize.name;
+            prizeType = 'gift';
+            prizeImage = randomPrize.image;
+        } else {
+            prizeName = "DESCUENTO ESPECIAL";
+            prizeType = 'discount';
+            // Cycle through the 3 discount images
+            const discountIndex = ((visitNumber - 1) % 3) + 1;
+            prizeImage = `/discount-${discountIndex}.jpeg`;
+        }
         
         const { data: newPrize, error } = await supabase
             .from('treasure_hunt_prizes')
             .insert({
                 user_id: userId,
                 locale_id: localeId,
-                prize_name: randomPrize.name,
-                prize_type: 'gift'
+                prize_name: prizeName,
+                prize_type: prizeType,
+                prize_image: prizeImage
             })
             .select()
             .single();
-
+ 
         if (error) {
             console.error("Error saving demo prize:", error);
             return { success: false, error: "No se pudo generar el premio demo" };
         }
-
+ 
         revalidatePath("/treasure-hunt");
         return { success: true, prize: newPrize as TreasureHuntPrize };
     }
