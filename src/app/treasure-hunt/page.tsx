@@ -58,33 +58,34 @@ export default function TreasureHuntPage() {
         }
     }, [user, authLoading])
 
+    const [prizeLoading, setPrizeLoading] = useState(false)
+
     const handleScan = async (decodedText: string) => {
-        // Assume decodedText is either the Locale ID or a URL containing it
+        // ... decodedText logic ...
         let localeId = decodedText
         if (decodedText.includes('id=')) {
             localeId = decodedText.split('id=')[1].split('&')[0]
         }
 
         const locale = locales.find(l => l.id === localeId || l.name.toLowerCase() === decodedText.toLowerCase())
-        
-        if (!locale) {
-            alert("Código QR no reconocido. Asegúrate de estar escaneando el código oficial del restaurante.")
-            return
-        }
+        if (!locale) return
 
         if (!user) {
             setIsAuthModalOpen(true)
             return
         }
 
+        setPrizeLoading(true)
         const res = await registerVisit(user.id, locale.id)
         if (res.success) {
             if (!res.alreadyVisited) {
-                // New visit! Show scratch card
                 setActivePrizeLocale(locale)
                 const prizeRes = await generateScratchPrize(user.id, locale.id)
                 if (prizeRes.success && prizeRes.prize) {
                     setCurrentPrize(prizeRes.prize as TreasureHuntPrize)
+                } else {
+                    alert(prizeRes.error || "Ocurrió un error al generar tu premio. Por favor intenta de nuevo.")
+                    setActivePrizeLocale(null)
                 }
             } else {
                 alert(`¡Ya has registrado tu visita en ${locale.name}!`)
@@ -93,6 +94,7 @@ export default function TreasureHuntPage() {
         } else {
             alert(res.error)
         }
+        setPrizeLoading(false)
     }
 
     const handleScratchComplete = () => {
@@ -453,7 +455,12 @@ export default function TreasureHuntPage() {
                                             <ScratchCard onComplete={handleScratchComplete}>
                                                 <div className="absolute inset-0 w-full h-full bg-black">
                                                     <div className="relative w-full h-full overflow-hidden flex items-center justify-center">
-                                                        {currentPrize?.prize_name === "Proyector Smart" ? (
+                                                        {prizeLoading ? (
+                                                            <div className="flex flex-col items-center gap-4">
+                                                                <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+                                                                <p className="font-lilita text-white/60 uppercase tracking-widest text-xs">Preparando tu regalo...</p>
+                                                            </div>
+                                                        ) : currentPrize?.prize_name === "Proyector Smart" ? (
                                                             <Image src="/demo-prize-1.jpg" alt="Premio" fill className="object-cover" priority />
                                                         ) : currentPrize?.prize_name === "Barra de Sonido" ? (
                                                             <Image src="/demo-prize-2.jpg" alt="Premio" fill className="object-cover" priority />
