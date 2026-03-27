@@ -133,11 +133,9 @@ export function VerticalQuestTrail({ locales, visitedIds, onLocaleClick }: Verti
                     {/* Main Core */}
                     <path d={dynamicPath} fill="none" stroke="url(#neonBlueGrad)" strokeWidth="10" strokeLinecap="round" strokeLinejoin="round" />
                     
-                    {/* Rice Dots Pattern (Slightly larger dots) */}
-                    <path d={dynamicPath} fill="none" stroke="#FFF8E7" strokeWidth="1.5" strokeDasharray="0.1 8" strokeLinecap="round" opacity="0.4" />
-
                     {/* Cream Dash Pattern (Sushi Rice style) */}
                     <path d={dynamicPath} fill="none" stroke="#FFF8E7" strokeWidth="1" strokeLinecap="round" strokeDasharray="1.5 5" opacity="0.6" />
+
 
 
                     {/* ── DECORATIVE SUSHI EMOJIS ── */}
