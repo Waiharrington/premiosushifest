@@ -72,13 +72,14 @@ export function VerticalQuestTrail({ locales, visitedIds, onLocaleClick }: Verti
 
     return (
         <div className="relative w-full overflow-hidden">
-            {/* SVG canvas — Expanded Width to avoid side-cropping (Margin of 10-15 on each side) */}
-            <div className="relative w-full" style={{ paddingBottom: `${(activeHeight / 110) * 100}%` }}>
+            {/* SVG canvas — Further Expanded Width to avoid any side-cropping (Margin of 20 on each side) */}
+            <div className="relative w-full" style={{ paddingBottom: `${(activeHeight / 140) * 100}%` }}>
                 <svg
-                    viewBox={`-5 0 110 ${activeHeight}`}
+                    viewBox={`-20 0 140 ${activeHeight}`}
                     className="absolute inset-0 w-full h-full"
                     preserveAspectRatio="xMidYMid meet"
                 >
+
 
                     <defs>
                         {/* Clip paths for circular logos */}
