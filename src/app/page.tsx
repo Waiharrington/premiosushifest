@@ -23,14 +23,13 @@ export default function Home() {
                         src="/bg-welcome.png"
                         alt="Fondo de Festival"
                         fill
-                        className="object-cover opacity-90"
+                        className="object-cover opacity-100"
                         priority
                         quality={100}
                     />
                 </motion.div>
                 {/* Cinematic filters for depth and focus */}
-                <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/90" />
-                <div className="absolute inset-0 backdrop-blur-[1px]" />
+                <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/90" />
 
                 {/* Golden radiant light from the bottom (Chest glow) */}
                 <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[150%] h-[400px] bg-[radial-gradient(circle_at_center,rgba(255,183,0,0.15)_0%,transparent_70%)] blur-[100px] z-[5]" />
