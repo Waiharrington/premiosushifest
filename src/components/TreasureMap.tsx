@@ -12,33 +12,19 @@ interface TreasureMapProps {
 
 export function TreasureMap({ locales, visitedIds, onLocaleClick }: TreasureMapProps) {
     // Coordinate mapping for 23 locales (approximate path from Chiriquí to Panamá City)
-    // We'll distribute them along the "S" curve of the Isthmus
     const getCoordinates = (index: number) => {
         const total = locales.length;
-        
-        // Deterministic shuffle using a coprime multiplier (17 and 30 are coprimes)
-        // This ensures branch locations (e.g. Zen Sushi 1, 2, 3) are spread apart
         const shuffledIndex = (index * 17) % total;
         const t = shuffledIndex / (total - 1 || 1); 
-        
-        // Track-based horizontal staggered layout
-        const track = shuffledIndex % 3; // 0, 1, 2
-        
-        // Wider horizontal spread (5% to 95%) with track-based offset to prevent vertical alignment
+        const track = shuffledIndex % 3;
         const xBase = 5 + t * 90;
-        const xOffset = (track - 1) * 3; // Slight horizontal shift per track
-        
-        // Balanced Panama S-curve for the base Y
+        const xOffset = (track - 1) * 3;
         const curve = Math.sin(t * Math.PI * 2.1); 
         const baseY = 50 + (curve * 15);
-        
-        // Clean vertical gaps for the 3 tracks (18% safety gap)
         const yOffset = (track - 1) * 18;
-        
         return { x: `${xBase + xOffset}%`, y: `${baseY + yOffset}%` };
     };
 
-    // Calculate path for SVG
     const pathData = locales.map((_, i) => {
         const { x, y } = getCoordinates(i);
         return `${i === 0 ? 'M' : 'L'} ${parseFloat(x)} ${parseFloat(y)}`;
@@ -48,26 +34,28 @@ export function TreasureMap({ locales, visitedIds, onLocaleClick }: TreasureMapP
         <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="relative w-full min-h-[350px] md:aspect-[16/9] mb-12 rounded-[2rem] overflow-hidden border border-white/10 shadow-3xl bg-black/40"
+            className="relative w-full min-h-[400px] md:aspect-[16/9] rounded-[2.5rem] overflow-hidden border border-white/5 shadow-inner bg-black/20"
         >
-            {/* Map Background */}
-            <Image
-                src="/panama-map.png"
-                alt="Mapa de Panamá"
-                fill
-                className="object-cover opacity-60 mix-blend-lighten"
-                priority
-            />
+            {/* Map Background (Enhanced Contrast) */}
+            <div className="absolute inset-0 opacity-40 mix-blend-overlay">
+                <Image
+                    src="/panama-map.png"
+                    alt="Mapa de Panamá"
+                    fill
+                    className="object-cover"
+                    priority
+                />
+            </div>
 
-            {/* SVG Path Layer */}
+            {/* SVG Path Layer (The Digital Connection) */}
             <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 100 100" preserveAspectRatio="none">
-                {/* Background (Locked) Path */}
+                {/* Background (Locked) Path - Subtly visible infrastructure */}
                 <path
                     d={pathData}
                     fill="none"
-                    stroke="rgba(255, 255, 255, 0.05)"
-                    strokeWidth="0.5"
-                    strokeDasharray="1 1"
+                    stroke="rgba(255, 255, 255, 0.03)"
+                    strokeWidth="0.4"
+                    strokeDasharray="2 2"
                 />
                 
                 {/* Active (Visited) Path Segment by Segment */}
@@ -76,24 +64,38 @@ export function TreasureMap({ locales, visitedIds, onLocaleClick }: TreasureMapP
                     const p1 = getCoordinates(i-1);
                     const p2 = getCoordinates(i);
                     return (
-                        <motion.line
-                            key={`path-${i}`}
-                            x1={parseFloat(p1.x)}
-                            y1={parseFloat(p1.y)}
-                            x2={parseFloat(p2.x)}
-                            y2={parseFloat(p2.y)}
-                            stroke="#FFD700"
-                            strokeWidth="0.6"
-                            initial={{ pathLength: 0, opacity: 0 }}
-                            animate={{ pathLength: 1, opacity: 0.6 }}
-                            transition={{ duration: 1, delay: i * 0.1 }}
-                            className="drop-shadow-[0_0_8px_rgba(255,215,0,0.8)]"
-                        />
+                        <g key={`path-group-${i}`}>
+                            {/* Inner Glow Line */}
+                            <motion.line
+                                x1={parseFloat(p1.x)}
+                                y1={parseFloat(p1.y)}
+                                x2={parseFloat(p2.x)}
+                                y2={parseFloat(p2.y)}
+                                stroke="#00B2FF"
+                                strokeWidth="0.8"
+                                initial={{ pathLength: 0, opacity: 0 }}
+                                animate={{ pathLength: 1, opacity: 0.8 }}
+                                transition={{ duration: 1.5, delay: i * 0.1, ease: "easeInOut" }}
+                                className="drop-shadow-[0_0_12px_rgba(0,178,255,1)]"
+                            />
+                            {/* Outer Soft Glow */}
+                            <motion.line
+                                x1={parseFloat(p1.x)}
+                                y1={parseFloat(p1.y)}
+                                x2={parseFloat(p2.x)}
+                                y2={parseFloat(p2.y)}
+                                stroke="#0047FF"
+                                strokeWidth="2.5"
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 0.15 }}
+                                transition={{ duration: 2, delay: i * 0.1 }}
+                            />
+                        </g>
                     );
                 })}
             </svg>
 
-            {/* Locale Nodes */}
+            {/* Locale Nodes (The Interaction Points) */}
             {locales.map((locale, i) => {
                 const isVisited = visitedIds.includes(locale.id);
                 const { x, y } = getCoordinates(i);
@@ -103,27 +105,45 @@ export function TreasureMap({ locales, visitedIds, onLocaleClick }: TreasureMapP
                         key={locale.id}
                         initial={{ opacity: 0, scale: 0 }}
                         animate={{ opacity: 1, scale: 1 }}
-                        transition={{ delay: i * 0.05 + 0.5 }}
+                        transition={{ delay: i * 0.05 + 0.5, type: "spring", damping: 15 }}
                         style={{ left: x, top: y }}
                         className="absolute -translate-x-1/2 -translate-y-1/2 z-10"
                     >
                         <div className="relative group">
-                            {/* Pulse for visited or current */}
-                            {isVisited && (
+                            {/* Digital Radar Pulses */}
+                            {isVisited ? (
+                                <>
+                                    <motion.div 
+                                        animate={{ scale: [1, 2.5], opacity: [0.4, 0] }}
+                                        transition={{ duration: 3, repeat: Infinity, ease: "easeOut" }}
+                                        className="absolute inset-0 bg-primary rounded-full blur-md"
+                                    />
+                                    <motion.div 
+                                        animate={{ scale: [1, 2], opacity: [0.2, 0] }}
+                                        transition={{ duration: 2, repeat: Infinity, ease: "easeOut", delay: 1 }}
+                                        className="absolute inset-0 bg-secondary rounded-full blur-sm"
+                                    />
+                                </>
+                            ) : (
+                                // Subtle beacon for unvisited nodes
                                 <motion.div 
-                                    animate={{ scale: [1, 2], opacity: [0.5, 0] }}
-                                    transition={{ duration: 2, repeat: Infinity }}
-                                    className="absolute inset-0 bg-secondary rounded-full blur-md"
+                                    animate={{ opacity: [0.1, 0.3, 0.1] }}
+                                    transition={{ duration: 4, repeat: Infinity }}
+                                    className="absolute inset-0 bg-white/20 rounded-full blur-sm"
                                 />
                             )}
 
                             <motion.button
-                                whileHover={{ scale: 1.2, zIndex: 20 }}
+                                whileHover={{ scale: 1.3, zIndex: 30 }}
+                                whileTap={{ scale: 0.9 }}
                                 onClick={() => onLocaleClick(locale)}
                                 className={`
-                                    relative w-11 h-11 md:w-14 md:h-14 rounded-full overflow-hidden border-2 
-                                    ${isVisited ? 'border-secondary shadow-[0_0_20px_rgba(255,183,0,0.6)] ring-4 ring-secondary/20' : 'border-white/20 grayscale brightness-50 opacity-40'}
-                                    transition-all duration-500
+                                    relative w-12 h-12 md:w-16 md:h-16 rounded-2xl overflow-hidden border-2 
+                                    ${isVisited 
+                                        ? 'border-secondary shadow-[0_0_30px_rgba(255,122,0,0.5)] ring-4 ring-secondary/10' 
+                                        : 'border-white/10 grayscale brightness-[0.3] opacity-40 hover:opacity-60 transition-opacity'
+                                    }
+                                    bg-black transition-all duration-700
                                 `}
                             >
                                 <Image
@@ -133,17 +153,19 @@ export function TreasureMap({ locales, visitedIds, onLocaleClick }: TreasureMapP
                                     className="object-cover"
                                 />
                                 {!isVisited && (
-                                    <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
-                                        <span className="text-white/40 text-[10px]">🔒</span>
+                                    <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+                                        <X size={14} className="text-white/20" />
                                     </div>
                                 )}
                             </motion.button>
 
-                            {/* Label */}
-                            <div className="absolute top-full left-1/2 -translate-x-1/2 mt-1 whitespace-nowrap pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity">
-                                <span className="bg-black/80 backdrop-blur-md text-white text-[8px] md:text-[10px] px-2 py-0.5 rounded border border-white/10 font-lilita uppercase">
+                            {/* Floating Label (Cinematic HUD Style) */}
+                            <div className="absolute top-[110%] left-1/2 -translate-x-1/2 whitespace-nowrap pointer-events-none opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
+                                <span className="bg-black/90 backdrop-blur-2xl text-white text-[9px] font-black uppercase tracking-[0.2em] px-3 py-1.5 rounded-xl border border-white/10 shadow-2xl block">
                                     {locale.name}
                                 </span>
+                                {/* Small pointer arrow */}
+                                <div className="w-0 h-0 border-l-[4px] border-l-transparent border-r-[4px] border-r-transparent border-b-[4px] border-b-black/90 mx-auto -mt-[22px] rotate-180 mb-20" />
                             </div>
                         </div>
                     </motion.div>

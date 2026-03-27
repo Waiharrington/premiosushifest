@@ -5,6 +5,7 @@ import { useState } from "react";
 import Image from "next/image";
 import { RiceParticles } from "./RiceParticles";
 import { useAuth } from "@/context/AuthContext";
+import { X, User, Phone, CreditCard, Sparkles } from "lucide-react";
 
 interface AuthModalProps {
     onClose: () => void;
@@ -19,8 +20,6 @@ export default function AuthModal({ onClose, onSuccess }: AuthModalProps) {
     const [phone, setPhone] = useState("");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
-    
-    // Security fields
     const [honeypot, setHoneypot] = useState("");
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -33,11 +32,7 @@ export default function AuthModal({ onClose, onSuccess }: AuthModalProps) {
         const trimmedName = name.trim();
         const trimmedPhone = phone.trim();
 
-        // Bot check: Honeypot (must be empty)
-        if (honeypot) {
-            console.warn("Bot detected via honeypot");
-            return; // Silent fail for bots
-        }
+        if (honeypot) return;
 
         try {
             if (isRegistering) {
@@ -50,12 +45,11 @@ export default function AuthModal({ onClose, onSuccess }: AuthModalProps) {
                 if (success) { onSuccess?.(); onClose(); }
                 else setError("Cédula no encontrada.");
             }
-        } catch (err) {
-            const errorInstance = err as Error;
-            if (errorInstance.message === "PHONE_EXISTS") {
+        } catch (err: any) {
+            if (err.message === "PHONE_EXISTS") {
                 setError("Este número de teléfono ya está registrado.");
             } else {
-                setError("Error inesperado.");
+                setError("Ocurrió un error inesperado.");
             }
         } finally {
             setLoading(false);
@@ -66,158 +60,154 @@ export default function AuthModal({ onClose, onSuccess }: AuthModalProps) {
         <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="fixed inset-0 z-[200] flex items-center justify-center p-6 overflow-hidden select-none"
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[200] flex items-center justify-center p-4 md:p-6 overflow-hidden"
         >
-            {/* Backdrop Catch (Fixed & Instant) */}
+            {/* Backdrop */}
             <div 
                 onClick={onClose}
-                className="absolute inset-0 z-0 cursor-pointer pointer-events-auto"
+                className="absolute inset-0 z-0 bg-black/80 backdrop-blur-2xl cursor-pointer"
             >
-                <Image 
-                    src="/modal-bg.png" 
-                    alt="Fondo Estampado" 
-                    fill 
-                    className="object-cover opacity-100" // SHARP PATTERN
-                    priority 
-                />
-                <div className="absolute inset-0 bg-black/10" /> {/* LIGHTER VIGNETTE FOR 100% VISIBILITY */}
                 <RiceParticles />
             </div>
 
             {/* Modal Card */}
             <motion.div
-                initial={{ scale: 0.95, opacity: 0, y: 20 }}
+                initial={{ scale: 0.9, opacity: 0, y: 40 }}
                 animate={{ scale: 1, opacity: 1, y: 0 }}
-                transition={{ 
-                    type: "spring", 
-                    damping: 25, 
-                    stiffness: 400 
-                }}
-                className="relative w-full max-w-sm rounded-[2.5rem] p-8 shadow-[0_25px_90px_rgba(0,0,0,1)] overflow-visible pointer-events-auto will-change-transform"
-                style={{ willChange: 'transform, opacity' } as React.CSSProperties}
+                exit={{ scale: 0.9, opacity: 0, y: 40 }}
+                className="relative w-full max-w-md bg-[#000B2A]/90 border border-white/10 rounded-[3.5rem] p-8 md:p-12 shadow-[0_40px_100px_rgba(0,0,0,0.8)] backdrop-blur-3xl overflow-hidden"
             >
-                {/* Close Button */}
-                <button
-                    onClick={onClose}
-                    aria-label="Cerrar modal"
-                    className="absolute top-6 right-8 z-[210] w-10 h-10 flex items-center justify-center rounded-full bg-white/5 border border-white/10 text-white/40 hover:text-white hover:bg-white/10 transition-all active:scale-90"
-                >
-                    <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
-
-                {/* Background Glass Layer (SOLIDIFIED FOR READABILITY) */}
-                <div className="absolute inset-0 rounded-[2.5rem] overflow-hidden z-0 border border-white/20 shadow-2xl bg-black/90 backdrop-blur-3xl">
-                    <div className="absolute inset-0 scale-110 blur-xl opacity-60"> {/* BLURRED PATTERN INSIDE */}
-                        <Image src="/modal-bg.png" alt="F" fill className="object-cover" />
-                    </div>
-                    <div className="absolute inset-0 bg-black/20" /> {/* DARK OVERLAY TO PROTECT TEXT */}
-                    <motion.div 
-                        animate={{ x: ['-200%', '300%'] }}
-                        transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", repeatDelay: 3 }}
-                        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent skew-x-[-25deg]"
-                    />
+                {/* Visual Polish */}
+                <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-primary via-secondary to-primary animate-gradient-x" />
+                
+                {/* Character Header */}
+                <div className="absolute -top-6 left-1/2 -translate-x-1/2 w-32 drop-shadow-[0_20px_40px_rgba(0,0,0,0.5)] z-20">
+                    <Image src="/sushi-character.png" alt="Sushi" width={128} height={128} className="w-full h-auto animate-float" priority />
                 </div>
 
-                {/* Character (Lowered and optimized) */}
-                <div className="absolute -top-2 left-1/2 -track-x-1/2 w-32 h-auto z-50 pointer-events-none translate-x-[-50%]">
-                    <Image src="/sushi-character.png" alt="Character" width={128} height={100} className="w-full h-auto drop-shadow-2xl" priority />
-                </div>
-
-                {/* Content */}
                 <div className="relative z-10 pt-16">
-                    <h2 className="text-4xl font-lilita text-white text-center mb-1 tracking-tight uppercase">
-                        {isRegistering ? "¡REGÍSTRATE!" : "¡BIENVENIDO!"}
-                    </h2>
-                    <p className="text-[#00B2FF] font-black text-center mb-8 text-[11px] uppercase tracking-[0.25em] drop-shadow-[0_0_8px_rgba(0,178,255,0.4)]">
-                        {isRegistering ? "Elige el mejor sushi de Panamá" : "Ingresa para votar por tu favorito"}
-                    </p>
+                    <button
+                        onClick={onClose}
+                        className="absolute -top-4 -right-4 bg-white/5 border border-white/10 p-3 rounded-full text-white/40 hover:text-white transition-all active:scale-90"
+                    >
+                        <X size={20} />
+                    </button>
 
-                    {/* DEMO BUTTON (Testing only) */}
-                    <div className="flex justify-center mb-6">
-                        <button
-                            type="button"
-                            onClick={() => {
-                                setCedula("8-888-888");
-                                setName("Demo User");
-                                setPhone("6666-6666");
-                            }}
-                            className="px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-[9px] text-white/40 hover:text-white hover:bg-white/10 transition-all uppercase font-bold tracking-widest flex items-center gap-2"
-                        >
-                            <span className="w-1.5 h-1.5 rounded-full bg-[#00B2FF] animate-pulse" />
-                            RELLENAR DATOS DEMO
-                        </button>
+                    <div className="text-center mb-10">
+                        <h2 className="text-4xl font-lilita text-white tracking-tight uppercase mb-1">
+                            {isRegistering ? "¡ÚNETE!" : "¡HOLA!"}
+                        </h2>
+                        <div className="flex items-center justify-center gap-2">
+                             <Sparkles size={12} className="text-[#00B2FF]" />
+                             <p className="text-[#00B2FF] font-black text-[10px] uppercase tracking-[0.3em]">
+                                {isRegistering ? "Crea tu perfil de catador" : "Ingresa para continuar"}
+                             </p>
+                             <Sparkles size={12} className="text-[#00B2FF]" />
+                        </div>
                     </div>
 
-                    <form onSubmit={handleSubmit} className="space-y-4">
+                    <form onSubmit={handleSubmit} className="space-y-5">
                         {isRegistering && (
-                            <div className="space-y-1 px-1">
-                                <label className="text-[10px] text-white/40 font-bold ml-4 uppercase tracking-widest">Nombre Completo</label>
+                            <div className="space-y-2 group">
+                                <label className="text-[10px] text-white/30 font-black uppercase tracking-[0.2em] ml-2 flex items-center gap-2 transition-colors group-focus-within:text-white/60">
+                                    <User size={12} /> Nombre Completo
+                                </label>
                                 <input
                                     type="text"
-                                    placeholder="Ej: Juan Pérez"
+                                    placeholder="Ej: Akio Tanaka"
                                     value={name}
                                     onChange={(e) => setName(e.target.value)}
-                                    className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 outline-none focus:border-[#00B2FF] text-white text-base"
+                                    className="w-full bg-black/40 border border-white/5 rounded-2xl py-4 px-6 outline-none focus:border-primary/50 text-white placeholder:text-white/10 transition-all font-medium text-lg shadow-inner"
                                 />
                             </div>
                         )}
-                        <div className="space-y-1 px-1">
-                            <label className="text-[10px] text-white/40 font-bold ml-4 uppercase tracking-widest">Cédula</label>
+                        
+                        <div className="space-y-2 group">
+                            <label className="text-[10px] text-white/30 font-black uppercase tracking-[0.2em] ml-2 flex items-center gap-2 transition-colors group-focus-within:text-white/60">
+                                <CreditCard size={12} /> Cédula de Identidad
+                            </label>
                             <input
                                 type="text"
                                 placeholder="Ej: 8-888-888"
                                 value={cedula}
                                 onChange={(e) => setCedula(e.target.value)}
-                                className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 outline-none focus:border-[#00B2FF] text-white text-base"
+                                className="w-full bg-black/40 border border-white/5 rounded-2xl py-4 px-6 outline-none focus:border-primary/50 text-white placeholder:text-white/10 transition-all font-medium text-lg shadow-inner"
                             />
                         </div>
-                        {isRegistering && (
-                            <div className="space-y-4 px-1">
-                                <div className="space-y-1">
-                                    <label className="text-[10px] text-white/40 font-bold ml-4 uppercase tracking-widest">Teléfono</label>
-                                    <input
-                                        type="tel"
-                                        placeholder="Ej: 6666-6666"
-                                        value={phone}
-                                        onChange={(e) => setPhone(e.target.value)}
-                                        className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 outline-none focus:border-[#00B2FF] text-white text-base"
-                                    />
-                                </div>
 
-                                {/* Honeypot (Hidden) */}
+                        {isRegistering && (
+                            <div className="space-y-2 group">
+                                <label className="text-[10px] text-white/30 font-black uppercase tracking-[0.2em] ml-2 flex items-center gap-2 transition-colors group-focus-within:text-white/60">
+                                    <Phone size={12} /> WhatsApp
+                                </label>
                                 <input
-                                    type="text"
-                                    name="website"
-                                    title="website"
-                                    value={honeypot}
-                                    onChange={(e) => setHoneypot(e.target.value)}
-                                    className="hidden"
-                                    autoComplete="off"
+                                    type="tel"
+                                    placeholder="Ej: 6666-6666"
+                                    value={phone}
+                                    onChange={(e) => setPhone(e.target.value)}
+                                    className="w-full bg-black/40 border border-white/5 rounded-2xl py-4 px-6 outline-none focus:border-primary/50 text-white placeholder:text-white/10 transition-all font-medium text-lg shadow-inner"
                                 />
+                                <input type="text" value={honeypot} onChange={(e) => setHoneypot(e.target.value)} className="hidden" autoComplete="off" />
                             </div>
                         )}
-                        {error && <p className="text-red-400 text-[11px] text-center font-bold uppercase">{error}</p>}
+
+                        {error && (
+                            <motion.div 
+                                initial={{ opacity: 0, x: -10 }} 
+                                animate={{ opacity: 1, x: 0 }}
+                                className="bg-red-500/10 border border-red-500/20 rounded-xl p-3 text-red-400 text-[10px] font-black uppercase tracking-widest text-center"
+                            >
+                                {error}
+                            </motion.div>
+                        )}
+
                         <button
                             type="submit"
                             disabled={loading}
-                            className="w-full h-15 rounded-2xl mt-4 bg-gradient-to-r from-[#0066FF] to-[#00B2FF] text-white font-black text-lg uppercase tracking-wider"
+                            className="w-full relative h-16 rounded-2xl mt-4 overflow-hidden group shadow-[0_15px_30px_rgba(0,71,255,0.3)] transition-all active:scale-95"
                         >
-                            {loading ? "..." : (isRegistering ? "REGISTRARME" : "INGRESAR")}
+                            <div className="absolute inset-0 bg-gradient-to-r from-[#0047FF] via-[#00B2FF] to-[#0047FF] animate-gradient-x" />
+                            <span className="relative z-10 text-white font-lilita text-xl uppercase tracking-widest">
+                                {loading ? "PROCESANDO..." : (isRegistering ? "CREAR CUENTA" : "INGRESAR")}
+                            </span>
                         </button>
                     </form>
 
-                    <div className="mt-6 text-center">
+                    <div className="mt-8 text-center flex flex-col items-center gap-6">
                         <button
                             onClick={() => setIsRegistering(!isRegistering)}
-                            className="text-[10px] text-white/30 hover:text-white uppercase tracking-widest font-bold transition-all"
+                            className="text-[10px] text-white/30 hover:text-white uppercase tracking-[0.3em] font-black transition-colors"
                         >
-                            {isRegistering ? "¿YA TIENES CUENTA? INGRESA" : "¿ERES NUEVO? REGÍSTRATE"}
+                            {isRegistering ? "¿Ya tienes cuenta? Ingresa aquí" : "¿Eres nuevo? Únete a la ruta"}
+                        </button>
+
+                        {/* Demo Helper */}
+                        <button
+                            type="button"
+                            onClick={() => {
+                                setCedula("8-888-888");
+                                setName("Catador Premium");
+                                setPhone("6666-6666");
+                            }}
+                            className="px-4 py-2 rounded-full bg-white/5 border border-white/10 text-[9px] text-white/20 hover:text-white/40 hover:bg-white/10 transition-all flex items-center gap-2 uppercase tracking-widest font-bold"
+                        >
+                            <span className="w-1.5 h-1.5 rounded-full bg-secondary animate-pulse" />
+                            Autocompletar Demo
                         </button>
                     </div>
                 </div>
             </motion.div>
+
+            <style jsx global>{`
+                @keyframes float {
+                    0%, 100% { transform: translateY(0) rotate(0); }
+                    50% { transform: translateY(-10px) rotate(2deg); }
+                }
+                .animate-float {
+                    animation: float 4s ease-in-out infinite;
+                }
+            `}</style>
         </motion.div>
     );
 }
