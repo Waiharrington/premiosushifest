@@ -45,8 +45,9 @@ export default function AuthModal({ onClose, onSuccess }: AuthModalProps) {
                 if (success) { onSuccess?.(); onClose(); }
                 else setError("Cédula no encontrada.");
             }
-        } catch (err: any) {
-            if (err.message === "PHONE_EXISTS") {
+        } catch (err: unknown) {
+            const errorInstance = err as Error;
+            if (errorInstance.message === "PHONE_EXISTS") {
                 setError("Este número de teléfono ya está registrado.");
             } else {
                 setError("Ocurrió un error inesperado.");
@@ -90,6 +91,7 @@ export default function AuthModal({ onClose, onSuccess }: AuthModalProps) {
                     <button
                         onClick={onClose}
                         className="absolute -top-4 -right-4 bg-white/5 border border-white/10 p-3 rounded-full text-white/40 hover:text-white transition-all active:scale-90"
+                        title="Cerrar modal"
                     >
                         <X size={20} />
                     </button>
@@ -148,7 +150,7 @@ export default function AuthModal({ onClose, onSuccess }: AuthModalProps) {
                                     onChange={(e) => setPhone(e.target.value)}
                                     className="w-full bg-black/40 border border-white/5 rounded-2xl py-4 px-6 outline-none focus:border-primary/50 text-white placeholder:text-white/10 transition-all font-medium text-lg shadow-inner"
                                 />
-                                <input type="text" value={honeypot} onChange={(e) => setHoneypot(e.target.value)} className="hidden" autoComplete="off" />
+                                <input type="text" value={honeypot} onChange={(e) => setHoneypot(e.target.value)} className="hidden" autoComplete="off" title="Security field" placeholder="Security" />
                             </div>
                         )}
 
@@ -199,15 +201,6 @@ export default function AuthModal({ onClose, onSuccess }: AuthModalProps) {
                 </div>
             </motion.div>
 
-            <style jsx global>{`
-                @keyframes float {
-                    0%, 100% { transform: translateY(0) rotate(0); }
-                    50% { transform: translateY(-10px) rotate(2deg); }
-                }
-                .animate-float {
-                    animation: float 4s ease-in-out infinite;
-                }
-            `}</style>
         </motion.div>
     );
 }

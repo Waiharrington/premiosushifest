@@ -3,6 +3,7 @@
 import { motion } from "framer-motion"
 import Image from "next/image"
 import { Locale } from "@/types"
+import { X } from "lucide-react"
 
 interface TreasureMapProps {
     locales: Locale[]

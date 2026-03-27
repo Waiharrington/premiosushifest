@@ -114,7 +114,7 @@ export default function Home() {
                         <h1 
                             className="text-5xl md:text-7xl font-lilita uppercase tracking-tight leading-[0.95] text-white my-2 drop-shadow-[0_10px_30px_rgba(0,0,0,0.8)]"
                         >
-                            ¡GANA <span className="italic">PREMIOS</span> INCREIBLES!
+                            ¡GANA <span className="italic">PREMIOS</span> INCREÍBLES!
                         </h1>
                         <p className="text-white/90 text-xs md:text-sm font-medium tracking-wide max-w-[380px] mx-auto leading-relaxed drop-shadow-lg">
                             Explora la ciudad, descubre nuevos sabores y desbloquea descuentos exclusivos en cada restaurante que visites.

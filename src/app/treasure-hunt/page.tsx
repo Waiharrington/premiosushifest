@@ -14,7 +14,7 @@ import { SponsorBackground } from "@/components/SponsorBackground"
 import { registerVisit, getTreasureHuntStatus, generateScratchPrize } from "@/actions/treasure-hunt"
 import { supabase } from "@/lib/supabase"
 import { Locale, TreasureHuntPrize } from "@/types"
-import { Trophy, QrCode, Map as MapIcon, Gift, CheckCircle2, LogOut, Sparkles, ArrowRight, X, Heart } from "lucide-react"
+import { QrCode, Map as MapIcon, Gift, CheckCircle2, LogOut, Sparkles, ArrowRight, X } from "lucide-react"
 import { useRouter } from "next/navigation"
 import confetti from "canvas-confetti"
 
@@ -32,6 +32,11 @@ export default function TreasureHuntPage() {
     const [isScratched, setIsScratched] = useState(false)
     const [viewingPrize, setViewingPrize] = useState<TreasureHuntPrize | null>(null)
     const [viewingPrizeIndex, setViewingPrizeIndex] = useState(1)
+    const [hasMounted, setHasMounted] = useState(false)
+
+    useEffect(() => {
+        setHasMounted(true)
+    }, [])
 
     const fetchData = useCallback(async () => {
         try {
@@ -110,7 +115,9 @@ export default function TreasureHuntPage() {
         })
     }
 
-    if (authLoading || (loading && user)) {
+    const progress = locales.length > 0 ? (visitedIds.length / locales.length) * 100 : 0
+
+    if (!hasMounted || authLoading || (loading && user)) {
         return (
             <div className="min-h-[100svh] bg-[#000B2A] flex flex-col items-center justify-center gap-6">
                 <motion.div 
@@ -122,8 +129,6 @@ export default function TreasureHuntPage() {
             </div>
         )
     }
-
-    const progress = locales.length > 0 ? (visitedIds.length / locales.length) * 100 : 0
 
     return (
         <div className="min-h-[100svh] bg-[#000B2A] text-white relative overflow-hidden selection:bg-primary/30 font-sans">
@@ -292,7 +297,7 @@ export default function TreasureHuntPage() {
                                         // Cinematic Alert replacement or improved interaction
                                         alert(`Visita "${l.name}" y escanea su código QR para desbloquearlo.`)
                                     } else {
-                                        const p = prizes.find(p => p.locale_id === l.id)
+                                        // prizes.find(p => p.locale_id === l.id)
                                         // Future: Show a small "Memory card" for visited locales
                                     }
                                 }} 
@@ -590,6 +595,7 @@ export default function TreasureHuntPage() {
                             <button 
                                 onClick={() => setViewingPrize(null)}
                                 className="absolute top-6 right-6 z-[130] bg-black/40 backdrop-blur-2xl border border-white/10 p-4 rounded-full text-white shadow-2xl hover:bg-black/60 hover:scale-110 active:scale-90 transition-all group"
+                                title="Cerrar vista de premio"
                             >
                                 <X size={20} className="group-hover:rotate-90 transition-transform duration-500" />
                             </button>
@@ -619,22 +625,6 @@ export default function TreasureHuntPage() {
                     </div>
                 )}
             </AnimatePresence>
-
-            <style jsx global>{`
-                .custom-scrollbar::-webkit-scrollbar {
-                    width: 4px;
-                }
-                .custom-scrollbar::-webkit-scrollbar-track {
-                    background: transparent;
-                }
-                .custom-scrollbar::-webkit-scrollbar-thumb {
-                    background: rgba(0, 71, 255, 0.2);
-                    border-radius: 20px;
-                }
-                .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-                    background: rgba(0, 71, 255, 0.4);
-                }
-            `}</style>
         </div>
     )
 }
