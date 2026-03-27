@@ -164,34 +164,6 @@ export default function Home() {
                     <p>© 2026 SUSHIFEST • PANAMÁ</p>
                 </footer>
             </main>
-
-            {/* Foreground Assets (3D Depth) */}
-            <div className="absolute bottom-0 left-0 right-0 z-50 pointer-events-none overflow-hidden h-1/2">
-                {/* Treasure Chest partially visible at the bottom right */}
-                <motion.div
-                    initial={{ y: 100, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    transition={{ duration: 2, delay: 1 }}
-                    className="absolute bottom-[-10%] right-[-10%] w-[120%] max-w-[500px] aspect-square"
-                >
-                    <Image
-                        src="/treasure-chest.png"
-                        alt="Cofre del Tesoro"
-                        fill
-                        className="object-contain drop-shadow-[0_0_80px_rgba(255,183,0,0.5)]"
-                    />
-                </motion.div>
-                
-                {/* Bottom-left accent (Darker Sushi to balance depth) */}
-                <div className="absolute bottom-[-5%] left-[-5%] w-[40%] max-w-[200px] aspect-square grayscale opacity-30 select-none">
-                     <Image
-                        src="/treasure-chest.png" // Placeholder or similar asset
-                        alt=""
-                        fill
-                        className="object-contain"
-                    />
-                </div>
-            </div>
         </div>
     )
 }
