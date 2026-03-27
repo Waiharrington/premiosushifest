@@ -178,65 +178,75 @@ export default function TreasureHuntPage() {
                 </div>
 
                 <main className="flex flex-col items-center px-4 pb-24 text-center max-w-lg md:max-w-4xl mx-auto w-full pt-4">
-                    
-                    {/* Space-Neon Header HUD */}
-                    <div className="w-full max-w-lg mb-8 px-4">
-                        <div className="flex justify-between items-center mb-4">
-                            <div className="flex items-center gap-4">
-                                <div className="relative w-16 h-16 rounded-full border-2 border-white/40 shadow-[0_0_25px_rgba(0,209,255,0.3)] bg-white/5 flex items-center justify-center p-0.5 overflow-hidden">
-                                     <Image src="/logo-fest.png" alt="Logo" width={64} height={64} className="w-full h-full object-contain" />
+                                       {/* HUD Central Card — Premium Glassmorphism */}
+                    <div className="w-full max-w-lg mb-8 relative p-0.5 rounded-[3rem] bg-gradient-to-b from-white/10 to-transparent">
+                        <div className="bg-[#0A0A0B]/80 backdrop-blur-3xl rounded-[2.8rem] p-6 border border-white/5 shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
+                            
+                            {/* Top HUD Info */}
+                            <div className="flex items-center gap-5 mb-6">
+                                {/* Enhanced Glowing Logo Container */}
+                                <div className="relative group">
+                                    <div className="absolute inset-0 bg-[#FF4B1F]/20 blur-xl rounded-full animate-pulse" />
+                                    <div className="relative w-20 h-20 rounded-full border-2 border-[#FF4B1F]/40 shadow-[0_0_30px_rgba(255,75,31,0.4)] bg-black/40 flex items-center justify-center p-1 overflow-hidden ring-4 ring-[#FF4B1F]/5">
+                                        <Image src="/logo-fest.png" alt="Logo" width={80} height={80} className="w-full h-full object-contain transform group-hover:scale-110 transition-transform duration-500" />
+                                    </div>
                                 </div>
-                                <div className="text-left">
-                                    <h1 className="text-2xl font-lilita uppercase text-white leading-none tracking-tight">¡ENCUENTRA TU <span className="text-[#FF8A5B]">PREMIO!</span></h1>
-                                    <p className="text-[7px] font-black uppercase text-[#00D1FF] tracking-[0.4em] mt-1">Búsqueda del Tesoro • Panamá 2026</p>
+
+                                {/* Dynamic Impact Title */}
+                                <div className="flex-grow text-left">
+                                    <h1 className="flex flex-col">
+                                        <span className="text-[10px] font-black uppercase text-white/50 tracking-[0.4em] mb-1">Tu Búsqueda del</span>
+                                        <span className="text-[28px] font-lilita leading-[0.9] text-white uppercase tracking-tight">
+                                            ¡TESORO <span className="text-[#FF4B1F] drop-shadow-[0_0_15px_rgba(255,75,31,0.5)]">SAGA!</span>
+                                        </span>
+                                    </h1>
+                                    <p className="text-[8px] font-black uppercase text-[#00D1FF] tracking-[0.3em] mt-2 opacity-80 decoration-none">Explora • Escanea • Gana</p>
                                 </div>
 
-
-
-
+                                {/* Revelados Counter (Badge Style) */}
+                                <div className="bg-white/5 border border-white/10 rounded-2xl px-4 py-3 text-center min-w-[70px] backdrop-blur-md">
+                                    <div className="text-xl font-lilita text-white leading-none mb-1">
+                                        {visitedIds.length}<span className="text-[#00D1FF] mx-1">/</span>{locales.length}
+                                    </div>
+                                    <div className="text-[7px] font-black text-white/40 uppercase tracking-widest">MAPA</div>
+                                </div>
                             </div>
-                            <div className="text-right">
-                                <div className="text-2xl font-lilita text-white">
-                                    {visitedIds.length} <span className="text-[#00D1FF]">/</span> {locales.length}
+
+                            {/* Neon Power Progress Bar */}
+                            <div className="relative mb-8 pt-1">
+                                <div className="flex justify-between items-end mb-2 px-1">
+                                    <span className="text-[9px] font-black text-white/30 uppercase tracking-widest">Progreso de la Misión</span>
+                                    <span className="text-[11px] font-lilita text-[#00D1FF]">{Math.round(progress)}%</span>
                                 </div>
-                                <p className="text-[8px] font-black uppercase text-white/40 tracking-widest">Revelados</p>
+                                <div className="relative h-4 w-full bg-black/60 rounded-full border border-white/5 p-1 overflow-hidden">
+                                     <motion.div 
+                                        initial={{ width: 0 }}
+                                        animate={{ width: `${progress}%` }}
+                                        transition={{ duration: 1.5, ease: 'easeOut' }}
+                                        className="h-full bg-gradient-to-r from-[#0038A8] via-[#00D1FF] to-[#0038A8] rounded-full shadow-[0_0_15px_rgba(0,178,255,0.6)] relative overflow-hidden"
+                                     >
+                                         <motion.div
+                                             className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent w-full"
+                                             animate={{ x: ['-200%', '200%'] }}
+                                             transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+                                         />
+                                     </motion.div>
+                                </div>
                             </div>
 
+                            {/* Big Action Scanner Button — High Contrast */}
+                            <motion.button
+                                onClick={() => setIsScannerOpen(true)}
+                                whileHover={{ scale: 1.02 }}
+                                whileTap={{ scale: 0.98 }}
+                                className="w-full h-16 rounded-[1.8rem] bg-gradient-to-r from-[#0038A8] via-[#0066FF] to-[#0038A8] shadow-[0_15px_40px_rgba(0,56,168,0.5)] flex items-center justify-center gap-4 border border-white/20 relative overflow-hidden group active:scale-95"
+                            >
+                                <div className="absolute inset-0 bg-[#00D1FF]/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+                                <QrCode size={26} className="text-[#00D1FF]" />
+                                <span className="text-white font-lilita text-2xl uppercase tracking-wider drop-shadow-md">Escanear QR <span className="text-white">🚀</span></span>
+                            </motion.button>
 
                         </div>
-
-                        {/* Neon Progress Bar */}
-                        <div className="relative h-7 w-full bg-black/70 rounded-full border border-white/10 p-1 mb-8 overflow-hidden">
-                             <motion.div 
-                                initial={{ width: 0 }}
-                                animate={{ width: `${progress}%` }}
-                                transition={{ duration: 1.2, ease: 'easeOut' }}
-                                className="h-full bg-gradient-to-r from-[#0038A8] via-[#00D1FF] to-[#0038A8] rounded-full shadow-[0_0_20px_rgba(0,209,255,0.7)] relative overflow-hidden"
-                             >
-
-                                 {/* Shimmer sweep */}
-                                 <motion.div
-                                     className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent"
-                                     animate={{ x: ['-100%', '200%'] }}
-                                     transition={{ duration: 1.8, repeat: Infinity, repeatDelay: 1.5, ease: 'easeInOut' }}
-                                 />
-                             </motion.div>
-                             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[10px] font-black text-white uppercase tracking-widest drop-shadow">
-                                {visitedIds.length} / {locales.length} restaurantes
-                             </div>
-                        </div>
-
-                        {/* Scanner Action Button */}
-                        <motion.button
-                            onClick={() => setIsScannerOpen(true)}
-                            whileHover={{ scale: 1.02 }}
-                            whileTap={{ scale: 0.98 }}
-                            className="w-full h-16 rounded-2xl bg-gradient-to-r from-[#0038A8] to-[#0066FF] shadow-[0_10px_30px_rgba(0,56,168,0.5)] flex items-center justify-center gap-3 border border-white/20"
-                        >
-                            <QrCode size={24} className="text-[#00D1FF]" />
-                            <span className="text-white font-lilita text-xl uppercase tracking-widest">Escanear QR <span className="text-white">🚀</span></span>
-                        </motion.button>
-
                     </div>
                     {/* Map Section (The QUEST Trail) */}
                     <section className="w-full relative py-2">
