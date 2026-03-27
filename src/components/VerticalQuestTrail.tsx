@@ -9,103 +9,148 @@ interface VerticalQuestTrailProps {
     onLocaleClick: (locale: Locale) => void
 }
 
-// ── Serpentine node positions ──────────────────────────────────────────────
-// 6 rows × 5 columns = 30 nodes in a snake shape
-// Even rows go RIGHT→LEFT, odd rows LEFT→RIGHT
-const ROW_YS = [12, 45, 78, 111, 144, 177]
-const X_RTL = [82, 66, 50, 34, 18]   // right-to-left
-const X_LTR = [18, 34, 50, 66, 82]   // left-to-right
+// ── Serpentine node positions (6 rows × 5 cols = 30 nodes) ────────────────
+const ROW_YS  = [14, 47, 80, 113, 146, 179]
+const X_RTL   = [82, 66, 50, 34, 18]   // right → left (even rows)
+const X_LTR   = [18, 34, 50, 66, 82]   // left  → right (odd rows)
 
-const NODE_POSITIONS: { x: number; y: number }[] = []
+const NODE_POS: { x: number; y: number }[] = []
 for (let row = 0; row < 6; row++) {
     const xs = row % 2 === 0 ? X_RTL : X_LTR
     for (let col = 0; col < 5; col++) {
-        NODE_POSITIONS.push({ x: xs[col], y: ROW_YS[row] })
+        NODE_POS.push({ x: xs[col], y: ROW_YS[row] })
     }
 }
 
-// ── The single SVG snake path ──────────────────────────────────────────────
+// Decorative sushi emojis scattered between path curves
+const DECOS = [
+    { emoji: '🍣', x: 50, y: 31 },
+    { emoji: '🥢', x: 12, y: 64 },
+    { emoji: '🍱', x: 88, y: 97 },
+    { emoji: '🍜', x: 10, y: 130 },
+    { emoji: '✨', x: 88, y: 163 },
+    { emoji: '🍘', x: 50, y: 192 },
+]
+
+// ── SVG snake path ────────────────────────────────────────────────────────
 const PATH = [
-    'M 82 12 L 66 12 L 50 12 L 34 12 L 18 12',
-    'C 4 12, 4 45, 18 45',
-    'L 34 45 L 50 45 L 66 45 L 82 45',
-    'C 96 45, 96 78, 82 78',
-    'L 66 78 L 50 78 L 34 78 L 18 78',
-    'C 4 78, 4 111, 18 111',
-    'L 34 111 L 50 111 L 66 111 L 82 111',
-    'C 96 111, 96 144, 82 144',
-    'L 66 144 L 50 144 L 34 144 L 18 144',
-    'C 4 144, 4 177, 18 177',
-    'L 34 177 L 50 177 L 66 177 L 82 177',
+    'M 82 14 L 66 14 L 50 14 L 34 14 L 18 14',
+    'C 4 14, 4 47, 18 47',
+    'L 34 47 L 50 47 L 66 47 L 82 47',
+    'C 96 47, 96 80, 82 80',
+    'L 66 80 L 50 80 L 34 80 L 18 80',
+    'C 4 80, 4 113, 18 113',
+    'L 34 113 L 50 113 L 66 113 L 82 113',
+    'C 96 113, 96 146, 82 146',
+    'L 66 146 L 50 146 L 34 146 L 18 146',
+    'C 4 146, 4 179, 18 179',
+    'L 34 179 L 50 179 L 66 179 L 82 179',
 ].join(' ')
 
 export function VerticalQuestTrail({ locales, visitedIds, onLocaleClick }: VerticalQuestTrailProps) {
     const nodes = locales.slice(0, 30)
 
+    // Find index of the first unvisited node = "next mission"
+    const nextIndex = nodes.findIndex(l => !visitedIds.includes(l.id))
+
     return (
         <div className="relative w-full">
-            {/* No background here — the page background shows through */}
-
-            {/* SVG viewport — aspect ratio 100:192 keeps proportional on any phone */}
-            <div className="relative w-full" style={{ paddingBottom: '192%' }}>
+            {/* SVG canvas — 100:195 aspect ratio (portrait phone) */}
+            <div className="relative w-full" style={{ paddingBottom: '195%' }}>
                 <svg
-                    viewBox="0 0 100 192"
+                    viewBox="0 0 100 200"
                     className="absolute inset-0 w-full h-full"
                     preserveAspectRatio="xMidYMid meet"
                 >
-                    {/* ── Clip paths for circular logos ── */}
                     <defs>
+                        {/* Clip paths for circular logos */}
                         {nodes.map((locale, i) => (
-                            <clipPath key={`clip-${locale.id}`} id={`clip-${i}`}>
-                                <circle cx={NODE_POSITIONS[i].x} cy={NODE_POSITIONS[i].y} r="5.2" />
+                            <clipPath key={`clip-${locale.id}`} id={`clipN-${i}`}>
+                                <circle cx={NODE_POS[i].x} cy={NODE_POS[i].y} r="5.2" />
                             </clipPath>
                         ))}
+
+                        {/* Gold gradient for tiles */}
+                        <linearGradient id="goldGrad" x1="0" y1="0" x2="1" y2="1">
+                            <stop offset="0%" stopColor="#f59e0b" />
+                            <stop offset="100%" stopColor="#b45309" />
+                        </linearGradient>
+
+                        {/* Pulsing glow filter for next node */}
+                        <filter id="pulse-glow">
+                            <feGaussianBlur stdDeviation="2" result="blur" />
+                            <feMerge>
+                                <feMergeNode in="blur" />
+                                <feMergeNode in="SourceGraphic" />
+                            </feMerge>
+                        </filter>
+
+                        {/* Subtle drop shadow for road */}
+                        <filter id="road-shadow">
+                            <feDropShadow dx="0" dy="1" stdDeviation="1.5" floodColor="#000000" floodOpacity="0.5" />
+                        </filter>
                     </defs>
 
-                    {/* ── ROAD ── */}
-                    {/* Shadow / border */}
-                    <path d={PATH} fill="none" stroke="#061236" strokeWidth="13" strokeLinecap="round" strokeLinejoin="round" />
-                    {/* Blue base road */}
-                    <path d={PATH} fill="none" stroke="#1e40af" strokeWidth="10" strokeLinecap="round" strokeLinejoin="round" />
-                    {/* Orange tile dashes — alternates with blue to create tile effect */}
-                    <path d={PATH} fill="none" stroke="#f97316" strokeWidth="10" strokeLinecap="butt" strokeLinejoin="round" strokeDasharray="5 5" />
-                    {/* Thin white center dashes */}
-                    <path d={PATH} fill="none" stroke="rgba(255,255,255,0.55)" strokeWidth="1.2" strokeLinecap="round" strokeDasharray="2 4" />
+                    {/* ── ROAD LAYERS ── */}
+                    {/* Outer shadow/border */}
+                    <path d={PATH} fill="none" stroke="#1a0a00" strokeWidth="14" strokeLinecap="round" strokeLinejoin="round" filter="url(#road-shadow)" />
+                    {/* Dark base road surface */}
+                    <path d={PATH} fill="none" stroke="#1c1c2e" strokeWidth="11" strokeLinecap="round" strokeLinejoin="round" />
+                    {/* Gold tile dashes — alternates with dark to create premium tile effect */}
+                    <path d={PATH} fill="none" stroke="url(#goldGrad)" strokeWidth="11" strokeLinecap="butt" strokeLinejoin="round" strokeDasharray="4.5 4.5" />
+                    {/* Thin white center line */}
+                    <path d={PATH} fill="none" stroke="rgba(255,255,255,0.5)" strokeWidth="1" strokeLinecap="round" strokeDasharray="2 3.5" />
 
-                    {/* ── START badge ── */}
-                    <circle cx="82" cy="12" r="6" fill="#fbbf24" stroke="white" strokeWidth="0.8" />
-                    <text x="82" y="14" textAnchor="middle" fontSize="3" fill="#1e1e1e" fontWeight="bold" fontFamily="Arial, sans-serif">START</text>
+                    {/* ── DECORATIVE SUSHI EMOJIS ── */}
+                    {DECOS.map((d, i) => (
+                        <text key={i} x={d.x} y={d.y} textAnchor="middle" fontSize="5.5" opacity="0.35">
+                            {d.emoji}
+                        </text>
+                    ))}
 
-                    {/* ── FINISH badge ── */}
-                    <circle cx="82" cy="177" r="6" fill="#22c55e" stroke="white" strokeWidth="0.8" />
-                    <text x="82" y="179" textAnchor="middle" fontSize="3" fill="white" fontWeight="bold" fontFamily="Arial, sans-serif">META</text>
+                    {/* ── START BADGE ── */}
+                    <circle cx="82" cy="14" r="7" fill="#fbbf24" stroke="white" strokeWidth="1" filter="url(#road-shadow)" />
+                    <text x="82" y="15" textAnchor="middle" fontSize="2.8" fill="#1a1a1a" fontWeight="bold" fontFamily="Arial, sans-serif">START</text>
+                    <text x="82" y="6" textAnchor="middle" fontSize="4.5">🏁</text>
+
+                    {/* ── FINISH / META BADGE ── */}
+                    <circle cx="82" cy="179" r="7" fill="#16a34a" stroke="white" strokeWidth="1" filter="url(#road-shadow)" />
+                    <text x="82" y="180" textAnchor="middle" fontSize="2.8" fill="white" fontWeight="bold" fontFamily="Arial, sans-serif">META</text>
+                    <text x="82" y="191" textAnchor="middle" fontSize="4.5">🏆</text>
 
                     {/* ── NODES ── */}
                     {nodes.map((locale, i) => {
-                        const pos = NODE_POSITIONS[i]
+                        const pos    = NODE_POS[i]
                         const isVisited = visitedIds.includes(locale.id)
-                        const label = locale.name.length > 9 ? locale.name.slice(0, 9) + '…' : locale.name
+                        const isNext    = i === nextIndex
+                        const label     = locale.name.length > 10 ? locale.name.slice(0, 10) + '…' : locale.name
 
                         return (
-                            <motion.g
-                                key={locale.id}
-                                initial={{ scale: 0, opacity: 0 }}
-                                animate={{ scale: 1, opacity: 1 }}
-                                transition={{ delay: i * 0.04, type: 'spring', stiffness: 200 }}
-                                onClick={() => onLocaleClick(locale)}
-                                style={{ cursor: 'pointer' }}
-                            >
-                                {/* Outer glow for visited */}
-                                {isVisited && (
-                                    <circle cx={pos.x} cy={pos.y} r="8" fill="rgba(251,191,36,0.25)" />
+                            <g key={locale.id} onClick={() => onLocaleClick(locale)} style={{ cursor: 'pointer' }}>
+
+                                {/* Pulsing ring for "next mission" node */}
+                                {isNext && (
+                                    <motion.circle
+                                        cx={pos.x} cy={pos.y} r="9"
+                                        fill="none"
+                                        stroke="#22c55e"
+                                        strokeWidth="1.5"
+                                        animate={{ r: [9, 11, 9], opacity: [0.9, 0.3, 0.9] }}
+                                        transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut' }}
+                                    />
                                 )}
 
-                                {/* White plate (background circle) */}
+                                {/* Gold outer glow for visited */}
+                                {isVisited && (
+                                    <circle cx={pos.x} cy={pos.y} r="8" fill="rgba(251,191,36,0.2)" />
+                                )}
+
+                                {/* Node plate */}
                                 <circle
                                     cx={pos.x} cy={pos.y} r="6.5"
-                                    fill="#0d1b3e"
-                                    stroke={isVisited ? '#fbbf24' : 'rgba(255,255,255,0.2)'}
-                                    strokeWidth={isVisited ? 1.5 : 0.8}
+                                    fill={isVisited ? '#0d1b3e' : '#12121f'}
+                                    stroke={isVisited ? '#fbbf24' : isNext ? '#22c55e' : 'rgba(255,255,255,0.15)'}
+                                    strokeWidth={isVisited || isNext ? 1.5 : 0.7}
                                 />
 
                                 {/* Restaurant logo */}
@@ -113,31 +158,45 @@ export function VerticalQuestTrail({ locales, visitedIds, onLocaleClick }: Verti
                                     href={locale.image_url || '/logo-fest.png'}
                                     x={pos.x - 5.2} y={pos.y - 5.2}
                                     width="10.4" height="10.4"
-                                    clipPath={`url(#clip-${i})`}
-                                    style={{ opacity: isVisited ? 1 : 0.35 }}
+                                    clipPath={`url(#clipN-${i})`}
+                                    style={{ opacity: isVisited ? 1 : isNext ? 0.75 : 0.3 }}
                                 />
 
-                                {/* Number badge (top-right corner) */}
-                                <circle cx={pos.x + 5.5} cy={pos.y - 5.5} r="2.8" fill={isVisited ? '#16a34a' : '#374151'} />
-                                <text x={pos.x + 5.5} y={pos.y - 4.2} textAnchor="middle" fontSize="2.8" fill="white" fontWeight="bold" fontFamily="Arial, sans-serif">
+                                {/* Status icon (bottom-right corner) */}
+                                {isVisited ? (
+                                    <circle cx={pos.x + 5} cy={pos.y + 4.5} r="2.5" fill="#16a34a" />
+                                ) : isNext ? (
+                                    <circle cx={pos.x + 5} cy={pos.y + 4.5} r="2.5" fill="#22c55e" />
+                                ) : (
+                                    <circle cx={pos.x + 5} cy={pos.y + 4.5} r="2.5" fill="#374151" />
+                                )}
+
+                                {/* Number badge (top-right) */}
+                                <circle cx={pos.x + 5.5} cy={pos.y - 5} r="2.8"
+                                    fill={isVisited ? '#fbbf24' : '#374151'}
+                                    stroke={isVisited ? '#1a1a1a' : 'none'}
+                                    strokeWidth="0.5"
+                                />
+                                <text x={pos.x + 5.5} y={pos.y - 3.8}
+                                    textAnchor="middle" fontSize="2.7"
+                                    fill={isVisited ? '#1a1a1a' : 'white'}
+                                    fontWeight="bold" fontFamily="Arial, sans-serif"
+                                >
                                     {i + 1}
                                 </text>
 
                                 {/* Name label */}
                                 <text
                                     x={pos.x} y={pos.y + 10.5}
-                                    textAnchor="middle" fontSize="2.6"
-                                    fill={isVisited ? 'rgba(255,255,255,0.95)' : 'rgba(255,255,255,0.4)'}
+                                    textAnchor="middle" fontSize="2.5"
+                                    fill={isVisited ? 'rgba(255,215,100,0.9)' : isNext ? 'rgba(134,239,172,0.9)' : 'rgba(255,255,255,0.35)'}
                                     fontFamily="Arial, sans-serif" fontWeight="600"
                                 >
                                     {label}
                                 </text>
-                            </motion.g>
+                            </g>
                         )
                     })}
-
-                    {/* Trophy at end */}
-                    <text x="68" y="180" fontSize="6" textAnchor="middle">🏆</text>
                 </svg>
             </div>
         </div>

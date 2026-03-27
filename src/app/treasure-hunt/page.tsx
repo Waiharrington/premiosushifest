@@ -190,14 +190,22 @@ export default function TreasureHuntPage() {
                         </div>
 
                         {/* Neon Progress Bar */}
-                        <div className="relative h-6 w-full bg-black/60 rounded-full border border-white/10 p-1 mb-8">
+                        <div className="relative h-7 w-full bg-black/70 rounded-full border border-white/10 p-1 mb-8 overflow-hidden">
                              <motion.div 
                                 initial={{ width: 0 }}
                                 animate={{ width: `${progress}%` }}
-                                className="h-full bg-gradient-to-r from-[#0047FF] to-[#00B2FF] rounded-full shadow-[0_0_15px_rgba(0,178,255,0.6)]"
-                             />
-                             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[10px] font-black text-white/90 uppercase tracking-widest">
-                                {Math.round(progress)}% Completado
+                                transition={{ duration: 1.2, ease: 'easeOut' }}
+                                className="h-full bg-gradient-to-r from-[#fbbf24] via-[#f97316] to-[#fbbf24] rounded-full shadow-[0_0_20px_rgba(251,191,36,0.7)] relative overflow-hidden"
+                             >
+                                 {/* Shimmer sweep */}
+                                 <motion.div
+                                     className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent"
+                                     animate={{ x: ['-100%', '200%'] }}
+                                     transition={{ duration: 1.8, repeat: Infinity, repeatDelay: 1.5, ease: 'easeInOut' }}
+                                 />
+                             </motion.div>
+                             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[10px] font-black text-white uppercase tracking-widest drop-shadow">
+                                {visitedIds.length} / {locales.length} restaurantes
                              </div>
                         </div>
 
