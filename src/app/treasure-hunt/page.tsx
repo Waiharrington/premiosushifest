@@ -196,13 +196,14 @@ export default function TreasureHuntPage() {
                                 {/* Dynamic Impact Title */}
                                 <div className="flex-grow text-left">
                                     <h1 className="flex flex-col">
-                                        <span className="text-[10px] font-black uppercase text-white/50 tracking-[0.4em] mb-1">Tu Búsqueda del</span>
-                                        <span className="text-[28px] font-lilita leading-[0.9] text-white uppercase tracking-tight">
-                                            ¡TESORO <span className="text-[#FF4B1F] drop-shadow-[0_0_15px_rgba(255,75,31,0.5)]">SAGA!</span>
+                                        <span className="text-[9px] font-black uppercase text-white/50 tracking-[0.3em] mb-1">Tu Búsqueda del</span>
+                                        <span className="text-[26px] font-lilita leading-tight text-white uppercase tracking-tight whitespace-nowrap">
+                                            ¡Tesoro <span className="text-[#FF4B1F] drop-shadow-[0_0_15px_rgba(255,75,31,0.5)]">Saga!</span>
                                         </span>
                                     </h1>
-                                    <p className="text-[8px] font-black uppercase text-[#00D1FF] tracking-[0.3em] mt-2 opacity-80 decoration-none">Explora • Escanea • Gana</p>
+                                    <p className="text-[8px] font-black uppercase text-[#00D1FF] tracking-[0.3em] mt-1 opacity-80">Explora • Escanea • Gana</p>
                                 </div>
+
 
                                 {/* Revelados Counter (Badge Style) */}
                                 <div className="bg-white/5 border border-white/10 rounded-2xl px-4 py-3 text-center min-w-[70px] backdrop-blur-md">
