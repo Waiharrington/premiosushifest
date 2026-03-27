@@ -12,9 +12,13 @@ export default function Home() {
     const { user } = useAuth()
     return (
         <div className="min-h-[100svh] bg-[#000B2A] text-white relative overflow-hidden font-sans selection:bg-primary/30">
-            {/* Background Layer (New Treasure Image) */}
+            {/* Background Layer (New Treasure Image with Cinematic Zoom) */}
             <div className="absolute inset-0 z-0 overflow-hidden">
-                <div className="absolute inset-0">
+                <motion.div 
+                    animate={{ scale: [1, 1.05, 1] }}
+                    transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
+                    className="absolute inset-0"
+                >
                     <Image
                         src="/bg-welcome.png"
                         alt="Fondo de Festival"
@@ -23,7 +27,7 @@ export default function Home() {
                         priority
                         quality={100}
                     />
-                </div>
+                </motion.div>
                 {/* Cinematic filters for depth and focus */}
                 <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/90" />
                 <div className="absolute inset-0 backdrop-blur-[1px]" />
@@ -36,75 +40,85 @@ export default function Home() {
             <SponsorBackground />
 
             {/* Cinematic Vignette Overlay */}
-            <div className="absolute inset-0 z-30 pointer-events-none bg-[radial-gradient(circle_at_center,transparent_25%,rgba(0,0,0,0.7)_100%)]" />
+            <div className="absolute inset-0 z-30 pointer-events-none bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.6)_100%)]" />
 
             {/* Main Content */}
             <main className="relative z-40 flex flex-col items-center justify-center min-h-[100svh] px-6 text-center pt-8 pb-12">
                 
-                {/* Logo Section (Refined for the new dark background) */}
+                {/* Logo Section (Refined for maximum prominence) */}
                 <motion.div
-                    initial={{ opacity: 0, scale: 0.8, y: 20 }}
-                    animate={{ opacity: 1, scale: 1, y: 0 }}
-                    transition={{ duration: 1.5, type: "spring" }}
-                    className="relative w-full max-w-[120px] aspect-[4/3] mb-4"
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 1.2, type: "spring" }}
+                    className="relative w-full max-w-[160px] aspect-[4/3] mb-4 flex items-center justify-center"
                 >
-                    {/* Pulsing blue glow behind logo */}
+                    {/* Pulsing blue glow (Intensified Electric Blue) */}
                     <motion.div 
-                        animate={{ opacity: [0.15, 0.35, 0.15], scale: [0.85, 1.15, 0.85] }}
-                        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-                        className="absolute inset-x-[-40%] inset-y-[-40%] bg-[#0066FF]/25 blur-[90px] rounded-full" 
+                        animate={{ opacity: [0.1, 0.3, 0.1], scale: [0.8, 1.2, 0.8] }}
+                        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+                        className="absolute inset-x-[-50%] inset-y-[-50%] bg-[#0066FF]/30 blur-[110px] rounded-full" 
                     />
                     
                     <Image
                         src="/logo-fest.png"
                         alt="Sushi Fest 2026 Logo"
-                        width={220}
-                        height={160}
-                        className="w-full h-auto drop-shadow-[0_0_50px_rgba(0,178,255,0.9)] brightness-125 relative z-10"
+                        width={280}
+                        height={210}
+                        className="w-full h-auto drop-shadow-[0_0_50px_rgba(0,178,255,0.7)] brightness-125 relative z-10"
                         priority
                     />
 
-                    {/* Compass Icon - Repositioned to be above the text, not overlapping */}
+                    {/* Compass Icon - Independent Floating Parallax */}
                     <motion.div
                         animate={{ 
-                            y: [0, -8, 0], 
+                            y: [0, -10, 0], 
                             rotate: [0, 5, -5, 0],
-                            scale: [1, 1.05, 1]
+                            scale: [1, 1.1, 1]
                         }}
                         transition={{ 
-                            duration: 6, 
+                            duration: 5, 
                             repeat: Infinity, 
                             ease: "easeInOut" 
                         }}
-                        className="absolute top-[55%] left-1/2 -translate-x-1/2 z-[30] w-[120%] max-w-[180px]"
+                        className="absolute top-[60%] left-1/2 -translate-x-1/2 z-[30] w-[110%] max-w-[200px]"
                     >
                         <Image 
                             src="/compass.png" 
                             alt="Brújula del Tesoro" 
-                            width={180} 
-                            height={180} 
-                            className="w-full drop-shadow-[0_20px_60px_rgba(255,183,0,0.4)]"
+                            width={200} 
+                            height={200} 
+                            className="w-full drop-shadow-[0_25px_60px_rgba(255,183,0,0.5)]"
                         />
                     </motion.div>
                 </motion.div>
 
-                {/* Text Content - Spaced to avoid compass overlap (Final Adjustment) */}
-                <div className="mt-20 space-y-3 max-w-xl">
+                {/* Text Content - Floating Cinematic Parallax */}
+                <div className="mt-20 max-w-xl">
                     <motion.div
                         initial={{ opacity: 0, y: 30 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.7, duration: 1 }}
+                        animate={{ 
+                            opacity: 1, 
+                            y: [0, -4, 0] 
+                        }}
+                        transition={{ 
+                            opacity: { delay: 0.8, duration: 1 },
+                            y: { delay: 1.8, duration: 4, repeat: Infinity, ease: "easeInOut" }
+                        }}
+                        className="space-y-3"
                     >
-                        <h2 className="text-white font-lilita text-xl md:text-2xl tracking-[0.25em] uppercase drop-shadow-[0_10px_20px_rgba(0,0,0,1)]">
+                        <h2 
+                            className="text-white font-lilita text-xl md:text-2xl tracking-[0.25em] uppercase drop-shadow-[0_8px_16px_rgba(0,0,0,1)]"
+                            style={{ textShadow: '0 4px 12px rgba(0,0,0,1), 0 0 20px rgba(0,0,0,0.5)' }}
+                        >
                             Búsqueda del <span className="text-white">Tesoro</span>
                         </h2>
                         <h1 
-                            className="text-5xl md:text-7xl font-lilita uppercase tracking-tight leading-[0.95] text-white my-2 drop-shadow-[0_15px_60px_rgba(0,0,0,1)]"
-                            style={{ textShadow: '0 8px 32px rgba(0,0,0,1), 0 0 100px rgba(0,0,0,0.8), 0 0 40px rgba(255,183,0,0.2)' }}
+                            className="text-5xl md:text-7xl font-lilita uppercase tracking-tight leading-[0.95] text-white my-2"
+                            style={{ textShadow: '0 8px 32px rgba(0,0,0,0.9), 0 0 60px rgba(0,0,0,1), 0 0 100px rgba(0,0,0,0.6)' }}
                         >
                             ¡GANA <span className="italic">PREMIOS</span> INCREIBLES!
                         </h1>
-                        <p className="text-white/80 text-xs md:text-sm font-medium tracking-wide max-w-[380px] mx-auto leading-relaxed drop-shadow-md">
+                        <p className="text-white/90 text-xs md:text-sm font-medium tracking-wide max-w-[380px] mx-auto leading-relaxed drop-shadow-lg">
                             Explora la ciudad, descubre nuevos sabores y desbloquea descuentos exclusivos en cada restaurante que visites.
                         </p>
                     </motion.div>
@@ -114,7 +128,7 @@ export default function Home() {
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 1.2, duration: 1 }}
+                    transition={{ delay: 1.4, duration: 1 }}
                     className="mt-8 w-full max-w-[300px] px-4"
                 >
                     <Link href="/treasure-hunt" className="group relative block">
@@ -143,7 +157,7 @@ export default function Home() {
                 <motion.div 
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    transition={{ delay: 1.6 }}
+                    transition={{ delay: 1.8 }}
                     className="flex flex-wrap justify-center gap-2 mt-8 mb-2"
                 >
                     <div className="flex items-center gap-2 bg-black/40 backdrop-blur-xl border border-white/10 px-4 py-2 rounded-full shadow-2xl">
