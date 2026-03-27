@@ -16,7 +16,7 @@ export default function Home() {
             <div className="absolute inset-0 z-0 overflow-hidden">
                 <div className="absolute inset-0">
                     <Image
-                        src="/bg-treasure-home.png"
+                        src="/bg-welcome.png"
                         alt="Fondo de Festival"
                         fill
                         className="object-cover opacity-90"
