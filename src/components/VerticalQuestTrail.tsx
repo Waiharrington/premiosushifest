@@ -11,8 +11,9 @@ interface VerticalQuestTrailProps {
 
 // ── Serpentine node positions (6 rows × 5 cols = 30 nodes) ────────────────
 const ROW_YS  = [14, 47, 80, 113, 146, 179]
-const X_RTL   = [88, 69, 50, 31, 12]   // right → left (even rows)
-const X_LTR   = [12, 31, 50, 69, 88]   // left  → right (odd rows)
+const X_RTL   = [85, 68, 50, 32, 15]   // right → left (even rows)
+const X_LTR   = [15, 32, 50, 68, 85]   // left  → right (odd rows)
+
 
 
 const NODE_POS: { x: number; y: number }[] = []
@@ -54,9 +55,10 @@ function getDynamicPath(numNodes: number): string {
             const nextRowStart = NODE_POS[(r + 1) * 5]
             // Curve logic: even rows curve right-to-left, odd rows curve left-to-right
             const isCurveRight = r % 2 === 0
-            const curveX = isCurveRight ? 2 : 98
+            const curveX = isCurveRight ? 5 : 95
             d += ` C ${curveX} ${targetY}, ${curveX} ${nextRowStart.y}, ${nextRowStart.x} ${nextRowStart.y}`
         }
+
 
 
     }

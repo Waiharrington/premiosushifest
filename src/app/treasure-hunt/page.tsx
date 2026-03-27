@@ -181,9 +181,10 @@ export default function TreasureHuntPage() {
                                      <Image src="/logo-fest.png" alt="Logo" width={64} height={64} className="w-full h-full object-contain" />
                                 </div>
                                 <div className="text-left">
-                                    <h1 className="text-2xl font-lilita uppercase text-white leading-none tracking-tight">Sushi <span className="text-[#FF8A5B]">Saga</span></h1>
+                                    <h1 className="text-2xl font-lilita uppercase text-white leading-none tracking-tight">¡ENCUENTRA TU <span className="text-[#FF8A5B]">PREMIO!</span></h1>
                                     <p className="text-[7px] font-black uppercase text-[#00D1FF] tracking-[0.4em] mt-1">Búsqueda del Tesoro • Panamá 2026</p>
                                 </div>
+
 
 
 
