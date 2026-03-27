@@ -107,14 +107,12 @@ export default function Home() {
                         className="space-y-3"
                     >
                         <h2 
-                            className="text-white font-lilita text-xl md:text-2xl tracking-[0.25em] uppercase drop-shadow-[0_8px_16px_rgba(0,0,0,1)]"
-                            style={{ textShadow: '0 4px 12px rgba(0,0,0,1), 0 0 20px rgba(0,0,0,0.5)' }}
+                            className="text-white font-lilita text-xl md:text-2xl tracking-[0.25em] uppercase drop-shadow-[0_4px_8px_rgba(0,0,0,0.8)]"
                         >
                             Búsqueda del <span className="text-white">Tesoro</span>
                         </h2>
                         <h1 
-                            className="text-5xl md:text-7xl font-lilita uppercase tracking-tight leading-[0.95] text-white my-2"
-                            style={{ textShadow: '0 8px 32px rgba(0,0,0,0.9), 0 0 60px rgba(0,0,0,1), 0 0 100px rgba(0,0,0,0.6)' }}
+                            className="text-5xl md:text-7xl font-lilita uppercase tracking-tight leading-[0.95] text-white my-2 drop-shadow-[0_10px_30px_rgba(0,0,0,0.8)]"
                         >
                             ¡GANA <span className="italic">PREMIOS</span> INCREIBLES!
                         </h1>
