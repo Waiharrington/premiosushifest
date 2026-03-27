@@ -95,14 +95,14 @@ export default function Home() {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.7, duration: 1 }}
                     >
-                        <h2 className="text-secondary font-lilita text-xl md:text-2xl tracking-[0.2em] uppercase drop-shadow-[0_4px_8px_rgba(0,0,0,1)]">
-                            Búsqueda del <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#FFD700] to-[#FF8C00]">Tesoro</span>
+                        <h2 className="text-white/90 font-lilita text-xl md:text-2xl tracking-[0.2em] uppercase drop-shadow-[0_8px_16px_rgba(0,0,0,1)]">
+                            Búsqueda del <span className="text-white">Tesoro</span>
                         </h2>
                         <h1 
-                            className="text-4xl md:text-6xl font-lilita uppercase tracking-tight leading-[0.95] text-white my-2 drop-shadow-[0_10px_40px_rgba(0,0,0,1)]"
-                            style={{ textShadow: '0 8px 32px rgba(0,0,0,1), 0 0 80px rgba(0,0,0,1)' }}
+                            className="text-5xl md:text-7xl font-lilita uppercase tracking-tight leading-[0.95] text-white my-2 drop-shadow-[0_15px_60px_rgba(0,0,0,1)]"
+                            style={{ textShadow: '0 8px 32px rgba(0,0,0,1), 0 0 100px rgba(0,0,0,0.8), 0 0 40px rgba(255,183,0,0.2)' }}
                         >
-                            ¡GANA <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#FFD700] via-[#FF8C00] to-[#FF4500] italic drop-shadow-[0_0_20px_rgba(255,140,0,0.5)]">PREMIOS</span> INCREIBLES!
+                            ¡GANA <span className="italic">PREMIOS</span> INCREIBLES!
                         </h1>
                         <p className="text-white/80 text-xs md:text-sm font-medium tracking-wide max-w-[380px] mx-auto leading-relaxed drop-shadow-md">
                             Explora la ciudad, descubre nuevos sabores y desbloquea descuentos exclusivos en cada restaurante que visites.
