@@ -61,7 +61,7 @@ export default function Home() {
                         priority
                     />
 
-                    {/* Compass Icon - Replacing the crown with a premium floating compass */}
+                    {/* Compass Icon - Repositioned to be above the text, not overlapping */}
                     <motion.div
                         animate={{ 
                             y: [0, -10, 0], 
@@ -73,13 +73,13 @@ export default function Home() {
                             repeat: Infinity, 
                             ease: "easeInOut" 
                         }}
-                        className="absolute top-[85%] left-1/2 -translate-x-1/2 z-[30] w-[140%] max-w-[280px]"
+                        className="absolute top-[60%] left-1/2 -translate-x-1/2 z-[30] w-[120%] max-w-[240px]"
                     >
                         <Image 
                             src="/compass.png" 
                             alt="Brújula del Tesoro" 
-                            width={280} 
-                            height={280} 
+                            width={240} 
+                            height={240} 
                             className="w-full drop-shadow-[0_20px_60px_rgba(0,0,0,0.8)]"
                         />
                     </motion.div>
