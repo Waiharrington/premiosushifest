@@ -5,7 +5,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { RiceParticles } from "@/components/RiceParticles"
 import { SponsorBackground } from "@/components/SponsorBackground"
-import { Trophy, ArrowRight, Map as MapIcon, Sparkles } from "lucide-react"
+import { Trophy, ArrowRight, Map as MapIcon, Tag } from "lucide-react"
 import { useAuth } from "@/context/AuthContext"
 
 export default function Home() {
@@ -155,8 +155,8 @@ export default function Home() {
                         <span className="text-[9px] uppercase font-black tracking-[0.1em] text-white/60">Premios</span>
                     </div>
                     <div className="flex items-center gap-2 bg-black/40 backdrop-blur-xl border border-white/10 px-4 py-2 rounded-full shadow-2xl">
-                        <Sparkles size={14} className="text-blue-400" />
-                        <span className="text-[9px] uppercase font-black tracking-[0.1em] text-white/60">Pro</span>
+                        <Tag size={14} className="text-blue-400" />
+                        <span className="text-[9px] uppercase font-black tracking-[0.1em] text-white/60">Descuentos</span>
                     </div>
                 </motion.div>
 
