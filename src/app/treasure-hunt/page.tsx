@@ -12,7 +12,11 @@ import { SushifestLoader } from "@/components/SushifestLoader"
 import { QRScannerUI } from "@/components/QRScannerUI"
 import { ScratchCard } from "@/components/ScratchCard"
 import { SponsorBackground } from "@/components/SponsorBackground"
+import { MysteryModal } from "@/components/MysteryModal"
 import { registerVisit, getTreasureHuntStatus, generateScratchPrize } from "@/actions/treasure-hunt"
+
+
+
 import { supabase } from "@/lib/supabase"
 import { Locale, TreasureHuntPrize } from "@/types"
 import { QrCode, Map as MapIcon, Gift, CheckCircle2, LogOut, Sparkles, ArrowRight, X } from "lucide-react"
@@ -34,6 +38,8 @@ export default function TreasureHuntPage() {
     const [viewingPrize, setViewingPrize] = useState<TreasureHuntPrize | null>(null)
     const [viewingPrizeIndex, setViewingPrizeIndex] = useState(1)
     const [hasMounted, setHasMounted] = useState(false)
+    const [isMysteryModalOpen, setIsMysteryModalOpen] = useState(false)
+
 
     useEffect(() => {
         setHasMounted(true)
@@ -257,10 +263,11 @@ export default function TreasureHuntPage() {
                                     visitedIds={visitedIds} 
                                     onLocaleClick={(l) => {
                                         if (!visitedIds.includes(l.id)) {
-                                            alert(`¡Negocio misterioso! Visita este local y escanea su código QR para revelarlo en el mapa.`)
+                                            setIsMysteryModalOpen(true)
                                         }
                                     }} 
                                 />
+
                             )}
                         </div>
                     </section>
@@ -395,12 +402,13 @@ export default function TreasureHuntPage() {
                     <Image 
                         src="/assets/character-explorer.png" 
                         alt="Explorador Guide" 
-                        width={120} 
-                        height={120} 
-                        className="w-24 h-24 object-contain drop-shadow-[0_10px_15px_rgba(0,0,0,0.5)]"
+                        width={160} 
+                        height={160} 
+                        className="w-32 h-32 object-contain drop-shadow-[0_10px_20px_rgba(0,0,0,0.6)]"
                     />
                 </div>
             </motion.div>
+
 
 
             {/* Modals & Overlays */}
@@ -411,6 +419,15 @@ export default function TreasureHuntPage() {
                         onSuccess={fetchData}
                     />
                 )}
+
+                
+                {isMysteryModalOpen && (
+                    <MysteryModal 
+                        isOpen={isMysteryModalOpen} 
+                        onClose={() => setIsMysteryModalOpen(false)} 
+                    />
+                )}
+
             </AnimatePresence>
 
             <QRScannerUI 
