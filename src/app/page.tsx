@@ -61,18 +61,26 @@ export default function Home() {
                         priority
                     />
 
-                    {/* Golden crown below logo - Pedestal position with breathing room */}
+                    {/* Compass Icon - Replacing the crown with a premium floating compass */}
                     <motion.div
-                        animate={{ y: [0, -6, 0], scale: [1, 1.1, 1], rotate: [0, 2, 0] }}
-                        transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut" }}
-                        className="absolute top-[102%] left-1/2 -translate-x-1/2 z-[30] w-[115%] max-w-[220px]"
+                        animate={{ 
+                            y: [0, -10, 0], 
+                            rotate: [0, 5, -5, 0],
+                            scale: [1, 1.05, 1]
+                        }}
+                        transition={{ 
+                            duration: 6, 
+                            repeat: Infinity, 
+                            ease: "easeInOut" 
+                        }}
+                        className="absolute top-[85%] left-1/2 -translate-x-1/2 z-[30] w-[140%] max-w-[280px]"
                     >
                         <Image 
-                            src="/crown.png" 
-                            alt="Corona" 
-                            width={220} 
-                            height={180} 
-                            className="w-full drop-shadow-[0_20px_50px_rgba(255,183,0,1)]"
+                            src="/compass.png" 
+                            alt="Brújula del Tesoro" 
+                            width={280} 
+                            height={280} 
+                            className="w-full drop-shadow-[0_20px_60px_rgba(0,0,0,0.8)]"
                         />
                     </motion.div>
                 </motion.div>
