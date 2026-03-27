@@ -4,7 +4,7 @@ import { motion } from "framer-motion"
 import { useRef, useState, useEffect } from "react"
 import Image from "next/image"
 import { Locale } from "@/types"
-import { CheckCircle2, Lock, Sparkles, MapPin } from "lucide-react"
+import { Lock, Sparkles, MapPin } from "lucide-react"
 
 interface VerticalQuestTrailProps {
     locales: Locale[]
@@ -44,53 +44,87 @@ export function VerticalQuestTrail({ locales, visitedIds, onLocaleClick }: Verti
         }, 0)
         return () => clearTimeout(timer)
     }, [])
+
+    // Calculate node position (Multi-column winding path)
     const getNodePosition = (index: number) => {
-        const xOffset = Math.sin(index * 1.2) * 28; // Wavy horizontal offset (-28% to 28%)
-        return { x: 50 + xOffset };
+        // We create a winding pattern (Left, Center-Left, Center-Right, Right, and back)
+        const sequence = [0, 1, 2, 3, 2, 1]; // Indices of horizontal grid columns
+        const colIndex = sequence[index % sequence.length];
+        const xPos = 15 + colIndex * 23.3; // Distribute across 4 logical columns (15% to 85%)
+        
+        // Add a bit of natural jitter
+        const jitter = Math.sin(index * 2.5) * 3;
+        return { x: xPos + jitter, y: index * 12 }; // Vertical spacing
     }
 
     return (
-        <div ref={containerRef} className="relative w-full py-20 px-4 md:px-0 min-h-[1500px]">
+        <div ref={containerRef} className="relative w-full py-20 px-4 md:px-0 min-h-[3000px]">
+            {/* The Sega Illustrated Background */}
+            <div className="absolute inset-0 z-0">
+                <Image 
+                    src="/sushi_saga_background.png" 
+                    alt="Saga Background" 
+                    fill 
+                    className="object-cover object-top opacity-80"
+                />
+                <div className="absolute inset-0 bg-gradient-to-b from-[#0A0A0B]/20 via-transparent to-[#0A0A0B]" />
+            </div>
+
             {/* The Saga Glowing Path (SVG) */}
-            <div className="absolute inset-0 z-0 pointer-events-none">
-                <svg viewBox="0 0 100 100" className="h-full w-full opacity-40" preserveAspectRatio="none">
+            <div className="absolute inset-0 z-10 pointer-events-none">
+                <svg viewBox="0 0 100 100" className="h-full w-full" preserveAspectRatio="none">
                     <defs>
-                        <filter id="glow">
-                            <feGaussianBlur stdDeviation="4" result="coloredBlur" />
-                            <feMerge>
-                                <feMergeNode in="coloredBlur" />
-                                <feMergeNode in="SourceGraphic" />
-                            </feMerge>
+                        <filter id="saga-glow">
+                            <feGaussianBlur stdDeviation="6" result="blur" />
+                            <feComposite in="SourceGraphic" in2="blur" operator="over" />
                         </filter>
+                        <linearGradient id="river-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" stopColor="#0047FF" />
+                            <stop offset="50%" stopColor="#00B2FF" />
+                            <stop offset="100%" stopColor="#0047FF" />
+                        </linearGradient>
                     </defs>
+                    
+                    {/* The 3D River Path (Base) */}
                     <path 
                         d={locales.map((_, i) => {
-                            const x = 50 + Math.sin(i * 1.2) * 28;
-                            const total = locales.length > 1 ? locales.length - 1 : 1;
-                            const y = (i / total) * 100;
-                            return `${i === 0 ? 'M' : 'L'} ${x} ${y}`;
+                            const pos = getNodePosition(i);
+                            return `${i === 0 ? 'M' : 'L'} ${pos.x} ${pos.y}`;
                         }).join(' ')}
                         fill="none" 
-                        stroke="rgba(255,184,0,0.2)" 
-                        strokeWidth="5" 
-                        strokeDasharray="4 8" 
+                        stroke="#000B2A" 
+                        strokeWidth="18" 
                         strokeLinecap="round"
+                        strokeLinejoin="round"
+                        className="opacity-50"
                     />
+                    
+                    {/* The Main River Body */}
                     <motion.path 
                         d={locales.map((_, i) => {
-                            const x = 50 + Math.sin(i * 1.2) * 28;
-                            const total = locales.length > 1 ? locales.length - 1 : 1;
-                            const y = (i / total) * 100;
-                            return `${i === 0 ? 'M' : 'L'} ${x} ${y}`;
+                            const pos = getNodePosition(i);
+                            return `${i === 0 ? 'M' : 'L'} ${pos.x} ${pos.y}`;
                         }).join(' ')}
                         fill="none" 
-                        stroke="#FFB800" 
-                        strokeWidth="8"
-                        filter="url(#glow)"
-                        initial={{ pathLength: 1, opacity: 0.6 }}
-                        animate={{ opacity: [0.6, 1, 0.6] }}
-                        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                        className="drop-shadow-[0_0_25px_rgba(255,184,0,0.8)]"
+                        stroke="url(#river-grad)" 
+                        strokeWidth="14" 
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        className="drop-shadow-[0_0_15px_rgba(0,178,255,0.4)]"
+                    />
+
+                    {/* The Crystalline Center Line */}
+                    <motion.path 
+                        d={locales.map((_, i) => {
+                            const pos = getNodePosition(i);
+                            return `${i === 0 ? 'M' : 'L'} ${pos.x} ${pos.y}`;
+                        }).join(' ')}
+                        fill="none" 
+                        stroke="#E0F2FF" 
+                        strokeWidth="2" 
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        className="opacity-40"
                     />
                 </svg>
             </div>
@@ -124,17 +158,29 @@ export function VerticalQuestTrail({ locales, visitedIds, onLocaleClick }: Verti
             </div>
 
             {/* Saga Milestones (Nodes) */}
-            <div className="flex flex-col gap-40 relative z-10 py-10">
-                {locales.map((locale, index) => (
-                    <div key={locale.id} className="relative flex justify-center w-full">
-                        <QuestMilestone 
-                            locale={locale}
-                            isVisited={visitedIds.includes(locale.id)}
-                            onClick={() => onLocaleClick(locale)}
-                            nodePos={getNodePosition(index)}
-                        />
-                    </div>
-                ))}
+            <div className="absolute inset-0 pointer-events-none">
+                {locales.map((locale, index) => {
+                    const pos = getNodePosition(index);
+                    return (
+                        <div 
+                            key={locale.id} 
+                            style={{ 
+                                position: 'absolute',
+                                left: `${pos.x}%`,
+                                top: `${pos.y}%`,
+                                pointerEvents: 'auto'
+                            }}
+                        >
+                            <QuestMilestone 
+                                locale={locale}
+                                isVisited={visitedIds.includes(locale.id)}
+                                onClick={() => onLocaleClick(locale)}
+                                nodePos={pos}
+                                index={index + 1}
+                            />
+                        </div>
+                    );
+                })}
             </div>
 
             {/* Final Prize Milestone */}
@@ -157,8 +203,8 @@ export function VerticalQuestTrail({ locales, visitedIds, onLocaleClick }: Verti
     )
 }
 
-function QuestMilestone({ locale, isVisited, onClick, nodePos }: { 
-    locale: Locale, isVisited: boolean, onClick: () => void, nodePos: { x: number }
+function QuestMilestone({ locale, isVisited, onClick, index }: { 
+    locale: Locale, isVisited: boolean, onClick: () => void, nodePos: { x: number, y: number }, index: number
 }) {
     const cardRef = useRef(null)
 
@@ -172,37 +218,43 @@ function QuestMilestone({ locale, isVisited, onClick, nodePos }: {
             whileTap={{ scale: 0.95 }}
             onClick={onClick}
             style={{ 
-                left: `${nodePos.x}%`,
-                x: "-50%"
+                x: "-50%",
+                y: "-50%"
             }}
-            className="absolute z-30"
+            className="z-30"
         >
             <div className="relative group flex flex-col items-center">
                 {/* LEVEL NODE (Candy Crush Style) */}
                 <div className={`
-                    relative w-28 h-28 md:w-36 md:h-36 rounded-full overflow-hidden p-1.5 transition-all duration-700
+                    relative w-24 h-24 md:w-28 md:h-28 rounded-full transition-all duration-700
                     ${isVisited 
-                        ? 'bg-gradient-to-br from-secondary to-orange-500 shadow-[0_0_50px_rgba(255,122,0,0.8)] border-4 border-white' 
-                        : 'bg-black/80 border-4 border-white/10 grayscale ring-8 ring-white/5 shadow-inner'
+                        ? 'bg-gradient-to-br from-yellow-300 via-[#FFD700] to-orange-500 shadow-[0_8px_30px_rgba(255,184,0,0.6)] border-[6px] border-white' 
+                        : 'bg-gradient-to-br from-gray-400 to-gray-600 border-[6px] border-white/40 grayscale'
                     }
                 `}>
-                    <div className="relative w-full h-full rounded-full overflow-hidden bg-black/40 backdrop-blur-md">
+                    {/* Shadow tag below node */}
+                    <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-16 h-4 bg-black/40 blur-md rounded-full -z-10" />
+
+                    <div className="relative w-full h-full rounded-full overflow-hidden bg-black/10 flex items-center justify-center p-3">
                         <Image 
                             src={locale.image_url} 
                             alt={locale.name} 
                             fill 
-                            className={`object-contain p-4 ${!isVisited && 'opacity-20 translate-y-2'}`}
+                            className={`object-contain p-2 ${!isVisited && 'opacity-20'}`}
                         />
                         {!isVisited && (
                             <div className="absolute inset-0 flex items-center justify-center">
-                                <Lock className="text-white/20 w-8 h-8" />
+                                <Lock className="text-white/40 w-6 h-6" />
                             </div>
                         )}
-                        {isVisited && (
-                            <div className="absolute top-1 right-1 w-8 h-8 bg-green-500 rounded-full flex items-center justify-center border-2 border-white shadow-lg animate-bounce-slow">
-                                <CheckCircle2 className="text-white w-5 h-5" />
-                            </div>
-                        )}
+                    </div>
+
+                    {/* Level Number Tag */}
+                    <div className={`
+                        absolute -bottom-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full border-2 border-white shadow-xl
+                        ${isVisited ? 'bg-secondary' : 'bg-gray-700'}
+                    `}>
+                        <span className="text-white font-lilita text-xs">{index}</span>
                     </div>
                 </div>
 
