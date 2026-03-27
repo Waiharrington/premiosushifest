@@ -126,7 +126,7 @@ export default function Home() {
                             <div className="absolute inset-[1px] rounded-full border border-white/40" />
                             
                             <span className="relative z-10 text-white font-black text-xl lg:text-2xl drop-shadow-2xl uppercase tracking-tighter flex items-center justify-center gap-2">
-                                {user ? "SEGUIR RUTA 🏆" : "COMENZAR RUTA 🗺️"} <ArrowRight size={22} className="group-hover:translate-x-2 transition-transform duration-500 ease-out" />
+                                {user ? "SEGUIR RUTA 🗺️" : "COMENZAR RUTA 🗺️"} <ArrowRight size={22} className="group-hover:translate-x-2 transition-transform duration-500 ease-out" />
                             </span>
                             
                             {/* Shimmer Effect */}
