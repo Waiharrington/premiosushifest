@@ -142,22 +142,6 @@ export function VerticalQuestTrail({ locales, visitedIds, onLocaleClick }: Verti
                 })}
             </div>
 
-            {/* Final Prize Milestone */}
-            <div className="mt-48 relative z-20 flex flex-col items-center">
-                <motion.div 
-                    initial={{ scale: 0 }}
-                    whileInView={{ scale: 1 }}
-                    className="w-32 h-32 bg-gradient-to-br from-secondary to-orange-600 rounded-full flex items-center justify-center p-1 border-8 border-white/20 shadow-[0_0_70px_rgba(255,122,0,0.6)] animate-pulse"
-                >
-                    <div className="w-full h-full rounded-full border-4 border-dashed border-white/40 flex items-center justify-center">
-                       
-                    </div>
-                </motion.div>
-                <div className="mt-10 px-8 py-3 bg-black/60 backdrop-blur-2xl rounded-2xl border border-white/10 shadow-3xl text-center">
-                    <h3 className="text-2xl font-lilita text-white uppercase tracking-widest">El Tesoro Final</h3>
-                    <p className="text-[11px] font-black text-secondary uppercase tracking-[0.4em] mt-2">Completa la Saga para desbloquearlo</p>
-                </div>
-            </div>
         </div>
     )
 }
