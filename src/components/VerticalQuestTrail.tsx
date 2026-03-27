@@ -107,11 +107,12 @@ export function VerticalQuestTrail({ locales, visitedIds, onLocaleClick }: Verti
                             <stop offset="100%" stopColor="#E66A3E" />
                         </linearGradient>
 
-                        {/* Blur + Grayscale filter for mystery nodes */}
-                        <filter id="mystery-blur">
+                        {/* Blur + Grayscale filter for mystery nodes — Expanded region to avoid clipping */}
+                        <filter id="mystery-blur" x="-50%" y="-50%" width="200%" height="200%">
                             <feColorMatrix type="saturate" values="0" />
                             <feGaussianBlur stdDeviation="2.5" />
                         </filter>
+
 
                         {/* Intense Neon Glow for path edges */}
                         <filter id="neon-glow" x="-20%" y="-20%" width="140%" height="140%">
@@ -119,10 +120,11 @@ export function VerticalQuestTrail({ locales, visitedIds, onLocaleClick }: Verti
                             <feComposite in="SourceGraphic" in2="blur" operator="over" />
                         </filter>
 
-                        {/* Outer Blue Shadow for depth */}
-                        <filter id="blue-shadow">
+                        {/* Outer Blue Shadow for depth — Expanded region to avoid square clipping */}
+                        <filter id="blue-shadow" x="-50%" y="-50%" width="200%" height="200%">
                             <feDropShadow dx="0" dy="2" stdDeviation="3" floodColor="#001B4D" floodOpacity="0.8" />
                         </filter>
+
                     </defs>
 
 
