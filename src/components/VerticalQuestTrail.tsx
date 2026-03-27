@@ -1,6 +1,6 @@
 'use client'
 
-import { motion, useScroll, useSpring } from "framer-motion"
+import { motion } from "framer-motion"
 import { useRef, useState, useEffect } from "react"
 import Image from "next/image"
 import { Locale } from "@/types"
@@ -34,7 +34,7 @@ export function VerticalQuestTrail({ locales, visitedIds, onLocaleClick }: Verti
             rotate: Math.random() * 360,
             duration: 10 + Math.random() * 20,
             delay: i * 2,
-            emoji: ['🍣', '🥢', '🍱', '🍘'][i % 4]
+            emoji: ['🍣', '✨', '🍱', '🍘', '⭐'][i % 5]
         }))
         
         // Use a small delay or requestAnimationFrame to satisfy strict linting 
@@ -44,18 +44,6 @@ export function VerticalQuestTrail({ locales, visitedIds, onLocaleClick }: Verti
         }, 0)
         return () => clearTimeout(timer)
     }, [])
-    const { scrollYProgress } = useScroll({
-        target: containerRef,
-        offset: ["start end", "end start"]
-    })
-
-    const pathLength = useSpring(scrollYProgress, {
-        stiffness: 100,
-        damping: 30,
-        restDelta: 0.001
-    })
-
-    // Calculate node position based on index (Saga style wiggling)
     const getNodePosition = (index: number) => {
         const xOffset = Math.sin(index * 1.2) * 28; // Wavy horizontal offset (-28% to 28%)
         return { x: 50 + xOffset };
@@ -83,9 +71,10 @@ export function VerticalQuestTrail({ locales, visitedIds, onLocaleClick }: Verti
                             return `${i === 0 ? 'M' : 'L'} ${x} ${y}`;
                         }).join(' ')}
                         fill="none" 
-                        stroke="rgba(255,255,255,0.05)" 
-                        strokeWidth="4" 
-                        strokeDasharray="12 12" 
+                        stroke="rgba(255,184,0,0.2)" 
+                        strokeWidth="5" 
+                        strokeDasharray="4 8" 
+                        strokeLinecap="round"
                     />
                     <motion.path 
                         d={locales.map((_, i) => {
@@ -95,11 +84,13 @@ export function VerticalQuestTrail({ locales, visitedIds, onLocaleClick }: Verti
                             return `${i === 0 ? 'M' : 'L'} ${x} ${y}`;
                         }).join(' ')}
                         fill="none" 
-                        stroke="#00B2FF" 
-                        strokeWidth="6"
-                        style={{ pathLength: pathLength }}
+                        stroke="#FFB800" 
+                        strokeWidth="8"
                         filter="url(#glow)"
-                        className="drop-shadow-[0_0_15px_rgba(0,178,255,1)]"
+                        initial={{ pathLength: 1, opacity: 0.6 }}
+                        animate={{ opacity: [0.6, 1, 0.6] }}
+                        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                        className="drop-shadow-[0_0_25px_rgba(255,184,0,0.8)]"
                     />
                 </svg>
             </div>
@@ -191,8 +182,8 @@ function QuestMilestone({ locale, isVisited, onClick, nodePos }: {
                 <div className={`
                     relative w-28 h-28 md:w-36 md:h-36 rounded-full overflow-hidden p-1.5 transition-all duration-700
                     ${isVisited 
-                        ? 'bg-gradient-to-br from-primary to-[#0047FF] shadow-[0_0_40px_rgba(0,178,255,0.6)] border-4 border-white/60' 
-                        : 'bg-black/80 border-4 border-white/10 grayscale ring-8 ring-white/5'
+                        ? 'bg-gradient-to-br from-secondary to-orange-500 shadow-[0_0_50px_rgba(255,122,0,0.8)] border-4 border-white' 
+                        : 'bg-black/80 border-4 border-white/10 grayscale ring-8 ring-white/5 shadow-inner'
                     }
                 `}>
                     <div className="relative w-full h-full rounded-full overflow-hidden bg-black/40 backdrop-blur-md">
@@ -222,7 +213,7 @@ function QuestMilestone({ locale, isVisited, onClick, nodePos }: {
                             {locale.name}
                         </h4>
                         <div className="flex items-center justify-center gap-1.5 mt-1.5">
-                            <MapPin size={9} className="text-primary" />
+                            <MapPin size={9} className="text-secondary" />
                             <span className="text-[8px] font-black uppercase text-white/40 tracking-widest">Nivel {locale.id.slice(-2)}</span>
                         </div>
                     </div>

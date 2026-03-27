@@ -5,7 +5,7 @@ import { RiceParticles } from "./RiceParticles"
 
 export function SushifestLoader() {
     return (
-        <div className="fixed inset-0 z-[100] bg-[#000B2A] flex flex-col items-center justify-center overflow-hidden">
+        <div className="fixed inset-0 z-[100] bg-[#0A0A0B] flex flex-col items-center justify-center overflow-hidden">
             {/* Background Particles */}
             <RiceParticles />
             
@@ -24,7 +24,7 @@ export function SushifestLoader() {
                 {/* Spinning Sushi Emoji */}
                 <motion.div 
                     animate={{ rotate: 360 }}
-                    transition={{ duration: 3.5, repeat: Infinity, ease: "linear" }}
+                    transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
                     className="text-7xl md:text-8xl relative z-10 drop-shadow-[0_0_30px_rgba(0,178,255,0.6)]"
                 >
                     🍣
