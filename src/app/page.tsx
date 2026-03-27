@@ -115,7 +115,7 @@ export default function Home() {
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 1.2, duration: 1 }}
-                    className="mt-8 w-full max-w-sm px-6"
+                    className="mt-8 w-full max-w-[300px] px-4"
                 >
                     <Link href="/treasure-hunt" className="group relative block">
                         <div className="absolute inset-0 bg-primary blur-3xl opacity-30 group-hover:opacity-60 transition-all duration-500" />
