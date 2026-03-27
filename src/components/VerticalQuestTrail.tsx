@@ -32,33 +32,50 @@ const DECOS = [
     { emoji: '🍘', x: 50, y: 192 },
 ]
 
-// ── SVG snake path ────────────────────────────────────────────────────────
-const PATH = [
-    'M 82 14 L 66 14 L 50 14 L 34 14 L 18 14',
-    'C 4 14, 4 47, 18 47',
-    'L 34 47 L 50 47 L 66 47 L 82 47',
-    'C 96 47, 96 80, 82 80',
-    'L 66 80 L 50 80 L 34 80 L 18 80',
-    'C 4 80, 4 113, 18 113',
-    'L 34 113 L 50 113 L 66 113 L 82 113',
-    'C 96 113, 96 146, 82 146',
-    'L 66 146 L 50 146 L 34 146 L 18 146',
-    'C 4 146, 4 179, 18 179',
-    'L 34 179 L 50 179 L 66 179 L 82 179',
-].join(' ')
+// ── Helper to generate the path dynamically based on node count ───────────
+function getDynamicPath(numNodes: number): string {
+    if (numNodes <= 0) return ""
+    
+    let d = `M ${NODE_POS[0].x} ${NODE_POS[0].y}`
+    const numRows = Math.ceil(numNodes / 5)
+    
+    for (let r = 0; r < numRows; r++) {
+        const isLastRow = r === numRows - 1
+        const nodesInThisRow = isLastRow ? (numNodes % 5 || 5) : 5
+        
+        // Draw horizontal line for the row
+        const targetX = NODE_POS[r * 5 + nodesInThisRow - 1].x
+        const targetY = NODE_POS[r * 5 + nodesInThisRow - 1].y
+        d += ` L ${targetX} ${targetY}`
+        
+        // Draw curve to next row if exists
+        if (!isLastRow) {
+            const nextRowStart = NODE_POS[(r + 1) * 5]
+            // Curve logic: even rows curve right-to-left, odd rows curve left-to-right
+            const isCurveRight = r % 2 === 0
+            const curveX = isCurveRight ? -10 : 110
+            d += ` C ${curveX} ${targetY}, ${curveX} ${nextRowStart.y}, ${nextRowStart.x} ${nextRowStart.y}`
+        }
+
+    }
+    return d
+}
+
 
 export function VerticalQuestTrail({ locales, visitedIds, onLocaleClick }: VerticalQuestTrailProps) {
     const nodes = locales.slice(0, 30)
 
     // No sequence logic needed for Mystery Mode
-
+    const numRows = Math.ceil(nodes.length / 5)
+    const activeHeight = nodes.length > 0 ? ROW_YS[numRows - 1] + 30 : 100
+    const dynamicPath = getDynamicPath(nodes.length)
 
     return (
-        <div className="relative w-full">
-            {/* SVG canvas — 100:195 aspect ratio (portrait phone) */}
-            <div className="relative w-full" style={{ paddingBottom: '195%' }}>
+        <div className="relative w-full overflow-hidden">
+            {/* SVG canvas — Dynamic aspect ratio based on rows */}
+            <div className="relative w-full" style={{ paddingBottom: `${(activeHeight / 100) * 100}%` }}>
                 <svg
-                    viewBox="0 0 100 200"
+                    viewBox={`0 0 100 ${activeHeight}`}
                     className="absolute inset-0 w-full h-full"
                     preserveAspectRatio="xMidYMid meet"
                 >
@@ -104,13 +121,16 @@ export function VerticalQuestTrail({ locales, visitedIds, onLocaleClick }: Verti
 
                     {/* ── ROAD LAYERS (Neo-Blue Version) ── */}
                     {/* Glow Layer */}
-                    <path d={PATH} fill="none" stroke="#00D1FF" strokeWidth="13" strokeLinecap="round" strokeLinejoin="round" opacity="0.3" filter="url(#neon-glow)" />
-                    {/* Deep Blue Border */}
-                    <path d={PATH} fill="none" stroke="#001B4D" strokeWidth="12" strokeLinecap="round" strokeLinejoin="round" filter="url(#blue-shadow)" />
-                    {/* Royal Blue Surface */}
-                    <path d={PATH} fill="none" stroke="url(#neonBlueGrad)" strokeWidth="10" strokeLinecap="round" strokeLinejoin="round" />
+                    <path d={dynamicPath} fill="none" stroke="#00D1FF" strokeWidth="13" strokeLinecap="round" strokeLinejoin="round" opacity="0.3" filter="url(#neon-glow)" />
+                    
+                    {/* Main Core */}
+                    <path d={dynamicPath} fill="none" stroke="url(#neonBlueGrad)" strokeWidth="10" strokeLinecap="round" strokeLinejoin="round" />
+                    
+                    {/* Rice Dots Pattern (Slightly larger dots) */}
+                    <path d={dynamicPath} fill="none" stroke="#FFF8E7" strokeWidth="1.5" strokeDasharray="0.1 8" strokeLinecap="round" opacity="0.4" />
+
                     {/* Cream Dash Pattern (Sushi Rice style) */}
-                    <path d={PATH} fill="none" stroke="#FFF8E7" strokeWidth="1" strokeLinecap="round" strokeDasharray="1.5 5" opacity="0.6" />
+                    <path d={dynamicPath} fill="none" stroke="#FFF8E7" strokeWidth="1" strokeLinecap="round" strokeDasharray="1.5 5" opacity="0.6" />
 
 
                     {/* ── DECORATIVE SUSHI EMOJIS ── */}
