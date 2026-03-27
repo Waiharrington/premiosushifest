@@ -85,8 +85,8 @@ export default function Home() {
                     </motion.div>
                 </motion.div>
 
-                {/* Text Content */}
-                <div className="mt-6 space-y-3 max-w-xl">
+                {/* Text Content - Spaced to avoid compass overlap */}
+                <div className="mt-14 space-y-3 max-w-xl">
                     <motion.div
                         initial={{ opacity: 0, y: 30 }}
                         animate={{ opacity: 1, y: 0 }}
