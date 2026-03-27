@@ -7,7 +7,7 @@ import Image from "next/image"
 import { useAuth } from "@/context/AuthContext"
 import AuthModal from "@/components/AuthModal"
 import { RiceParticles } from "@/components/RiceParticles"
-import { TreasureMap } from "@/components/TreasureMap"
+import { VerticalQuestTrail } from "@/components/VerticalQuestTrail"
 import { QRScannerUI } from "@/components/QRScannerUI"
 import { ScratchCard } from "@/components/ScratchCard"
 import { SponsorBackground } from "@/components/SponsorBackground"
@@ -266,39 +266,25 @@ export default function TreasureHuntPage() {
                             </span>
                         </motion.button>
                     </div>
-
-                    {/* Map Section (The HUD Map) */}
-                    <section className="w-full bg-black/30 backdrop-blur-xl border border-white/5 rounded-[3rem] p-6 mb-16 min-h-[500px] shadow-inner relative">
-                        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:32px_32px] pointer-events-none rounded-[3rem]" />
-                        
-                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8 px-4 relative z-10">
+                                        {/* Map Section (The QUEST Trail) */}
+                    <section className="w-full relative py-10">
+                        <div className="flex flex-col items-center justify-center gap-4 mb-16 text-center">
                             <div className="flex items-center gap-3">
-                                <MapIcon className="text-secondary" size={20} />
-                                <h2 className="text-xl font-lilita uppercase tracking-widest text-white/80">Mapa de la Victoria</h2>
+                                <MapIcon className="text-secondary" size={24} />
+                                <h2 className="text-3xl font-lilita uppercase tracking-widest text-white/90">Mapa de la Victoria</h2>
                             </div>
-                            <div className="flex items-center gap-4">
-                                <div className="flex items-center gap-2">
-                                    <div className="w-3 h-3 rounded-full bg-primary shadow-[0_0_10px_rgba(0,71,255,0.8)]" />
-                                    <span className="text-[10px] uppercase font-black text-white/50 tracking-wider">Visitado</span>
-                                </div>
-                                <div className="flex items-center gap-2">
-                                    <div className="w-3 h-3 rounded-full border border-white/30" />
-                                    <span className="text-[10px] uppercase font-black text-white/50 tracking-wider">Pendiente</span>
-                                </div>
-                            </div>
+                            <p className="text-[10px] font-black uppercase text-secondary tracking-[0.4em] font-sans">Sigue el sendero, encuentra el tesoro</p>
                         </div>
 
-                        <div className="relative z-10 p-2 md:p-6 bg-white/5 rounded-[2.5rem] border border-white/5 shadow-2xl">
-                            <TreasureMap 
+                        <div className="relative z-10 w-full">
+                            <VerticalQuestTrail 
                                 locales={locales} 
                                 visitedIds={visitedIds} 
                                 onLocaleClick={(l) => {
                                     if (!visitedIds.includes(l.id)) {
-                                        // Cinematic Alert replacement or improved interaction
                                         alert(`Visita "${l.name}" y escanea su código QR para desbloquearlo.`)
                                     } else {
-                                        // prizes.find(p => p.locale_id === l.id)
-                                        // Future: Show a small "Memory card" for visited locales
+                                        // Optional: show details
                                     }
                                 }} 
                             />
