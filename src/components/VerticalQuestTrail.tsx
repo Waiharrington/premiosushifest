@@ -78,7 +78,8 @@ export function VerticalQuestTrail({ locales, visitedIds, onLocaleClick }: Verti
                     <path 
                         d={locales.map((_, i) => {
                             const x = 50 + Math.sin(i * 1.2) * 28;
-                            const y = (i / (locales.length - 1)) * 100;
+                            const total = locales.length > 1 ? locales.length - 1 : 1;
+                            const y = (i / total) * 100;
                             return `${i === 0 ? 'M' : 'L'} ${x} ${y}`;
                         }).join(' ')}
                         fill="none" 
@@ -89,7 +90,8 @@ export function VerticalQuestTrail({ locales, visitedIds, onLocaleClick }: Verti
                     <motion.path 
                         d={locales.map((_, i) => {
                             const x = 50 + Math.sin(i * 1.2) * 28;
-                            const y = (i / (locales.length - 1)) * 100;
+                            const total = locales.length > 1 ? locales.length - 1 : 1;
+                            const y = (i / total) * 100;
                             return `${i === 0 ? 'M' : 'L'} ${x} ${y}`;
                         }).join(' ')}
                         fill="none" 

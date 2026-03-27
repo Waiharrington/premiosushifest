@@ -268,18 +268,34 @@ export default function TreasureHuntPage() {
                             <p className="text-[10px] font-black uppercase text-secondary tracking-[0.4em] font-sans">Sigue el sendero, encuentra el tesoro</p>
                         </div>
 
-                        <div className="relative z-10 w-full">
-                            <VerticalQuestTrail 
-                                locales={locales} 
-                                visitedIds={visitedIds} 
-                                onLocaleClick={(l) => {
-                                    if (!visitedIds.includes(l.id)) {
-                                        alert(`Visita "${l.name}" y escanea su código QR para desbloquearlo.`)
-                                    } else {
-                                        // Optional: show details
-                                    }
-                                }} 
-                            />
+                        <div className="relative z-10 w-full px-4">
+                            {locales.length === 0 ? (
+                                <div className="flex flex-col items-center justify-center py-20 text-center bg-black/20 backdrop-blur-md rounded-[3rem] border border-white/5">
+                                    <div className="w-20 h-20 bg-white/5 rounded-full flex items-center justify-center mb-6 border border-white/10">
+                                        <MapIcon size={32} className="text-white/20" />
+                                    </div>
+                                    <h3 className="text-xl font-lilita text-white uppercase tracking-wider mb-2">Mapa en Mantenimiento</h3>
+                                    <p className="text-white/40 text-[10px] font-black uppercase tracking-[0.3em] max-w-[240px] leading-relaxed mb-6">
+                                        No hay conexión con la base de datos o no hay locales registrados.
+                                    </p>
+                                    <button 
+                                        onClick={() => window.location.reload()}
+                                        className="px-6 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full font-bold text-[9px] uppercase tracking-[0.2em] transition-all"
+                                    >
+                                        Reintentar Conexión
+                                    </button>
+                                </div>
+                            ) : (
+                                <VerticalQuestTrail 
+                                    locales={locales} 
+                                    visitedIds={visitedIds} 
+                                    onLocaleClick={(l) => {
+                                        if (!visitedIds.includes(l.id)) {
+                                            alert(`Visita "${l.name}" y escanea su código QR para desbloquearlo.`)
+                                        }
+                                    }} 
+                                />
+                            )}
                         </div>
                     </section>
 
