@@ -124,28 +124,25 @@ export default function TreasureHuntPage() {
 
     return (
         <div className="min-h-[100svh] bg-[#000B2A] text-white relative overflow-hidden selection:bg-primary/30 font-sans">
-            {/* Background Layer (Synchronized with Home) */}
+            {/* Background Layer - Sushi Pattern */}
             <div className="absolute inset-0 z-0 overflow-hidden">
-                <div className="absolute inset-0">
-                    <Image
-                        src="/bg-treasure-home.png"
-                        alt="Fondo de Festival"
-                        fill
-                        className="object-cover opacity-80"
-                        priority
-                        quality={100}
-                    />
-                </div>
-                {/* Cinematic filters for depth and focus */}
-                <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/90" />
-                <div className="absolute inset-0 backdrop-blur-[1px]" />
+                <Image
+                    src="/bg-treasure-home.png"
+                    alt="Fondo de Festival"
+                    fill
+                    className="object-cover opacity-95"
+                    priority
+                    quality={100}
+                />
+                {/* Light overlay to keep text readable without hiding the sushi pattern */}
+                <div className="absolute inset-0 bg-[#030818]/50" />
             </div>
 
             <RiceParticles />
             <SponsorBackground />
 
-            {/* Cinematic Vignette Overlay */}
-            <div className="absolute inset-0 z-30 pointer-events-none bg-[radial-gradient(circle_at_center,transparent_25%,rgba(0,0,0,0.6)_100%)]" />
+            {/* Subtle vignette around edges */}
+            <div className="absolute inset-0 z-30 pointer-events-none bg-[radial-gradient(circle_at_center,transparent_40%,rgba(0,0,0,0.3)_100%)]" />
 
             {/* Main Content Layer (Scrollable Wrapper) */}
             <div className="relative z-40 h-[100svh] overflow-y-auto custom-scrollbar">

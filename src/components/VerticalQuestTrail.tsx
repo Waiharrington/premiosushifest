@@ -1,7 +1,6 @@
 'use client'
 
 import { motion } from "framer-motion"
-import Image from "next/image"
 import { Locale } from "@/types"
 
 interface VerticalQuestTrailProps {
@@ -44,16 +43,8 @@ export function VerticalQuestTrail({ locales, visitedIds, onLocaleClick }: Verti
     const nodes = locales.slice(0, 30)
 
     return (
-        <div
-            className="relative w-full"
-            style={{
-                backgroundImage: "url('/sushi_saga_background.png')",
-                backgroundSize: 'cover',
-                backgroundPosition: 'top center',
-            }}
-        >
-            {/* Dark tinted overlay so nodes pop */}
-            <div className="absolute inset-0 bg-[#04091E]/55 pointer-events-none" />
+        <div className="relative w-full">
+            {/* No background here — the page background shows through */}
 
             {/* SVG viewport — aspect ratio 100:192 keeps proportional on any phone */}
             <div className="relative w-full" style={{ paddingBottom: '192%' }}>
