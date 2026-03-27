@@ -118,7 +118,8 @@ export default function TreasureHuntPage() {
             particleCount: 150,
             spread: 70,
             origin: { y: 0.6 },
-            colors: ['#0038A8', '#00D1FF', '#FFFFFF', '#FF8A5B']
+            colors: ['#0038A8', '#00D1FF', '#FFFFFF', '#FF4B1F']
+
         })
     }
 
@@ -288,7 +289,8 @@ export default function TreasureHuntPage() {
                         <div className="w-full mt-2 mb-20 text-left relative z-20">
                             <div className="flex items-center justify-center md:justify-start gap-4 mb-10">
                                 <div className="w-12 h-12 bg-[#0038A8]/20 backdrop-blur-xl border border-[#0038A8]/30 rounded-2xl flex items-center justify-center shadow-lg">
-                                    <Gift className="text-[#FF8A5B] w-6 h-6" />
+                                    <Gift className="text-[#FF4B1F] w-6 h-6" />
+
                                 </div>
                                 <div>
                                     <h2 className="text-3xl font-lilita uppercase tracking-tight text-white m-0">Mis Recompensas</h2>
@@ -357,7 +359,8 @@ export default function TreasureHuntPage() {
 
                                             <div className="flex-shrink-0">
                                                 <div className={`p-3 rounded-full border ${isRedeemed ? 'border-white/5 bg-white/5' : 'border-[#00D1FF]/20 bg-[#00D1FF]/10 group-hover:bg-[#00D1FF]/20 transition-colors'}`}>
-                                                    {isRedeemed ? <CheckCircle2 className="w-5 h-5 text-white/20" /> : <Gift className="w-5 h-5 text-[#FF8A5B] group-hover:animate-bounce" />}
+                                                    {isRedeemed ? <CheckCircle2 className="w-5 h-5 text-white/20" /> : <Gift className="w-5 h-5 text-[#FF4B1F] group-hover:animate-bounce" />}
+
                                                 </div>
                                             </div>
 
@@ -376,7 +379,8 @@ export default function TreasureHuntPage() {
                         </div>
                         <div className="w-[1px] h-10 bg-white/10" />
                         <div className="flex flex-col items-center">
-                            <span className="text-[#FF8A5B] font-lilita text-2xl">{locales.length - visitedIds.length}</span>
+                            <span className="text-[#FF4B1F] font-lilita text-2xl">{locales.length - visitedIds.length}</span>
+
                             <span className="text-[8px] font-black text-white/40 uppercase tracking-widest">Disponibles</span>
                         </div>
                         <div className="w-[1px] h-10 bg-white/10" />

@@ -101,11 +101,12 @@ export function VerticalQuestTrail({ locales, visitedIds, onLocaleClick }: Verti
                             <stop offset="100%" stopColor="#0038A8" />
                         </linearGradient>
 
-                        {/* Salmon Gradient for accents */}
+                        {/* Logo Orange Gradient for accents */}
                         <linearGradient id="salmonGrad" x1="0" y1="0" x2="1" y2="1">
-                            <stop offset="0%" stopColor="#FF8A5B" />
-                            <stop offset="100%" stopColor="#E66A3E" />
+                            <stop offset="0%" stopColor="#FF4B1F" />
+                            <stop offset="100%" stopColor="#D43D16" />
                         </linearGradient>
+
 
                         {/* Blur + Grayscale filter for mystery nodes — Expanded region to avoid clipping */}
                         <filter id="mystery-blur" x="-50%" y="-50%" width="200%" height="200%">
@@ -171,7 +172,8 @@ export function VerticalQuestTrail({ locales, visitedIds, onLocaleClick }: Verti
                                 <circle
                                     cx={pos.x} cy={pos.y} r="6.8"
                                     fill="#0a0a1a"
-                                    stroke={isVisited ? '#FF8A5B' : 'rgba(255,255,255,0.15)'}
+                                    stroke={isVisited ? '#FF4B1F' : 'rgba(255,255,255,0.15)'}
+
                                     strokeWidth={isVisited ? 2.5 : 0.7}
                                     filter={isVisited ? 'url(#blue-shadow)' : ''}
                                 />
@@ -201,7 +203,8 @@ export function VerticalQuestTrail({ locales, visitedIds, onLocaleClick }: Verti
                                 <text
                                     x={pos.x} y={pos.y + 11.5}
                                     textAnchor="middle" fontSize="2.8"
-                                    fill={isVisited ? '#FF8A5B' : 'rgba(255,255,255,0.2)'}
+                                    fill={isVisited ? '#FF4B1F' : 'rgba(255,255,255,0.2)'}
+
                                     fontFamily="Arial, sans-serif" fontWeight="900"
                                     style={{ textShadow: '0 2px 4px rgba(0,0,0,0.8)' }}
                                 >

@@ -31,7 +31,8 @@ export function MysteryModal({ isOpen, onClose }: MysteryModalProps) {
                     >
                         {/* Decorative background glow */}
                         <div className="absolute -top-24 -left-24 w-48 h-48 bg-[#00D1FF]/10 blur-[60px] rounded-full" />
-                        <div className="absolute -bottom-24 -right-24 w-48 h-48 bg-[#FF8A5B]/10 blur-[60px] rounded-full" />
+                        <div className="absolute -bottom-24 -right-24 w-48 h-48 bg-[#FF4B1F]/10 blur-[60px] rounded-full" />
+
 
                         {/* Close button */}
                         <button 
@@ -60,8 +61,9 @@ export function MysteryModal({ isOpen, onClose }: MysteryModalProps) {
                                     transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
                                     className="absolute -top-2 -right-2"
                                 >
-                                    <Sparkles size={20} className="text-[#FF8A5B]" />
+                                    <Sparkles size={20} className="text-[#FF4B1F]" />
                                 </motion.div>
+
                             </div>
 
                             {/* Text Content */}
