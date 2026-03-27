@@ -27,6 +27,9 @@ export default function Home() {
                 {/* Cinematic filters for depth and focus */}
                 <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/90" />
                 <div className="absolute inset-0 backdrop-blur-[1px]" />
+
+                {/* Golden radiant light from the bottom (Chest glow) */}
+                <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[150%] h-[400px] bg-[radial-gradient(circle_at_center,rgba(255,183,0,0.15)_0%,transparent_70%)] blur-[100px] z-[5]" />
             </div>
 
             <RiceParticles />
@@ -57,7 +60,7 @@ export default function Home() {
                         alt="Sushi Fest 2026 Logo"
                         width={220}
                         height={160}
-                        className="w-full h-auto drop-shadow-[0_0_40px_rgba(0,178,255,0.8)] brightness-125 relative z-10"
+                        className="w-full h-auto drop-shadow-[0_0_50px_rgba(0,178,255,0.9)] brightness-125 relative z-10"
                         priority
                     />
 
@@ -80,7 +83,7 @@ export default function Home() {
                             alt="Brújula del Tesoro" 
                             width={180} 
                             height={180} 
-                            className="w-full drop-shadow-[0_20px_60px_rgba(0,0,0,0.8)]"
+                            className="w-full drop-shadow-[0_20px_60px_rgba(255,183,0,0.4)]"
                         />
                     </motion.div>
                 </motion.div>
@@ -115,15 +118,15 @@ export default function Home() {
                     className="mt-8 w-full max-w-sm px-6"
                 >
                     <Link href="/treasure-hunt" className="group relative block">
-                        <div className="absolute inset-0 bg-primary blur-3xl opacity-30 group-hover:opacity-50 transition-all duration-500" />
+                        <div className="absolute inset-0 bg-primary blur-3xl opacity-30 group-hover:opacity-60 transition-all duration-500" />
                         <div className="relative h-16 w-full rounded-full overflow-hidden flex items-center justify-center shadow-[0_0_40px_rgba(0,178,255,0.4)] transition-all duration-500 group-hover:shadow-[0_0_60px_rgba(0,178,255,0.6)] group-hover:scale-[1.03] active:scale-95">
                             {/* Gradient Background */}
                             <div className="absolute inset-0 bg-gradient-to-r from-[#0047FF] via-[#00B2FF] to-[#0047FF] bg-[length:200%_auto] animate-gradient-x" />
                             {/* Inner Border */}
-                            <div className="absolute inset-[1px] rounded-full border border-white/30" />
+                            <div className="absolute inset-[1px] rounded-full border border-white/40" />
                             
                             <span className="relative z-10 text-white font-black text-xl lg:text-2xl drop-shadow-2xl uppercase tracking-tighter flex items-center justify-center gap-2">
-                                {user ? "SEGUIR LA RUTA" : "COMENZAR RUTA"} <ArrowRight size={22} className="group-hover:translate-x-2 transition-transform duration-500 ease-out" />
+                                {user ? "SEGUIR RUTA 🏆" : "COMENZAR RUTA 🗺️"} <ArrowRight size={22} className="group-hover:translate-x-2 transition-transform duration-500 ease-out" />
                             </span>
                             
                             {/* Shimmer Effect */}
@@ -157,10 +160,38 @@ export default function Home() {
                     </div>
                 </motion.div>
 
-                <footer className="mt-4 pt-4 pb-4 text-center text-white/30 text-[9px] uppercase tracking-[0.2em] font-black">
+                <footer className="relative z-50 mt-4 pt-4 pb-4 text-center text-white/40 text-[9px] uppercase tracking-[0.2em] font-black">
                     <p>© 2026 SUSHIFEST • PANAMÁ</p>
                 </footer>
             </main>
+
+            {/* Foreground Assets (3D Depth) */}
+            <div className="absolute bottom-0 left-0 right-0 z-50 pointer-events-none overflow-hidden h-1/2">
+                {/* Treasure Chest partially visible at the bottom right */}
+                <motion.div
+                    initial={{ y: 100, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ duration: 2, delay: 1 }}
+                    className="absolute bottom-[-10%] right-[-10%] w-[120%] max-w-[500px] aspect-square"
+                >
+                    <Image
+                        src="/treasure-chest.png"
+                        alt="Cofre del Tesoro"
+                        fill
+                        className="object-contain drop-shadow-[0_0_80px_rgba(255,183,0,0.5)]"
+                    />
+                </motion.div>
+                
+                {/* Bottom-left accent (Darker Sushi to balance depth) */}
+                <div className="absolute bottom-[-5%] left-[-5%] w-[40%] max-w-[200px] aspect-square grayscale opacity-30 select-none">
+                     <Image
+                        src="/treasure-chest.png" // Placeholder or similar asset
+                        alt=""
+                        fill
+                        className="object-contain"
+                    />
+                </div>
+            </div>
         </div>
     )
 }
