@@ -1,7 +1,7 @@
 'use client'
 
-import { motion } from "framer-motion"
 import { Locale } from "@/types"
+
 
 interface VerticalQuestTrailProps {
     locales: Locale[]
@@ -119,21 +119,6 @@ export function VerticalQuestTrail({ locales, visitedIds, onLocaleClick }: Verti
                             {d.emoji}
                         </text>
                     ))}
-
-                    {/* ── GLOBAL GUIDE (Explorer) ── */}
-                    <motion.g
-                        initial={{ y: -5, opacity: 0 }}
-                        animate={{ y: [4, -4, 4], x: [0, 2, 0], opacity: 0.9 }}
-                        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-                    >
-                        <image 
-                            href="/assets/character-explorer.png" 
-                            x="43" y="2" 
-                            width="14" height="14" 
-                            filter="drop-shadow(0 5px 8px rgba(0,0,0,0.6))"
-                        />
-                    </motion.g>
-
 
 
                     {/* ── NODES ── */}

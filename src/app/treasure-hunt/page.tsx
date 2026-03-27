@@ -373,6 +373,33 @@ export default function TreasureHuntPage() {
                 </main>
             </div>
 
+            {/* Explorador Mascota Fija (Mobile Guide) */}
+            <motion.div
+                initial={{ x: -100, opacity: 0 }}
+                animate={{ 
+                    x: 0, 
+                    opacity: 1,
+                    y: [0, -10, 0] 
+                }}
+                transition={{ 
+                    x: { duration: 0.8, ease: "easeOut" },
+                    y: { duration: 4, repeat: Infinity, ease: "easeInOut" }
+                }}
+                className="fixed bottom-6 left-4 z-50 pointer-events-none"
+            >
+                <div className="relative group">
+                    <div className="absolute inset-0 bg-[#00D1FF]/20 blur-2xl rounded-full scale-150 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <Image 
+                        src="/assets/character-explorer.png" 
+                        alt="Explorador Guide" 
+                        width={120} 
+                        height={120} 
+                        className="w-24 h-24 object-contain drop-shadow-[0_10px_15px_rgba(0,0,0,0.5)]"
+                    />
+                </div>
+            </motion.div>
+
+
             {/* Modals & Overlays */}
             <AnimatePresence>
                 {isAuthModalOpen && (
