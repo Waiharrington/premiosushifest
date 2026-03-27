@@ -1,6 +1,6 @@
 'use client'
 
-import { motion, useScroll, useTransform, useSpring } from "framer-motion"
+import { motion, useScroll, useSpring } from "framer-motion"
 import { useRef, useState, useEffect } from "react"
 import Image from "next/image"
 import { Locale } from "@/types"
@@ -58,14 +58,14 @@ export function VerticalQuestTrail({ locales, visitedIds, onLocaleClick }: Verti
     // Calculate node position based on index (Saga style wiggling)
     const getNodePosition = (index: number) => {
         const xOffset = Math.sin(index * 1.2) * 28; // Wavy horizontal offset (-28% to 28%)
-        return { x: `calc(50% + ${xOffset}%)` };
+        return { x: 50 + xOffset };
     }
 
     return (
         <div ref={containerRef} className="relative w-full py-20 px-4 md:px-0 min-h-[1500px]">
             {/* The Saga Glowing Path (SVG) */}
             <div className="absolute inset-0 z-0 pointer-events-none">
-                <svg className="h-full w-full opacity-30" preserveAspectRatio="none">
+                <svg viewBox="0 0 100 100" className="h-full w-full opacity-40" preserveAspectRatio="none">
                     <defs>
                         <filter id="glow">
                             <feGaussianBlur stdDeviation="4" result="coloredBlur" />
@@ -140,7 +140,6 @@ export function VerticalQuestTrail({ locales, visitedIds, onLocaleClick }: Verti
                             locale={locale}
                             isVisited={visitedIds.includes(locale.id)}
                             onClick={() => onLocaleClick(locale)}
-                            isLeft={Math.sin(index * 1.2) < 0}
                             nodePos={getNodePosition(index)}
                         />
                     </div>
@@ -167,32 +166,24 @@ export function VerticalQuestTrail({ locales, visitedIds, onLocaleClick }: Verti
     )
 }
 
-function QuestMilestone({ locale, isVisited, onClick, isLeft, nodePos }: { 
-    locale: Locale, isVisited: boolean, onClick: () => void, isLeft: boolean, nodePos: { x: string }
+function QuestMilestone({ locale, isVisited, onClick, nodePos }: { 
+    locale: Locale, isVisited: boolean, onClick: () => void, nodePos: { x: number }
 }) {
     const cardRef = useRef(null)
-    const { scrollYProgress } = useScroll({
-        target: cardRef,
-        offset: ["start end", "center center"]
-    })
-
-    const scale = useTransform(scrollYProgress, [0, 1], [0.5, 1])
-    const opacity = useTransform(scrollYProgress, [0, 0.5], [0, 1])
-    const rotate = useTransform(scrollYProgress, [0, 1], [isLeft ? -20 : 20, 0])
 
     return (
         <motion.div 
             ref={cardRef} 
-            style={{ 
-                scale, 
-                opacity, 
-                rotate,
-                left: nodePos.x,
-                transform: 'translate(-50%, 0)'
-            }}
-            whileHover={{ scale: 1.15 }}
-            whileTap={{ scale: 0.9 }}
+            initial={{ opacity: 0, scale: 0.8, y: 20 }}
+            whileInView={{ opacity: 1, scale: 1, y: 0 }}
+            viewport={{ once: true, margin: "-50px" }}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
             onClick={onClick}
+            style={{ 
+                left: `${nodePos.x}%`,
+                x: "-50%"
+            }}
             className="absolute z-30"
         >
             <div className="relative group flex flex-col items-center">
