@@ -112,9 +112,10 @@ export default function TreasureHuntPage() {
             particleCount: 150,
             spread: 70,
             origin: { y: 0.6 },
-            colors: ['#0066FF', '#00B2FF', '#FFFFFF', '#FFD700']
+            colors: ['#0038A8', '#00D1FF', '#FFFFFF', '#FF8A5B']
         })
     }
+
 
     const progress = locales.length > 0 ? (visitedIds.length / locales.length) * 100 : 0
 
@@ -123,7 +124,8 @@ export default function TreasureHuntPage() {
     }
 
     return (
-        <div className="min-h-[100svh] bg-[#000B2A] text-white relative overflow-hidden selection:bg-primary/30 font-sans">
+        <div className="min-h-[100svh] bg-[#000818] text-white relative overflow-hidden selection:bg-primary/30 font-sans">
+
             {/* Background Layer - Sushi Pattern */}
             <div className="absolute inset-0 z-0 overflow-hidden">
                 <Image
@@ -139,7 +141,9 @@ export default function TreasureHuntPage() {
             </div>
 
             <RiceParticles />
+            <div className="fixed inset-0 z-10 pointer-events-none opacity-20 bg-[radial-gradient(circle_at_center,rgba(0,178,255,0.15)_0%,transparent_70%)]" />
             <SponsorBackground />
+
 
             {/* Subtle vignette around edges */}
             <div className="absolute inset-0 z-30 pointer-events-none bg-[radial-gradient(circle_at_center,transparent_40%,rgba(0,0,0,0.3)_100%)]" />
@@ -173,20 +177,23 @@ export default function TreasureHuntPage() {
                     <div className="w-full max-w-lg mb-8 px-4">
                         <div className="flex justify-between items-center mb-4">
                             <div className="flex items-center gap-4">
-                                <div className="p-3 bg-secondary/20 rounded-2xl border border-secondary/40 shadow-[0_0_20px_rgba(255,122,0,0.4)]">
+                                <div className="p-3 bg-[#0038A8]/20 rounded-2xl border border-[#0038A8]/40 shadow-[0_0_20px_rgba(0,56,168,0.4)]">
                                      <Image src="/logo-fest.png" alt="Logo" width={40} height={40} className="w-8 h-8 object-contain" />
                                 </div>
                                 <div className="text-left">
-                                    <h1 className="text-2xl font-lilita uppercase text-white leading-none tracking-tight">Búsqueda del <span className="text-primary">Tesoro</span></h1>
-                                    <p className="text-[8px] font-black uppercase text-white/40 tracking-[0.3em]">Sushifest Panamá 2026</p>
+                                    <h1 className="text-2xl font-lilita uppercase text-white leading-none tracking-tight">Sushi <span className="text-[#FF8A5B]">Saga</span></h1>
+                                    <p className="text-[8px] font-black uppercase text-white/40 tracking-[0.3em]">Treasure Hunt • Panamá 2026</p>
                                 </div>
+
                             </div>
                             <div className="text-right">
                                 <div className="text-2xl font-lilita text-white">
-                                    {visitedIds.length} <span className="text-primary">/</span> {locales.length}
+                                    {visitedIds.length} <span className="text-[#00D1FF]">/</span> {locales.length}
                                 </div>
-                                <p className="text-[8px] font-black uppercase text-white/40 tracking-widest">Descubiertos</p>
+                                <p className="text-[8px] font-black uppercase text-white/40 tracking-widest">Revelados</p>
                             </div>
+
+
                         </div>
 
                         {/* Neon Progress Bar */}
@@ -195,8 +202,9 @@ export default function TreasureHuntPage() {
                                 initial={{ width: 0 }}
                                 animate={{ width: `${progress}%` }}
                                 transition={{ duration: 1.2, ease: 'easeOut' }}
-                                className="h-full bg-gradient-to-r from-[#fbbf24] via-[#f97316] to-[#fbbf24] rounded-full shadow-[0_0_20px_rgba(251,191,36,0.7)] relative overflow-hidden"
+                                className="h-full bg-gradient-to-r from-[#0038A8] via-[#00D1FF] to-[#0038A8] rounded-full shadow-[0_0_20px_rgba(0,209,255,0.7)] relative overflow-hidden"
                              >
+
                                  {/* Shimmer sweep */}
                                  <motion.div
                                      className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent"
@@ -214,29 +222,30 @@ export default function TreasureHuntPage() {
                             onClick={() => setIsScannerOpen(true)}
                             whileHover={{ scale: 1.02 }}
                             whileTap={{ scale: 0.98 }}
-                            className="w-full h-16 rounded-2xl bg-gradient-to-r from-secondary to-orange-600 shadow-[0_10px_30px_rgba(255,122,0,0.5)] flex items-center justify-center gap-3 border border-white/20"
+                            className="w-full h-16 rounded-2xl bg-gradient-to-r from-[#0038A8] to-[#0066FF] shadow-[0_10px_30px_rgba(0,56,168,0.5)] flex items-center justify-center gap-3 border border-white/20"
                         >
-                            <QrCode size={24} className="text-white" />
-                            <span className="text-white font-lilita text-xl uppercase tracking-widest">Escanear QR <span className="text-yellow-300">🔥</span></span>
+                            <QrCode size={24} className="text-[#00D1FF]" />
+                            <span className="text-white font-lilita text-xl uppercase tracking-widest">Escanear QR <span className="text-white">🚀</span></span>
                         </motion.button>
+
                     </div>
                     {/* Map Section (The QUEST Trail) */}
-                    <section className="w-full relative py-10">
+                    <section className="w-full relative py-2">
                         <div className="relative z-10 w-full px-4">
                             {locales.length === 0 ? (
                                 <div className="flex flex-col items-center justify-center py-20 text-center bg-black/20 backdrop-blur-md rounded-[3rem] border border-white/5">
                                     <div className="w-20 h-20 bg-white/5 rounded-full flex items-center justify-center mb-6 border border-white/10">
                                         <MapIcon size={32} className="text-white/20" />
                                     </div>
-                                    <h3 className="text-xl font-lilita text-white uppercase tracking-wider mb-2">Mapa en Mantenimiento</h3>
+                                    <h3 className="text-xl font-lilita text-white uppercase tracking-wider mb-2">Saga en Mantenimiento</h3>
                                     <p className="text-white/40 text-[10px] font-black uppercase tracking-[0.3em] max-w-[240px] leading-relaxed mb-6">
-                                        No hay conexión con la base de datos o no hay locales registrados.
+                                        Exploración temporalmente pausada...
                                     </p>
                                     <button 
                                         onClick={() => window.location.reload()}
-                                        className="px-6 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full font-bold text-[9px] uppercase tracking-[0.2em] transition-all"
+                                        className="px-6 py-2 bg-[#0038A8]/20 hover:bg-[#0038A8]/40 border border-white/10 rounded-full font-bold text-[9px] uppercase tracking-[0.2em] transition-all"
                                     >
-                                        Reintentar Conexión
+                                        Reintentar
                                     </button>
                                 </div>
                             ) : (
@@ -245,7 +254,7 @@ export default function TreasureHuntPage() {
                                     visitedIds={visitedIds} 
                                     onLocaleClick={(l) => {
                                         if (!visitedIds.includes(l.id)) {
-                                            alert(`Visita "${l.name}" y escanea su código QR para desbloquearlo.`)
+                                            alert(`¡Negocio misterioso! Visita este local y escanea su código QR para revelarlo en el mapa.`)
                                         }
                                     }} 
                                 />
@@ -253,18 +262,20 @@ export default function TreasureHuntPage() {
                         </div>
                     </section>
 
+
                     {/* Prizes / Recompensas Section (The Vault) */}
                     {prizes.filter(p => p.prize_type !== 'try_again').length > 0 && (
                         <div className="w-full mt-2 mb-20 text-left relative z-20">
                             <div className="flex items-center justify-center md:justify-start gap-4 mb-10">
-                                <div className="w-12 h-12 bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl flex items-center justify-center shadow-lg">
-                                    <Gift className="text-primary w-6 h-6" />
+                                <div className="w-12 h-12 bg-[#0038A8]/20 backdrop-blur-xl border border-[#0038A8]/30 rounded-2xl flex items-center justify-center shadow-lg">
+                                    <Gift className="text-[#FF8A5B] w-6 h-6" />
                                 </div>
                                 <div>
                                     <h2 className="text-3xl font-lilita uppercase tracking-tight text-white m-0">Mis Recompensas</h2>
-                                    <p className="text-[10px] font-black uppercase text-secondary tracking-[0.3em] font-sans">The Vault • Panamá 2026</p>
+                                    <p className="text-[10px] font-black uppercase text-[#00D1FF] tracking-[0.3em] font-sans">The Vault • Panamá 2026</p>
                                 </div>
                             </div>
+
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 {prizes.filter(p => p.prize_type !== 'try_again').map((prize, idx) => {
@@ -325,10 +336,11 @@ export default function TreasureHuntPage() {
                                             </div>
 
                                             <div className="flex-shrink-0">
-                                                <div className={`p-3 rounded-full border ${isRedeemed ? 'border-white/5 bg-white/5' : 'border-primary/20 bg-primary/10 group-hover:bg-primary/20 transition-colors'}`}>
-                                                    {isRedeemed ? <CheckCircle2 className="w-5 h-5 text-white/20" /> : <Gift className="w-5 h-5 text-primary group-hover:animate-bounce" />}
+                                                <div className={`p-3 rounded-full border ${isRedeemed ? 'border-white/5 bg-white/5' : 'border-[#00D1FF]/20 bg-[#00D1FF]/10 group-hover:bg-[#00D1FF]/20 transition-colors'}`}>
+                                                    {isRedeemed ? <CheckCircle2 className="w-5 h-5 text-white/20" /> : <Gift className="w-5 h-5 text-[#FF8A5B] group-hover:animate-bounce" />}
                                                 </div>
                                             </div>
+
                                         </motion.div>
                                     )
                                 })}
@@ -337,22 +349,23 @@ export default function TreasureHuntPage() {
                     )}
 
                     {/* Map Footer HUD (Adventure Stats) */}
-                    <div className="w-full max-w-lg mt-12 bg-black/60 backdrop-blur-3xl border border-white/10 rounded-3xl p-6 flex items-center justify-around gap-2 shadow-[0_-20px_50px_rgba(0,0,0,0.5)]">
+                    <div className="w-full max-w-lg mt-12 bg-[#000818] backdrop-blur-3xl border border-white/10 rounded-3xl p-6 flex items-center justify-around gap-2 shadow-[0_-20px_50px_rgba(0,0,0,0.5)]">
                         <div className="flex flex-col items-center">
-                            <span className="text-secondary font-lilita text-2xl">{visitedIds.length}</span>
+                            <span className="text-[#00D1FF] font-lilita text-2xl">{visitedIds.length}</span>
                             <span className="text-[8px] font-black text-white/40 uppercase tracking-widest">Visitados</span>
                         </div>
                         <div className="w-[1px] h-10 bg-white/10" />
                         <div className="flex flex-col items-center">
-                            <span className="text-primary font-lilita text-2xl">{locales.length - visitedIds.length}</span>
+                            <span className="text-[#FF8A5B] font-lilita text-2xl">{locales.length - visitedIds.length}</span>
                             <span className="text-[8px] font-black text-white/40 uppercase tracking-widest">Disponibles</span>
                         </div>
                         <div className="w-[1px] h-10 bg-white/10" />
                         <div className="flex flex-col items-center">
-                            <span className="text-gray-500 font-lilita text-2xl">0</span>
+                            <span className="text-gray-600 font-lilita text-2xl">0</span>
                             <span className="text-[8px] font-black text-white/40 uppercase tracking-widest">Bloqueados</span>
                         </div>
                     </div>
+
 
                     <footer className="mt-12 py-6 text-center text-white/10 text-[8px] uppercase tracking-[0.4em] font-black">
                         <p>© 2026 SUSHIFEST • PANAMÁ</p>
