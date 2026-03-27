@@ -154,7 +154,7 @@ export default function Home() {
                 </motion.div>
 
                 <footer className="mt-auto py-12 text-center text-white/30 text-[10px] uppercase tracking-[0.2em]">
-                    <p>© 2026 SUSHIFEST • BY EPIC MARKETING • PANAMÁ</p>
+                    <p>© 2026 SUSHIFEST • PANAMÁ</p>
                 </footer>
             </main>
         </div>

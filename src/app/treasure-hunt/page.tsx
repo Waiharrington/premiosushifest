@@ -345,7 +345,7 @@ export default function TreasureHuntPage() {
                     )}
 
                     <footer className="pb-8 pt-4 text-center text-white/40 text-[10px] uppercase tracking-[0.2em] w-full">
-                        <p>© 2026 SUSHIFEST • BY EPIC MARKETING • PANAMÁ</p>
+                        <p>© 2026 SUSHIFEST • PANAMÁ</p>
                     </footer>
                 </main>
             </div>
