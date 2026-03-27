@@ -95,7 +95,7 @@ export default function Home() {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.7, duration: 1 }}
                     >
-                        <h2 className="text-white/90 font-lilita text-xl md:text-2xl tracking-[0.2em] uppercase drop-shadow-[0_8px_16px_rgba(0,0,0,1)]">
+                        <h2 className="text-white font-lilita text-xl md:text-2xl tracking-[0.25em] uppercase drop-shadow-[0_10px_20px_rgba(0,0,0,1)]">
                             Búsqueda del <span className="text-white">Tesoro</span>
                         </h2>
                         <h1 
