@@ -172,102 +172,51 @@ export default function TreasureHuntPage() {
 
                 <main className="flex flex-col items-center px-4 pb-24 text-center max-w-lg md:max-w-4xl mx-auto w-full pt-4">
                     
-                    {/* Header Section */}
-                    <motion.div
-                        initial={{ opacity: 0, y: -20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="relative w-full max-w-[140px] aspect-[4/3] mb-4 flex items-center justify-center"
-                    >
-                        <Image
-                            src="/logo-fest.png"
-                            alt="Sushi Fest 2026 Logo"
-                            width={180}
-                            height={130}
-                            className="w-full h-auto drop-shadow-[0_0_30px_rgba(0,178,255,0.5)] brightness-125 relative z-10"
-                            priority
-                        />
-                    </motion.div>
-
-                    {/* Title */}
-                    <div className="space-y-2 mb-10">
-                        <motion.h1 
-                            initial={{ opacity: 0, scale: 0.9 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            className="text-4xl md:text-6xl font-lilita uppercase tracking-tight leading-none text-white drop-shadow-[0_8px_24px_rgba(0,0,0,0.8)]"
-                        >
-                            Tu Ruta al <span className="text-secondary italic">Tesoro</span>
-                        </motion.h1>
-                        <p className="text-white/40 text-[10px] md:text-xs uppercase font-black tracking-[0.4em] font-sans">
-                            Sushifest Panamá • 2026 Edition
-                        </p>
-                    </div>
-
-                    {/* Progress Card (Premium HUD Design) */}
-                    <div className="w-full bg-black/40 backdrop-blur-2xl border border-white/10 rounded-[2.5rem] p-8 mb-10 shadow-[0_0_50px_rgba(0,0,0,0.5)] relative overflow-hidden group">
-                        {/* Internal pulse background */}
-                        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-secondary/5 opacity-50" />
-                        
-                        <div className="relative flex justify-between items-center mb-8 px-2 gap-4">
-                            <div className="text-left">
-                                <p className="text-[10px] uppercase font-black text-white/40 tracking-[0.2em] mb-2">Restaurantes Visitados</p>
-                                <h3 className="text-3xl md:text-4xl font-lilita uppercase text-white tracking-widest flex items-center gap-3">
-                                    {visitedIds.length} <span className="text-white/20 text-xl font-sans">/</span> {locales.length}
-                                </h3>
-                            </div>
-                            
-                            <div className="text-right">
-                                <div className="relative inline-flex items-center justify-center">
-                                    <svg className="w-20 h-20 -rotate-90">
-                                        <circle cx="40" cy="40" r="36" className="stroke-white/5 fill-none" strokeWidth="6" />
-                                        <motion.circle 
-                                            cx="40" cy="40" r="36" 
-                                            className="stroke-primary fill-none shadow-[0_0_15px_rgba(0,71,255,0.5)]" 
-                                            strokeWidth="6" 
-                                            strokeDasharray="226.2"
-                                            animate={{ strokeDashoffset: 226.2 - (226.2 * progress) / 100 }}
-                                            transition={{ duration: 2, ease: "easeOut" }}
-                                            strokeLinecap="round"
-                                        />
-                                    </svg>
-                                    <span className="absolute text-xl font-lilita text-secondary drop-shadow-[0_0_10px_rgba(255,122,0,0.4)]">{Math.round(progress)}%</span>
+                    {/* Space-Neon Header HUD */}
+                    <div className="w-full max-w-lg mb-8 px-4">
+                        <div className="flex justify-between items-center mb-4">
+                            <div className="flex items-center gap-4">
+                                <div className="p-3 bg-secondary/20 rounded-2xl border border-secondary/40 shadow-[0_0_20px_rgba(255,122,0,0.4)]">
+                                     <Image src="/logo-fest.png" alt="Logo" width={40} height={40} className="w-8 h-8 object-contain" />
+                                </div>
+                                <div className="text-left">
+                                    <h1 className="text-2xl font-lilita uppercase text-white leading-none tracking-tight">Búsqueda del <span className="text-primary">Tesoro</span></h1>
+                                    <p className="text-[8px] font-black uppercase text-white/40 tracking-[0.3em]">Sushifest Panamá 2026</p>
                                 </div>
                             </div>
+                            <div className="text-right">
+                                <div className="text-2xl font-lilita text-white">
+                                    {visitedIds.length} <span className="text-primary">/</span> {locales.length}
+                                </div>
+                                <p className="text-[8px] font-black uppercase text-white/40 tracking-widest">Descubiertos</p>
+                            </div>
                         </div>
 
-                        {/* Linear Progress Bar as backup/accent */}
-                        <div className="h-2 bg-white/5 rounded-full overflow-hidden border border-white/5 mb-8">
-                            <motion.div 
+                        {/* Neon Progress Bar */}
+                        <div className="relative h-6 w-full bg-black/60 rounded-full border border-white/10 p-1 mb-8">
+                             <motion.div 
                                 initial={{ width: 0 }}
                                 animate={{ width: `${progress}%` }}
-                                transition={{ duration: 1.5, ease: "easeOut" }}
-                                className="h-full bg-gradient-to-r from-primary via-blue-400 to-primary animate-gradient-x shadow-[0_0_15px_rgba(0,71,255,0.6)]"
-                            />
+                                className="h-full bg-gradient-to-r from-[#0047FF] to-[#00B2FF] rounded-full shadow-[0_0_15px_rgba(0,178,255,0.6)]"
+                             />
+                             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[10px] font-black text-white/90 uppercase tracking-widest">
+                                {Math.round(progress)}% Completado
+                             </div>
                         </div>
 
-                        {/* Scan Button (Large Action) */}
+                        {/* Scanner Action Button */}
                         <motion.button
                             onClick={() => setIsScannerOpen(true)}
                             whileHover={{ scale: 1.02 }}
                             whileTap={{ scale: 0.98 }}
-                            className="w-full relative h-20 rounded-2xl overflow-hidden flex items-center justify-center group shadow-[0_0_40px_rgba(0,178,255,0.3)] hover:shadow-[0_0_60px_rgba(0,178,255,0.5)] transition-all duration-500"
+                            className="w-full h-16 rounded-2xl bg-gradient-to-r from-secondary to-orange-600 shadow-[0_10px_30px_rgba(255,122,0,0.5)] flex items-center justify-center gap-3 border border-white/20"
                         >
-                            <div className="absolute inset-0 bg-gradient-to-r from-[#0047FF] via-[#00B2FF] to-[#0047FF] bg-[length:200%_auto] animate-gradient-x" />
-                            <div className="absolute inset-[2px] rounded-xl border border-white/40" />
-                            <span className="relative z-10 text-white font-black text-xl md:text-2xl drop-shadow-2xl uppercase tracking-tighter flex items-center justify-center gap-4">
-                                <QrCode size={28} className="group-hover:rotate-12 transition-transform duration-300" /> ESCANEAR QR PARA GANAR 🔥
-                            </span>
+                            <QrCode size={24} className="text-white" />
+                            <span className="text-white font-lilita text-xl uppercase tracking-widest">Escanear QR <span className="text-yellow-300">🔥</span></span>
                         </motion.button>
                     </div>
-                                        {/* Map Section (The QUEST Trail) */}
+                    {/* Map Section (The QUEST Trail) */}
                     <section className="w-full relative py-10">
-                        <div className="flex flex-col items-center justify-center gap-4 mb-16 text-center">
-                            <div className="flex items-center gap-3">
-                                <MapIcon className="text-secondary" size={24} />
-                                <h2 className="text-3xl font-lilita uppercase tracking-widest text-white/90">Mapa de la Victoria</h2>
-                            </div>
-                            <p className="text-[10px] font-black uppercase text-secondary tracking-[0.4em] font-sans">Sigue el sendero, encuentra el tesoro</p>
-                        </div>
-
                         <div className="relative z-10 w-full px-4">
                             {locales.length === 0 ? (
                                 <div className="flex flex-col items-center justify-center py-20 text-center bg-black/20 backdrop-blur-md rounded-[3rem] border border-white/5">
@@ -382,7 +331,25 @@ export default function TreasureHuntPage() {
                         </div>
                     )}
 
-                    <footer className="mt-auto py-12 text-center text-white/20 text-[10px] uppercase tracking-[0.5em] font-black">
+                    {/* Map Footer HUD (Adventure Stats) */}
+                    <div className="w-full max-w-lg mt-12 bg-black/60 backdrop-blur-3xl border border-white/10 rounded-3xl p-6 flex items-center justify-around gap-2 shadow-[0_-20px_50px_rgba(0,0,0,0.5)]">
+                        <div className="flex flex-col items-center">
+                            <span className="text-secondary font-lilita text-2xl">{visitedIds.length}</span>
+                            <span className="text-[8px] font-black text-white/40 uppercase tracking-widest">Visitados</span>
+                        </div>
+                        <div className="w-[1px] h-10 bg-white/10" />
+                        <div className="flex flex-col items-center">
+                            <span className="text-primary font-lilita text-2xl">{locales.length - visitedIds.length}</span>
+                            <span className="text-[8px] font-black text-white/40 uppercase tracking-widest">Disponibles</span>
+                        </div>
+                        <div className="w-[1px] h-10 bg-white/10" />
+                        <div className="flex flex-col items-center">
+                            <span className="text-gray-500 font-lilita text-2xl">0</span>
+                            <span className="text-[8px] font-black text-white/40 uppercase tracking-widest">Bloqueados</span>
+                        </div>
+                    </div>
+
+                    <footer className="mt-12 py-6 text-center text-white/10 text-[8px] uppercase tracking-[0.4em] font-black">
                         <p>© 2026 SUSHIFEST • PANAMÁ</p>
                     </footer>
                 </main>
@@ -459,14 +426,14 @@ export default function TreasureHuntPage() {
                                         </h2>
                                         
                                         <p className="text-blue-200/60 text-[10px] md:text-xs uppercase tracking-[0.4em] font-black mb-10 leading-relaxed">
-                                            Has desbloqueado este beneficio en <span className="text-white">{activePrizeLocale.name}</span>
+                                            Has desbloqueado este beneficio en <span className="text-white">{activePrizeLocale?.name}</span>
                                         </p>
 
                                         {/* Prize Visual Unit */}
                                         <div className="relative w-full aspect-video max-w-md mx-auto mb-10 group rounded-[2.5rem] overflow-hidden">
                                             <div className="absolute inset-0 bg-primary/20 blur-3xl opacity-50" />
                                             <div className="relative h-full w-full bg-white/5 backdrop-blur-md border border-white/10 flex items-center justify-center overflow-hidden shadow-2xl">
-                                                {currentPrize.prize_image ? (
+                                                {currentPrize?.prize_image ? (
                                                     <Image 
                                                         src={currentPrize.prize_image} 
                                                         alt="Premio" 
@@ -479,7 +446,7 @@ export default function TreasureHuntPage() {
                                                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
                                                 <div className="absolute bottom-6 left-1/2 -translate-x-1/2 w-full px-8">
                                                     <h3 className="text-2xl md:text-3xl font-lilita text-white uppercase tracking-tight drop-shadow-md">
-                                                        {currentPrize.prize_name}
+                                                        {currentPrize?.prize_name}
                                                     </h3>
                                                 </div>
                                             </div>
@@ -596,7 +563,7 @@ export default function TreasureHuntPage() {
 
                             <div className="relative w-full h-full">
                                 <Image
-                                    src={viewingPrize.prize_type === 'gift' 
+                                    src={viewingPrize?.prize_type === 'gift' 
                                         ? `/demo-prize-${((viewingPrizeIndex - 1) % 4) + 1}.jpg`
                                         : `/discount-${((viewingPrizeIndex - 1) % 3) + 1}.jpeg`
                                     }
@@ -610,9 +577,9 @@ export default function TreasureHuntPage() {
                                 <div className="absolute bottom-10 left-0 w-full px-10 text-center">
                                     <div className="w-12 h-1 bg-primary mx-auto mb-6 rounded-full" />
                                     <h3 className="text-3xl md:text-4xl font-lilita text-white uppercase tracking-tight leading-none mb-4 drop-shadow-xl">
-                                        {viewingPrize.prize_name}
+                                        {viewingPrize?.prize_name}
                                     </h3>
-                                    <p className="text-white/40 text-[10px] font-black uppercase tracking-[0.4em]">Cupón ID: SF-{viewingPrize.id.slice(0, 8)}</p>
+                                    <p className="text-white/40 text-[10px] font-black uppercase tracking-[0.4em]">Cupón ID: SF-{viewingPrize?.id.slice(0, 8)}</p>
                                 </div>
                             </div>
                         </motion.div>

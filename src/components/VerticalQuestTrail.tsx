@@ -4,7 +4,6 @@ import { motion } from "framer-motion"
 import { useRef, useState, useEffect } from "react"
 import Image from "next/image"
 import { Locale } from "@/types"
-import { Lock, Sparkles, MapPin } from "lucide-react"
 
 interface VerticalQuestTrailProps {
     locales: Locale[]
@@ -45,117 +44,64 @@ export function VerticalQuestTrail({ locales, visitedIds, onLocaleClick }: Verti
         return () => clearTimeout(timer)
     }, [])
 
-    // Calculate node position (Multi-column winding path)
+    // Calculate node position (Space-Neon winding path)
     const getNodePosition = (index: number) => {
-        // We create a winding pattern (Left, Center-Left, Center-Right, Right, and back)
         const sequence = [0, 1, 2, 3, 2, 1]; // Indices of horizontal grid columns
         const colIndex = sequence[index % sequence.length];
         const xPos = 15 + colIndex * 23.3; // Distribute across 4 logical columns (15% to 85%)
         
-        // Add a bit of natural jitter
-        const jitter = Math.sin(index * 2.5) * 3;
-        return { x: xPos + jitter, y: index * 12 }; // Vertical spacing
+        // ULTRADENSE vertical spacing (index * 5 instead of index * 12)
+        return { x: xPos, y: index * 5.5 }; 
     }
 
     return (
-        <div ref={containerRef} className="relative w-full py-20 px-4 md:px-0 min-h-[3000px]">
-            {/* The Sega Illustrated Background */}
-            <div className="absolute inset-0 z-0">
+        <div ref={containerRef} className="relative w-full py-20 px-4 md:px-0 min-h-[2000px]">
+            {/* The Space Illustrated Background */}
+            <div className="absolute inset-0 z-0 h-full">
                 <Image 
                     src="/sushi_saga_background.png" 
-                    alt="Saga Background" 
+                    alt="Space Background" 
                     fill 
-                    className="object-cover object-top opacity-80"
+                    className="object-cover object-top"
+                    priority
                 />
-                <div className="absolute inset-0 bg-gradient-to-b from-[#0A0A0B]/20 via-transparent to-[#0A0A0B]" />
+                <div className="absolute inset-0 bg-[#0A0A0B]/30" />
             </div>
 
             {/* The Saga Glowing Path (SVG) */}
             <div className="absolute inset-0 z-10 pointer-events-none">
                 <svg viewBox="0 0 100 100" className="h-full w-full" preserveAspectRatio="none">
                     <defs>
-                        <filter id="saga-glow">
-                            <feGaussianBlur stdDeviation="6" result="blur" />
-                            <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                        <filter id="neon-glow">
+                            <feGaussianBlur stdDeviation="3" result="blur" />
+                            <feMerge>
+                                <feMergeNode in="blur" />
+                                <feMergeNode in="SourceGraphic" />
+                            </feMerge>
                         </filter>
-                        <linearGradient id="river-grad" x1="0%" y1="0%" x2="0%" y2="100%">
-                            <stop offset="0%" stopColor="#0047FF" />
-                            <stop offset="50%" stopColor="#00B2FF" />
-                            <stop offset="100%" stopColor="#0047FF" />
-                        </linearGradient>
                     </defs>
                     
-                    {/* The 3D River Path (Base) */}
-                    <path 
-                        d={locales.map((_, i) => {
-                            const pos = getNodePosition(i);
-                            return `${i === 0 ? 'M' : 'L'} ${pos.x} ${pos.y}`;
-                        }).join(' ')}
-                        fill="none" 
-                        stroke="#000B2A" 
-                        strokeWidth="18" 
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="opacity-50"
-                    />
-                    
-                    {/* The Main River Body */}
+                    {/* The Neon Energy Trail */}
                     <motion.path 
                         d={locales.map((_, i) => {
                             const pos = getNodePosition(i);
                             return `${i === 0 ? 'M' : 'L'} ${pos.x} ${pos.y}`;
                         }).join(' ')}
                         fill="none" 
-                        stroke="url(#river-grad)" 
-                        strokeWidth="14" 
+                        stroke="#FF7A00" 
+                        strokeWidth="2.5" 
                         strokeLinecap="round"
                         strokeLinejoin="round"
-                        className="drop-shadow-[0_0_15px_rgba(0,178,255,0.4)]"
-                    />
-
-                    {/* The Crystalline Center Line */}
-                    <motion.path 
-                        d={locales.map((_, i) => {
-                            const pos = getNodePosition(i);
-                            return `${i === 0 ? 'M' : 'L'} ${pos.x} ${pos.y}`;
-                        }).join(' ')}
-                        fill="none" 
-                        stroke="#E0F2FF" 
-                        strokeWidth="2" 
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="opacity-40"
+                        filter="url(#neon-glow)"
+                        className="drop-shadow-[0_0_12px_rgba(255,122,0,0.9)]"
+                        initial={{ opacity: 0.8 }}
+                        animate={{ opacity: [0.7, 1, 0.7] }}
+                        transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
                     />
                 </svg>
             </div>
 
-            <div className="absolute inset-0 pointer-events-none overflow-hidden origin-top">
-                {props.map((p) => (
-                    <motion.div
-                        key={`prop-${p.id}`}
-                        initial={{ opacity: 0 }}
-                        whileInView={{ opacity: 1 }}
-                        animate={{ 
-                            y: [0, -40, 0],
-                            rotate: [p.rotate, p.rotate + 360],
-                            opacity: [0.1, 0.4, 0.1]
-                        }}
-                        transition={{ 
-                            duration: p.duration, 
-                            repeat: Infinity,
-                            delay: p.delay
-                        }}
-                        className="absolute w-8 h-8 md:w-12 md:h-12 text-3xl"
-                        style={{ 
-                            left: `${p.x}%`, 
-                            top: `${p.y}%`,
-                            filter: 'blur(1px)'
-                        }}
-                    >
-                        {p.emoji}
-                    </motion.div>
-                ))}
-            </div>
+            {/* No Floating Props for now to keep background clean */}
 
             {/* Saga Milestones (Nodes) */}
             <div className="absolute inset-0 pointer-events-none">
@@ -174,9 +120,7 @@ export function VerticalQuestTrail({ locales, visitedIds, onLocaleClick }: Verti
                             <QuestMilestone 
                                 locale={locale}
                                 isVisited={visitedIds.includes(locale.id)}
-                                onClick={() => onLocaleClick(locale)}
-                                nodePos={pos}
-                                index={index + 1}
+                                onLocaleClick={() => onLocaleClick(locale)}
                             />
                         </div>
                     );
@@ -191,7 +135,7 @@ export function VerticalQuestTrail({ locales, visitedIds, onLocaleClick }: Verti
                     className="w-32 h-32 bg-gradient-to-br from-secondary to-orange-600 rounded-full flex items-center justify-center p-1 border-8 border-white/20 shadow-[0_0_70px_rgba(255,122,0,0.6)] animate-pulse"
                 >
                     <div className="w-full h-full rounded-full border-4 border-dashed border-white/40 flex items-center justify-center">
-                       <Sparkles className="text-white w-14 h-14 drop-shadow-2xl" />
+                       
                     </div>
                 </motion.div>
                 <div className="mt-10 px-8 py-3 bg-black/60 backdrop-blur-2xl rounded-2xl border border-white/10 shadow-3xl text-center">
@@ -203,20 +147,18 @@ export function VerticalQuestTrail({ locales, visitedIds, onLocaleClick }: Verti
     )
 }
 
-function QuestMilestone({ locale, isVisited, onClick, index }: { 
-    locale: Locale, isVisited: boolean, onClick: () => void, nodePos: { x: number, y: number }, index: number
-}) {
+const QuestMilestone = ({ locale, isVisited, onLocaleClick }: { locale: Locale, isVisited: boolean, onLocaleClick: (l: Locale) => void }) => {
     const cardRef = useRef(null)
 
     return (
         <motion.div 
             ref={cardRef} 
-            initial={{ opacity: 0, scale: 0.8, y: 20 }}
-            whileInView={{ opacity: 1, scale: 1, y: 0 }}
-            viewport={{ once: true, margin: "-50px" }}
+            initial={{ opacity: 0, scale: 0.8 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
-            onClick={onClick}
+            onClick={() => onLocaleClick(locale)}
             style={{ 
                 x: "-50%",
                 y: "-50%"
@@ -224,61 +166,35 @@ function QuestMilestone({ locale, isVisited, onClick, index }: {
             className="z-30"
         >
             <div className="relative group flex flex-col items-center">
-                {/* LEVEL NODE (Candy Crush Style) */}
+                {/* LEVEL NODE (Neon Pin Style) */}
                 <div className={`
-                    relative w-24 h-24 md:w-28 md:h-28 rounded-full transition-all duration-700
+                    relative w-16 h-16 md:w-20 md:h-20 rounded-full transition-all duration-700
                     ${isVisited 
-                        ? 'bg-gradient-to-br from-yellow-300 via-[#FFD700] to-orange-500 shadow-[0_8px_30px_rgba(255,184,0,0.6)] border-[6px] border-white' 
-                        : 'bg-gradient-to-br from-gray-400 to-gray-600 border-[6px] border-white/40 grayscale'
+                        ? 'border-[3px] border-[#FFB800] shadow-[0_0_20px_rgba(255,184,0,0.8)]' 
+                        : 'border-[3px] border-white/20 grayscale opacity-40'
                     }
+                    bg-black/60 backdrop-blur-sm
                 `}>
-                    {/* Shadow tag below node */}
-                    <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-16 h-4 bg-black/40 blur-md rounded-full -z-10" />
-
-                    <div className="relative w-full h-full rounded-full overflow-hidden bg-black/10 flex items-center justify-center p-3">
+                    <div className="relative w-full h-full rounded-full overflow-hidden flex items-center justify-center p-2">
                         <Image 
                             src={locale.image_url} 
                             alt={locale.name} 
                             fill 
-                            className={`object-contain p-2 ${!isVisited && 'opacity-20'}`}
+                            className={`object-contain p-2`}
                         />
-                        {!isVisited && (
-                            <div className="absolute inset-0 flex items-center justify-center">
-                                <Lock className="text-white/40 w-6 h-6" />
-                            </div>
-                        )}
-                    </div>
-
-                    {/* Level Number Tag */}
-                    <div className={`
-                        absolute -bottom-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full border-2 border-white shadow-xl
-                        ${isVisited ? 'bg-secondary' : 'bg-gray-700'}
-                    `}>
-                        <span className="text-white font-lilita text-xs">{index}</span>
                     </div>
                 </div>
 
-                {/* Floating Info (Below the level) */}
-                <div className={`mt-6 transition-all duration-500 transform group-hover:-translate-y-2 ${isVisited ? 'opacity-100' : 'opacity-40'}`}>
-                    <div className="bg-black/90 backdrop-blur-3xl border border-white/10 px-5 py-2 rounded-2xl shadow-2xl text-center whitespace-nowrap min-w-[140px]">
-                        <h4 className="text-white font-lilita text-lg leading-none uppercase tracking-tight">
-                            {locale.name}
-                        </h4>
-                        <div className="flex items-center justify-center gap-1.5 mt-1.5">
-                            <MapPin size={9} className="text-secondary" />
-                            <span className="text-[8px] font-black uppercase text-white/40 tracking-widest">Nivel {locale.id.slice(-2)}</span>
-                        </div>
-                    </div>
+                {/* Level Label below node */}
+                <div className="mt-2 flex flex-col items-center">
+                    <span className="text-[10px] text-white font-bold drop-shadow-lg uppercase tracking-tight text-center max-w-[80px] line-clamp-1">
+                        {locale.name}
+                    </span>
+                    {isVisited && (
+                        <div className="w-1.5 h-1.5 bg-green-500 rounded-full shadow-[0_0_8px_rgba(34,197,94,0.8)] mt-0.5" />
+                    )}
                 </div>
 
-                {/* Interaction Pulsing Circle */}
-                {!isVisited && (
-                    <motion.div 
-                        animate={{ scale: [1, 1.2, 1], opacity: [0.1, 0.3, 0.1] }}
-                        transition={{ duration: 3, repeat: Infinity }}
-                        className="absolute inset-0 w-40 h-40 bg-white/10 rounded-full blur-2xl z-[-1] translate-y-[-10%]"
-                    />
-                )}
             </div>
         </motion.div>
     )
