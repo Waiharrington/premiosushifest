@@ -68,12 +68,12 @@ export function VerticalQuestTrail({ locales, visitedIds, onLocaleClick }: Verti
                 <div className="absolute inset-0 bg-[#0A0A0B]/30" />
             </div>
 
-            {/* The Saga Glowing Path (SVG) */}
+            {/* The Space Path Trail (thin dashed star trail) */}
             <div className="absolute inset-0 z-10 pointer-events-none">
                 <svg viewBox="0 0 100 100" className="h-full w-full" preserveAspectRatio="none">
                     <defs>
-                        <filter id="neon-glow">
-                            <feGaussianBlur stdDeviation="3" result="blur" />
+                        <filter id="soft-glow">
+                            <feGaussianBlur stdDeviation="0.4" result="blur" />
                             <feMerge>
                                 <feMergeNode in="blur" />
                                 <feMergeNode in="SourceGraphic" />
@@ -81,23 +81,38 @@ export function VerticalQuestTrail({ locales, visitedIds, onLocaleClick }: Verti
                         </filter>
                     </defs>
                     
-                    {/* The Neon Energy Trail */}
+                    {/* Thin dashed path between nodes */}
                     <motion.path 
                         d={locales.map((_, i) => {
                             const pos = getNodePosition(i);
                             return `${i === 0 ? 'M' : 'L'} ${pos.x} ${pos.y}`;
                         }).join(' ')}
                         fill="none" 
-                        stroke="#FF7A00" 
-                        strokeWidth="2.5" 
+                        stroke="rgba(255,255,255,0.25)" 
+                        strokeWidth="0.6" 
                         strokeLinecap="round"
                         strokeLinejoin="round"
-                        filter="url(#neon-glow)"
-                        className="drop-shadow-[0_0_12px_rgba(255,122,0,0.9)]"
-                        initial={{ opacity: 0.8 }}
-                        animate={{ opacity: [0.7, 1, 0.7] }}
-                        transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                        strokeDasharray="1.5 2"
+                        filter="url(#soft-glow)"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 1 }}
                     />
+
+                    {/* Small glowing dots along the path at each node */}
+                    {locales.map((locale, i) => {
+                        const pos = getNodePosition(i);
+                        return (
+                            <circle
+                                key={locale.id}
+                                cx={pos.x}
+                                cy={pos.y}
+                                r="0.8"
+                                fill="rgba(255,180,0,0.5)"
+                                filter="url(#soft-glow)"
+                            />
+                        );
+                    })}
                 </svg>
             </div>
 
