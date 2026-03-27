@@ -55,9 +55,9 @@ export function VerticalQuestTrail({ locales, visitedIds, onLocaleClick }: Verti
     }
 
     return (
-        <div ref={containerRef} className="relative w-full py-20 px-4 md:px-0 min-h-[2000px]">
+        <div ref={containerRef} className="relative w-full" style={{ aspectRatio: '9/16', maxHeight: '85vh' }}>
             {/* The Space Illustrated Background */}
-            <div className="absolute inset-0 z-0 h-full">
+            <div className="absolute inset-0 z-0">
                 <Image 
                     src="/sushi_saga_background.png" 
                     alt="Space Background" 
@@ -65,7 +65,7 @@ export function VerticalQuestTrail({ locales, visitedIds, onLocaleClick }: Verti
                     className="object-cover object-top"
                     priority
                 />
-                <div className="absolute inset-0 bg-[#0A0A0B]/30" />
+                <div className="absolute inset-0 bg-[#0A0A0B]/10" />
             </div>
 
             {/* The Space Path Trail (thin dashed star trail) */}
