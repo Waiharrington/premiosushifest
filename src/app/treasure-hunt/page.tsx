@@ -8,6 +8,7 @@ import { useAuth } from "@/context/AuthContext"
 import AuthModal from "@/components/AuthModal"
 import { RiceParticles } from "@/components/RiceParticles"
 import { VerticalQuestTrail } from "@/components/VerticalQuestTrail"
+import { SushifestLoader } from "@/components/SushifestLoader"
 import { QRScannerUI } from "@/components/QRScannerUI"
 import { ScratchCard } from "@/components/ScratchCard"
 import { SponsorBackground } from "@/components/SponsorBackground"
@@ -118,16 +119,7 @@ export default function TreasureHuntPage() {
     const progress = locales.length > 0 ? (visitedIds.length / locales.length) * 100 : 0
 
     if (!hasMounted || authLoading || (loading && user)) {
-        return (
-            <div className="min-h-[100svh] bg-[#000B2A] flex flex-col items-center justify-center gap-6">
-                <motion.div 
-                    animate={{ rotate: 360 }}
-                    transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-                    className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full shadow-[0_0_30px_rgba(0,178,255,0.4)]"
-                />
-                <p className="font-lilita uppercase tracking-[0.3em] text-white/40 text-sm animate-pulse">Cargando la Ruta...</p>
-            </div>
-        )
+        return <SushifestLoader />
     }
 
     return (
