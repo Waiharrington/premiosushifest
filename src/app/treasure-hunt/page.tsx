@@ -177,13 +177,14 @@ export default function TreasureHuntPage() {
                     <div className="w-full max-w-lg mb-8 px-4">
                         <div className="flex justify-between items-center mb-4">
                             <div className="flex items-center gap-4">
-                                <div className="p-1 bg-white/10 rounded-2xl border border-white/20 shadow-[0_0_30px_rgba(255,255,255,0.15)] overflow-hidden flex items-center justify-center">
-                                     <Image src="/logo-fest.png" alt="Logo" width={50} height={50} className="w-10 h-10 object-contain" />
+                                <div className="relative w-16 h-16 rounded-full border-2 border-white/40 shadow-[0_0_25px_rgba(0,209,255,0.3)] bg-white/5 flex items-center justify-center p-0.5 overflow-hidden">
+                                     <Image src="/logo-fest.png" alt="Logo" width={64} height={64} className="w-full h-full object-contain" />
                                 </div>
                                 <div className="text-left">
                                     <h1 className="text-2xl font-lilita uppercase text-white leading-none tracking-tight">Sushi <span className="text-[#FF8A5B]">Saga</span></h1>
                                     <p className="text-[7px] font-black uppercase text-[#00D1FF] tracking-[0.4em] mt-1">Búsqueda del Tesoro • Panamá 2026</p>
                                 </div>
+
 
 
                             </div>
