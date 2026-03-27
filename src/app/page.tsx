@@ -43,7 +43,7 @@ export default function Home() {
                     initial={{ opacity: 0, scale: 0.8, y: 20 }}
                     animate={{ opacity: 1, scale: 1, y: 0 }}
                     transition={{ duration: 1.5, type: "spring" }}
-                    className="relative w-full max-w-[155px] aspect-[4/3] mb-8"
+                    className="relative w-full max-w-[120px] aspect-[4/3] mb-4"
                 >
                     {/* Pulsing blue glow behind logo */}
                     <motion.div 
@@ -64,7 +64,7 @@ export default function Home() {
                     {/* Compass Icon - Repositioned to be above the text, not overlapping */}
                     <motion.div
                         animate={{ 
-                            y: [0, -10, 0], 
+                            y: [0, -8, 0], 
                             rotate: [0, 5, -5, 0],
                             scale: [1, 1.05, 1]
                         }}
@@ -73,91 +73,91 @@ export default function Home() {
                             repeat: Infinity, 
                             ease: "easeInOut" 
                         }}
-                        className="absolute top-[60%] left-1/2 -translate-x-1/2 z-[30] w-[120%] max-w-[240px]"
+                        className="absolute top-[55%] left-1/2 -translate-x-1/2 z-[30] w-[120%] max-w-[180px]"
                     >
                         <Image 
                             src="/compass.png" 
                             alt="Brújula del Tesoro" 
-                            width={240} 
-                            height={240} 
+                            width={180} 
+                            height={180} 
                             className="w-full drop-shadow-[0_20px_60px_rgba(0,0,0,0.8)]"
                         />
                     </motion.div>
                 </motion.div>
 
                 {/* Text Content */}
-                <div className="mt-20 space-y-4 max-w-xl">
+                <div className="mt-6 space-y-3 max-w-xl">
                     <motion.div
                         initial={{ opacity: 0, y: 30 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.7, duration: 1 }}
                     >
-                        <h2 className="text-secondary font-lilita text-2xl md:text-3xl tracking-[0.2em] uppercase drop-shadow-[0_4px_8px_rgba(0,0,0,1)]">
+                        <h2 className="text-secondary font-lilita text-xl md:text-2xl tracking-[0.2em] uppercase drop-shadow-[0_4px_8px_rgba(0,0,0,1)]">
                             Búsqueda del <span className="text-white">Tesoro</span>
                         </h2>
                         <h1 
-                            className="text-5xl md:text-7xl font-lilita uppercase tracking-tight leading-[0.95] text-white my-3 drop-shadow-[0_10px_40px_rgba(0,0,0,1)]"
+                            className="text-4xl md:text-6xl font-lilita uppercase tracking-tight leading-[0.95] text-white my-2 drop-shadow-[0_10px_40px_rgba(0,0,0,1)]"
                             style={{ textShadow: '0 8px 32px rgba(0,0,0,1), 0 0 80px rgba(0,0,0,1)' }}
                         >
                             ¡GANA <span className="text-secondary italic">PREMIOS</span> INCREIBLES!
                         </h1>
-                        <p className="text-white/80 text-sm md:text-base font-medium tracking-wide max-w-[440px] mx-auto leading-relaxed drop-shadow-md">
+                        <p className="text-white/80 text-xs md:text-sm font-medium tracking-wide max-w-[380px] mx-auto leading-relaxed drop-shadow-md">
                             Explora la ciudad, descubre nuevos sabores y desbloquea descuentos exclusivos en cada restaurante que visites.
                         </p>
                     </motion.div>
                 </div>
 
-                {/* Features Badges (Premium Glass Design) */}
-                <motion.div 
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 1.4 }}
-                    className="flex flex-wrap justify-center gap-3 mt-12 mb-4"
-                >
-                    <div className="flex items-center gap-2 bg-black/40 backdrop-blur-xl border border-white/10 px-5 py-3 rounded-full shadow-2xl">
-                        <MapIcon size={18} className="text-primary" />
-                        <span className="text-[11px] uppercase font-black tracking-[0.2em] text-white/70">Mapa Interactivo</span>
-                    </div>
-                    <div className="flex items-center gap-2 bg-black/40 backdrop-blur-xl border border-white/10 px-5 py-3 rounded-full shadow-2xl">
-                        <Trophy size={18} className="text-secondary" />
-                        <span className="text-[11px] uppercase font-black tracking-[0.2em] text-white/70">Premios Reales</span>
-                    </div>
-                    <div className="flex items-center gap-2 bg-black/40 backdrop-blur-xl border border-white/10 px-5 py-3 rounded-full shadow-2xl">
-                        <Sparkles size={18} className="text-blue-400" />
-                        <span className="text-[11px] uppercase font-black tracking-[0.2em] text-white/70">Experiencia Pro</span>
-                    </div>
-                </motion.div>
-
-                {/* CTA Button (Enhanced for depth) */}
+                {/* CTA Button (Moved higher for visibility) */}
                 <motion.div
-                    initial={{ opacity: 0, y: 50 }}
+                    initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 1.8, duration: 1 }}
-                    className="mt-12 w-full max-w-sm px-4"
+                    transition={{ delay: 1.2, duration: 1 }}
+                    className="mt-8 w-full max-w-sm px-6"
                 >
                     <Link href="/treasure-hunt" className="group relative block">
                         <div className="absolute inset-0 bg-primary blur-3xl opacity-30 group-hover:opacity-50 transition-all duration-500" />
-                        <div className="relative h-20 w-full rounded-full overflow-hidden flex items-center justify-center shadow-[0_0_50px_rgba(0,178,255,0.5)] transition-all duration-500 group-hover:shadow-[0_0_80px_rgba(0,178,255,0.7)] group-hover:scale-[1.05] active:scale-95">
+                        <div className="relative h-16 w-full rounded-full overflow-hidden flex items-center justify-center shadow-[0_0_40px_rgba(0,178,255,0.4)] transition-all duration-500 group-hover:shadow-[0_0_60px_rgba(0,178,255,0.6)] group-hover:scale-[1.03] active:scale-95">
                             {/* Gradient Background */}
                             <div className="absolute inset-0 bg-gradient-to-r from-[#0047FF] via-[#00B2FF] to-[#0047FF] bg-[length:200%_auto] animate-gradient-x" />
                             {/* Inner Border */}
-                            <div className="absolute inset-[2px] rounded-full border border-white/40" />
+                            <div className="absolute inset-[1px] rounded-full border border-white/30" />
                             
-                            <span className="relative z-10 text-white font-black text-2xl lg:text-3xl drop-shadow-2xl uppercase tracking-tighter flex items-center justify-center gap-3">
-                                {user ? "SEGUIR LA RUTA" : "COMENZAR RUTA"} <ArrowRight size={28} className="group-hover:translate-x-3 transition-transform duration-500 ease-out" />
+                            <span className="relative z-10 text-white font-black text-xl lg:text-2xl drop-shadow-2xl uppercase tracking-tighter flex items-center justify-center gap-2">
+                                {user ? "SEGUIR LA RUTA" : "COMENZAR RUTA"} <ArrowRight size={22} className="group-hover:translate-x-2 transition-transform duration-500 ease-out" />
                             </span>
                             
                             {/* Shimmer Effect */}
                             <motion.div 
                                 animate={{ x: ['150%', '-150%'] }}
                                 transition={{ duration: 2.5, repeat: Infinity, ease: "linear", repeatDelay: 1.5 }}
-                                className="absolute inset-0 bg-gradient-to-r from-transparent via-white/50 to-transparent skew-x-[-25deg] z-20" 
+                                className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent skew-x-[-25deg] z-20" 
                             />
                         </div>
                     </Link>
                 </motion.div>
 
-                <footer className="mt-auto pt-16 pb-8 text-center text-white/40 text-[10px] uppercase tracking-[0.3em] font-black">
+                {/* Features Badges (Secondary items moved lower) */}
+                <motion.div 
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 1.6 }}
+                    className="flex flex-wrap justify-center gap-2 mt-8 mb-2"
+                >
+                    <div className="flex items-center gap-2 bg-black/40 backdrop-blur-xl border border-white/10 px-4 py-2 rounded-full shadow-2xl">
+                        <MapIcon size={14} className="text-primary" />
+                        <span className="text-[9px] uppercase font-black tracking-[0.1em] text-white/60">Mapa</span>
+                    </div>
+                    <div className="flex items-center gap-2 bg-black/40 backdrop-blur-xl border border-white/10 px-4 py-2 rounded-full shadow-2xl">
+                        <Trophy size={14} className="text-secondary" />
+                        <span className="text-[9px] uppercase font-black tracking-[0.1em] text-white/60">Premios</span>
+                    </div>
+                    <div className="flex items-center gap-2 bg-black/40 backdrop-blur-xl border border-white/10 px-4 py-2 rounded-full shadow-2xl">
+                        <Sparkles size={14} className="text-blue-400" />
+                        <span className="text-[9px] uppercase font-black tracking-[0.1em] text-white/60">Pro</span>
+                    </div>
+                </motion.div>
+
+                <footer className="mt-4 pt-4 pb-4 text-center text-white/30 text-[9px] uppercase tracking-[0.2em] font-black">
                     <p>© 2026 SUSHIFEST • PANAMÁ</p>
                 </footer>
             </main>
