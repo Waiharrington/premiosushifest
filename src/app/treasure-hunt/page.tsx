@@ -478,7 +478,7 @@ export default function TreasureHuntPage() {
                 visitedIds={visitedIds}
             />
 
-            {/* Prize Unlocking Modal (Cinematic Reveal) */}
+            {/* Prize Unlocking Modal (Cinematic Reveal - SAGA ELITE) */}
             <AnimatePresence>
                 {activePrizeLocale && (
                     <div className="fixed inset-0 z-[120] flex items-center justify-center p-4">
@@ -486,18 +486,26 @@ export default function TreasureHuntPage() {
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
-                            className="absolute inset-0 bg-black/95 backdrop-blur-3xl"
+                            className="absolute inset-0 bg-black/98 backdrop-blur-[40px]"
                         />
                         
-                        {/* Animated background particles for modal */}
-                        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                            {[...Array(20)].map((_, i) => (
+                        {/* Gold Dust Particle Field */}
+                        <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-40">
+                            {[...Array(30)].map((_, i) => (
                                 <motion.div
                                     key={i}
-                                    initial={{ opacity: 0, y: 100 }}
-                                    animate={{ opacity: [0, 0.5, 0], y: -200, x: Math.random() * 400 - 200 }}
-                                    transition={{ duration: 4 + Math.random() * 4, repeat: Infinity, delay: Math.random() * 5 }}
-                                    className="absolute bottom-0 left-1/2 w-1 h-1 bg-primary rounded-full blur-sm"
+                                    initial={{ opacity: 0, y: "100%" }}
+                                    animate={{ 
+                                        opacity: [0, 0.4, 0], 
+                                        y: "-20%", 
+                                        x: (i * 30) % 100 + "%" 
+                                    }}
+                                    transition={{ 
+                                        duration: 6 + Math.random() * 8, 
+                                        repeat: Infinity, 
+                                        delay: Math.random() * 10 
+                                    }}
+                                    className="absolute bottom-0 w-1 h-1 bg-[#FFB700] rounded-full blur-[1px]"
                                 />
                             ))}
                         </div>
@@ -506,9 +514,10 @@ export default function TreasureHuntPage() {
                             initial={{ scale: 0.9, y: 40, opacity: 0 }}
                             animate={{ scale: 1, y: 0, opacity: 1 }}
                             exit={{ scale: 0.9, y: 40, opacity: 0 }}
-                            className="relative w-full max-w-xl bg-black/60 backdrop-blur-3xl border border-white/10 rounded-[4rem] p-10 md:p-14 shadow-[0_0_120px_rgba(0,71,255,0.4)] overflow-hidden text-center"
+                            className="relative w-full max-w-lg bg-black/40 backdrop-blur-[50px] border border-white/10 rounded-[3.5rem] p-8 md:p-12 shadow-[0_0_150px_rgba(0,0,0,1)] overflow-hidden"
                         >
-                            <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-primary via-secondary to-primary animate-gradient-x" />
+                            {/* Orbital Glow */}
+                            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-1 bg-gradient-to-r from-transparent via-amber-400 to-transparent" />
                             
                             <AnimatePresence mode="wait">
                                 {isScratched && currentPrize ? (
@@ -516,44 +525,51 @@ export default function TreasureHuntPage() {
                                         key="success-content"
                                         initial={{ opacity: 0, scale: 0.95 }}
                                         animate={{ opacity: 1, scale: 1 }}
-                                        className="relative z-10"
+                                        className="relative z-10 flex flex-col items-center text-center"
                                     >
-                                        <div className="flex items-center justify-center gap-3 text-secondary mb-6">
-                                            <Sparkles className="w-6 h-6 animate-pulse" />
-                                            <span className="font-lilita text-2xl tracking-[0.3em] uppercase drop-shadow-lg">
+                                        <div className="flex items-center justify-center gap-3 mb-6">
+                                            <Sparkles className="w-5 h-5 text-amber-500 animate-pulse" />
+                                            <span className="font-lilita text-xl tracking-[0.4em] uppercase bg-gradient-to-b from-amber-200 to-amber-600 bg-clip-text text-transparent drop-shadow-sm">
                                                 {currentPrize.prize_type === 'gift' ? '¡LEYENDA!' : '¡ÉXITO!'}
                                             </span>
-                                            <Sparkles className="w-6 h-6 animate-pulse" />
+                                            <Sparkles className="w-5 h-5 text-amber-500 animate-pulse" />
                                         </div>
 
-                                        <h2 className="text-4xl md:text-6xl font-lilita text-white italic tracking-tighter mb-4 uppercase leading-none drop-shadow-2xl">
+                                        <h2 className="text-4xl md:text-5xl font-lilita text-white uppercase italic tracking-tighter leading-none mb-4 drop-shadow-2xl">
                                             {currentPrize.prize_type === 'gift' ? 'TREMENDO PREMIO' : 'UN NUEVO DESCUENTO'}
                                         </h2>
                                         
-                                        <p className="text-blue-200/60 text-[10px] md:text-xs uppercase tracking-[0.4em] font-black mb-10 leading-relaxed">
-                                            Has desbloqueado este beneficio en <span className="text-white">{activePrizeLocale?.name}</span>
+                                        <p className="text-white/40 text-[10px] uppercase tracking-[0.4em] font-black mb-10">
+                                            DESBLOQUEADO EN <span className="text-white">{activePrizeLocale?.name}</span>
                                         </p>
 
-                                        {/* Prize Visual Unit */}
-                                        <div className="relative w-full aspect-video max-w-md mx-auto mb-10 group rounded-[2.5rem] overflow-hidden">
-                                            <div className="absolute inset-0 bg-primary/20 blur-3xl opacity-50" />
-                                            <div className="relative h-full w-full bg-white/5 backdrop-blur-md border border-white/10 flex items-center justify-center overflow-hidden shadow-2xl">
-                                                {currentPrize?.prize_image ? (
-                                                    <Image 
-                                                        src={currentPrize.prize_image} 
-                                                        alt="Premio" 
-                                                        fill 
-                                                        className="object-cover group-hover:scale-110 transition-transform duration-1000"
-                                                    />
-                                                ) : (
-                                                    <Gift className="text-secondary w-24 h-24 drop-shadow-[0_0_30px_rgba(255,122,0,0.6)]" />
-                                                )}
-                                                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
-                                                <div className="absolute bottom-6 left-1/2 -translate-x-1/2 w-full px-8">
-                                                    <h3 className="text-2xl md:text-3xl font-lilita text-white uppercase tracking-tight drop-shadow-md">
-                                                        {currentPrize?.prize_name}
-                                                    </h3>
+                                        {/* Physical Trophy/Ticket Visual */}
+                                        <div className="relative w-full aspect-square max-w-[280px] mx-auto mb-10 group">
+                                            <div className="absolute inset-[-20px] bg-amber-500/10 blur-[60px] rounded-full opacity-50 group-hover:opacity-100 transition-opacity" />
+                                            
+                                            <div className="relative h-full w-full bg-white/5 backdrop-blur-2xl border border-white/20 rounded-[2.5rem] overflow-hidden shadow-2xl flex items-center justify-center p-2">
+                                                <div className="relative w-full h-full rounded-[2rem] overflow-hidden bg-black/20">
+                                                    {currentPrize?.prize_image ? (
+                                                        <Image 
+                                                            src={currentPrize.prize_image} 
+                                                            alt="Premio" 
+                                                            fill 
+                                                            className="object-contain"
+                                                            priority
+                                                        />
+                                                    ) : (
+                                                        <div className="w-full h-full flex items-center justify-center">
+                                                            <Gift className="text-amber-500 w-20 h-20 drop-shadow-[0_0_30px_rgba(255,183,0,0.6)]" />
+                                                        </div>
+                                                    )}
                                                 </div>
+                                            </div>
+                                            
+                                            {/* Prize Name floating badge */}
+                                            <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 w-[90%] bg-white/10 backdrop-blur-3xl border border-white/20 py-3 px-6 rounded-2xl shadow-2xl">
+                                                <h3 className="text-lg md:text-xl font-lilita text-white uppercase tracking-tight truncate leading-none">
+                                                    {currentPrize?.prize_name}
+                                                </h3>
                                             </div>
                                         </div>
 
@@ -563,11 +579,11 @@ export default function TreasureHuntPage() {
                                                 setCurrentPrize(null)
                                                 setIsScratched(false)
                                             }}
-                                            className="w-full relative h-20 rounded-2xl overflow-hidden group shadow-[0_15px_40px_rgba(0,71,255,0.4)] transition-all hover:scale-[1.02] active:scale-95"
+                                            className="w-full mt-6 relative h-16 rounded-2xl overflow-hidden group shadow-[0_15px_40px_rgba(0,0,0,0.5)] transition-all active:scale-95"
                                         >
                                             <div className="absolute inset-0 bg-gradient-to-r from-[#0047FF] via-[#00B2FF] to-[#0047FF] bg-[length:200%_auto] animate-gradient-x" />
-                                            <span className="relative z-10 text-white font-lilita text-2xl uppercase tracking-widest flex items-center justify-center gap-4">
-                                                GUARDAR EN MI VAULT <ArrowRight className="w-6 h-6 group-hover:translate-x-3 transition-transform duration-500" />
+                                            <span className="relative z-10 text-white font-lilita text-xl uppercase tracking-[0.2em] flex items-center justify-center gap-3">
+                                                GUARDAR EN MI VAULT <ArrowRight className="w-5 h-5 group-hover:translate-x-2 transition-transform duration-500" />
                                             </span>
                                         </button>
                                     </motion.div>
@@ -576,24 +592,25 @@ export default function TreasureHuntPage() {
                                         key="scratch-content"
                                         initial={{ opacity: 0 }}
                                         animate={{ opacity: 1 }}
-                                        className="relative z-10"
+                                        className="relative z-10 flex flex-col items-center text-center"
                                     >
                                         <div className="mb-8">
-                                            <p className="text-secondary font-lilita text-2xl mb-2 tracking-widest uppercase italic">¡DESTINO ALCANZADO!</p>
-                                            <h2 className="text-3xl md:text-4xl font-lilita uppercase text-white/95 tracking-tight">{activePrizeLocale?.name}</h2>
+                                            <span className="text-amber-500/80 font-black text-[10px] uppercase tracking-[0.5em] block mb-3">CONQUISTA COMPLETADA</span>
+                                            <h2 className="text-4xl md:text-5xl font-lilita uppercase text-white tracking-tight leading-none italic">{activePrizeLocale?.name}</h2>
                                         </div>
 
-                                        <div className="relative group mb-8 rounded-[2.5rem] overflow-hidden shadow-[0_0_60px_rgba(0,0,0,0.6)] border border-white/10">
-                                            <ScratchCard onComplete={handleScratchComplete}>
-                                                <div className="absolute inset-0 w-full h-full bg-black">
-                                                    <div className="relative w-full h-full overflow-hidden flex items-center justify-center">
+                                        <div className="relative group mb-10">
+                                            <div className="absolute inset-[-15px] bg-blue-500/10 blur-[50px] rounded-full opacity-60" />
+                                            <div className="relative border border-white/20 rounded-[3.5rem] p-1.5 bg-white/5 backdrop-blur-xl shadow-2xl overflow-hidden">
+                                                <ScratchCard onComplete={handleScratchComplete}>
+                                                    <div className="absolute inset-0 w-full h-full bg-[#000B2A]">
                                                         {prizeLoading ? (
-                                                            <div className="flex flex-col items-center gap-6">
-                                                                <div className="w-14 h-14 border-4 border-primary border-t-transparent rounded-full animate-spin" />
-                                                                <p className="font-lilita text-white/40 uppercase tracking-[0.4em] text-[10px]">Consultando a los Dioses del Sushi...</p>
+                                                            <div className="flex flex-col items-center justify-center h-full gap-6">
+                                                                <div className="w-12 h-12 border-2 border-amber-500 border-t-transparent rounded-full animate-spin" />
+                                                                <p className="font-black text-white/20 uppercase tracking-[0.4em] text-[8px]">CONSULTANDO SAGAS...</p>
                                                             </div>
                                                         ) : (
-                                                            <>
+                                                            <div className="relative w-full h-full rounded-[3rem] overflow-hidden">
                                                                 <Image
                                                                     src={currentPrize?.prize_type === 'gift' 
                                                                         ? `/demo-prize-${((prizeVisitNumber - 1) % 4) + 1}.jpg`
@@ -601,33 +618,33 @@ export default function TreasureHuntPage() {
                                                                     }
                                                                     alt="Desbloqueado"
                                                                     fill
-                                                                    className="object-cover"
+                                                                    className="object-contain p-4"
                                                                     priority
                                                                 />
-                                                                <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px]" />
-                                                                <div className="absolute inset-0 flex items-center justify-center">
-                                                                    <div className="text-center p-6 bg-black/60 backdrop-blur-2xl border border-white/10 rounded-3xl transform rotate-3 shadow-2xl">
-                                                                        <Gift size={40} className="text-secondary mx-auto mb-2" />
-                                                                        <h4 className="text-white font-lilita text-xl uppercase tracking-tighter leading-none">Tu Sorpresa</h4>
+                                                                <div className="absolute inset-0 bg-black/60 backdrop-blur-[2px]" />
+                                                                <div className="absolute inset-0 flex flex-col items-center justify-center">
+                                                                    <div className="w-16 h-16 rounded-full bg-white/5 backdrop-blur-3xl border border-white/10 flex items-center justify-center mb-3">
+                                                                        <Gift size={28} className="text-white/40" />
                                                                     </div>
+                                                                    <p className="font-lilita text-white/40 uppercase tracking-widest text-sm">TU SORPRESA</p>
                                                                 </div>
-                                                            </>
+                                                            </div>
                                                         )}
                                                     </div>
-                                                </div>
-                                            </ScratchCard>
+                                                </ScratchCard>
+                                            </div>
                                         </div>
 
                                         <div className="flex flex-col items-center gap-6">
-                                            <div className="flex items-center gap-3">
-                                                <div className="w-12 h-[1px] bg-gradient-to-r from-transparent to-white/20" />
-                                                <p className="text-white/40 text-[9px] font-black uppercase tracking-[0.5em]">Raspa para revelar</p>
-                                                <div className="w-12 h-[1px] bg-gradient-to-l from-transparent to-white/20" />
+                                            <div className="flex items-center gap-4">
+                                                <div className="w-8 h-[1px] bg-gradient-to-r from-transparent to-white/20" />
+                                                <p className="text-white/30 text-[9px] font-black uppercase tracking-[0.5em]">Raspa suavemente</p>
+                                                <div className="w-8 h-[1px] bg-gradient-to-l from-transparent to-white/20" />
                                             </div>
 
                                             <button
                                                 onClick={() => setActivePrizeLocale(null)}
-                                                className="text-white/30 hover:text-white/60 font-black text-[10px] uppercase tracking-[0.3em] transition-colors py-4 px-8 border border-white/5 rounded-full hover:bg-white/5"
+                                                className="text-white/40 hover:text-white font-black text-[9px] uppercase tracking-[0.3em] transition-all px-10 py-3 border border-white/5 rounded-full hover:bg-white/5"
                                             >
                                                 Cerrar por ahora
                                             </button>
@@ -640,7 +657,7 @@ export default function TreasureHuntPage() {
                 )}
             </AnimatePresence>
 
-            {/* Reward Viewer Modal (The Vault Detail) */}
+            {/* GOLDEN TICKET VIEWER (The Vault Detail - RE-ENGINEERED) */}
             <AnimatePresence>
                 {viewingPrize && (
                     <div className="fixed inset-0 z-[120] flex items-center justify-center p-4">
@@ -649,42 +666,75 @@ export default function TreasureHuntPage() {
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
                             onClick={() => setViewingPrize(null)}
-                            className="absolute inset-0 bg-black/95 backdrop-blur-[30px]"
+                            className="absolute inset-0 bg-black/98 backdrop-blur-[50px]"
                         />
+                        
+                        {/* Immersive Gold Dust Layer */}
+                        <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-30">
+                            {[...Array(25)].map((_, i) => (
+                                <motion.div
+                                    key={i}
+                                    initial={{ opacity: 0, x: Math.random() * 100 + "%", y: "110%" }}
+                                    animate={{ opacity: [0, 0.5, 0], y: "-10%" }}
+                                    transition={{ duration: 10 + Math.random() * 10, repeat: Infinity, delay: Math.random() * 5 }}
+                                    className="absolute w-1 h-1 bg-amber-400 rounded-full blur-[1px]"
+                                />
+                            ))}
+                        </div>
+
                         <motion.div
                             initial={{ scale: 0.9, y: 50, opacity: 0 }}
                             animate={{ scale: 1, y: 0, opacity: 1 }}
                             exit={{ scale: 0.9, y: 50, opacity: 0 }}
-                            className="relative w-full max-w-sm aspect-[3/4] bg-[#000B2A] border border-white/10 rounded-[4rem] overflow-hidden shadow-[0_40px_100px_rgba(0,0,0,1)]"
+                            className="relative w-full max-w-sm"
                         >
-                            {/* Glass Close Button */}
+                            {/* Close Button - Detached & Minimalist */}
                             <button 
                                 onClick={() => setViewingPrize(null)}
-                                className="absolute top-6 right-6 z-[130] bg-black/40 backdrop-blur-2xl border border-white/10 p-4 rounded-full text-white shadow-2xl hover:bg-black/60 hover:scale-110 active:scale-90 transition-all group"
-                                title="Cerrar vista de premio"
+                                className="absolute -top-16 right-0 text-white/40 hover:text-white transition-colors flex items-center gap-2"
                             >
-                                <X size={20} className="group-hover:rotate-90 transition-transform duration-500" />
+                                <span className="text-[10px] font-black uppercase tracking-[0.3em]">Cerrar</span>
+                                <X size={20} />
                             </button>
 
-                            <div className="relative w-full h-full">
-                                <Image
-                                    src={viewingPrize?.prize_type === 'gift' 
-                                        ? `/demo-prize-${((viewingPrizeIndex - 1) % 4) + 1}.jpg`
-                                        : `/discount-${((viewingPrizeIndex - 1) % 3) + 1}.jpeg`
-                                    }
-                                    alt="Benefit"
-                                    fill
-                                    className="object-cover"
-                                    priority
-                                />
-                                {/* Bottom Info Fade */}
-                                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent" />
-                                <div className="absolute bottom-10 left-0 w-full px-10 text-center">
-                                    <div className="w-12 h-1 bg-primary mx-auto mb-6 rounded-full" />
-                                    <h3 className="text-3xl md:text-4xl font-lilita text-white uppercase tracking-tight leading-none mb-4 drop-shadow-xl">
-                                        {viewingPrize?.prize_name}
-                                    </h3>
-                                    <p className="text-white/40 text-[10px] font-black uppercase tracking-[0.4em]">Cupón ID: SF-{viewingPrize?.id.slice(0, 8)}</p>
+                            {/* Ticket Card Architecture */}
+                            <div className="relative bg-white/[0.03] backdrop-blur-[60px] border border-white/10 rounded-[3.5rem] p-1 shadow-[0_40px_100px_rgba(0,0,0,1)] overflow-hidden">
+                                {/* Ticket "Notches" (Lateral cutouts) */}
+                                <div className="absolute top-1/2 -left-4 w-8 h-8 bg-black rounded-full border-r border-white/10 translate-y-[-50%]" />
+                                <div className="absolute top-1/2 -right-4 w-8 h-8 bg-black rounded-full border-l border-white/10 translate-y-[-50%]" />
+                                
+                                <div className="relative flex flex-col p-4">
+                                    {/* Image Container (Elite Frame) */}
+                                    <div className="relative w-full aspect-square md:aspect-[4/5] bg-black/40 rounded-[2.8rem] border border-white/10 overflow-hidden shadow-inner flex items-center justify-center">
+                                        <Image
+                                            src={viewingPrize?.prize_type === 'gift' 
+                                                ? `/demo-prize-${((viewingPrizeIndex - 1) % 4) + 1}.jpg`
+                                                : `/discount-${((viewingPrizeIndex - 1) % 3) + 1}.jpeg`
+                                            }
+                                            alt="Benefit"
+                                            fill
+                                            className="object-contain p-2"
+                                            priority
+                                        />
+                                        {/* Shimmer sweep */}
+                                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full animate-shimmer pointer-events-none" />
+                                    </div>
+
+                                    {/* Ticket Base Info */}
+                                    <div className="pt-8 pb-6 px-10 text-center flex flex-col items-center">
+                                        <div className="w-16 h-[0.5px] bg-gradient-to-r from-transparent via-amber-500/50 to-transparent mb-6" />
+                                        
+                                        <h3 className="text-2xl md:text-3xl font-lilita text-white uppercase tracking-tight leading-none mb-4 bg-gradient-to-b from-white to-white/60 bg-clip-text text-transparent">
+                                            {viewingPrize?.prize_name}
+                                        </h3>
+                                        
+                                        <div className="mt-4 flex flex-col items-center gap-1">
+                                            <span className="text-[7px] font-black text-white/20 uppercase tracking-[0.8em] mb-1">AUTENTICIDAD SAGAS</span>
+                                            <div className="px-4 py-1.5 rounded-lg bg-white/5 border border-white/5">
+                                                <p className="text-[#00B2FF] text-[10px] font-black uppercase tracking-[0.4em] drop-shadow-[0_0_8px_rgba(0,178,255,0.4)]">SF-{viewingPrize?.id.slice(0, 8)}</p>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </motion.div>

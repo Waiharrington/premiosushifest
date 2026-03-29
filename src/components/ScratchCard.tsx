@@ -39,41 +39,47 @@ export function ScratchCard({
         if (ctx) {
             ctx.clearRect(0, 0, width, height)
             
-            // Premium Metallic Gradient (Deep Blue to Primary)
+            // Premium Metallic Gradient (Deep Navy to Saga Blue)
             const gradient = ctx.createLinearGradient(0, 0, width, height)
             gradient.addColorStop(0, '#000B2A')
-            gradient.addColorStop(0.5, '#0047FF')
-            gradient.addColorStop(1, '#00B2FF')
+            gradient.addColorStop(0.5, '#011543')
+            gradient.addColorStop(1, '#0038A8')
             
             ctx.fillStyle = gradient
             ctx.fillRect(0, 0, width, height)
             
-            // Add some "Noise/Texture" to the scratch area
-            for (let i = 0; i < 2000; i++) {
+            // Add Elegant "Saga Dust" (Noise/Metallic Texture)
+            for (let i = 0; i < 3000; i++) {
                 const x = Math.random() * width
                 const y = Math.random() * height
-                const size = Math.random() * 2
-                ctx.fillStyle = `rgba(255, 255, 255, ${Math.random() * 0.1})`
+                const size = Math.random() * 1.5
+                ctx.fillStyle = `rgba(255, 255, 255, ${Math.random() * 0.08})`
                 ctx.fillRect(x, y, size, size)
             }
 
-            // Decorative border inside scratch
+            // Decorative Golden Dust Border
             ctx.lineWidth = 1
-            ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)'
-            ctx.strokeRect(10, 10, width - 20, height - 20)
+            ctx.strokeStyle = 'rgba(255, 183, 0, 0.25)' // Golden/Orange tint
+            ctx.strokeRect(15, 15, width - 30, height - 30)
             
-            // Typography (Lilita One simulation)
-            ctx.font = '900 32px sans-serif'
-            ctx.fillStyle = 'white'
+            // Typography (Premium Render)
+            // Using bold sans-serif as Lilita One fallback
+            ctx.font = '900 36px "Montserrat", sans-serif'
+            ctx.fillStyle = 'rgba(255,255,255,0.95)'
             ctx.textAlign = 'center'
-            ctx.shadowColor = 'rgba(0,0,0,0.5)'
-            ctx.shadowBlur = 10
+            ctx.shadowColor = 'rgba(0,0,0,0.8)'
+            ctx.shadowBlur = 15
+            ctx.shadowOffsetX = 0
+            ctx.shadowOffsetY = 4
             ctx.fillText('RASPA AQUÍ', width / 2, height / 2)
             
-            ctx.font = '500 12px sans-serif'
-            ctx.fillStyle = 'rgba(255, 255, 255, 0.6)'
+            // Subtext (Saga Explorer vibe)
+            ctx.font = '900 10px "Montserrat", sans-serif'
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.4)'
             ctx.shadowBlur = 0
-            ctx.fillText('PARA DESCUBRIR TU PREMIO', width / 2, height / 2 + 40)
+            ctx.shadowOffsetY = 0
+            const subtext = 'PARA REVELAR TU TESORO'
+            ctx.fillText(subtext, width / 2, height / 2 + 50)
         }
     }, [])
 
