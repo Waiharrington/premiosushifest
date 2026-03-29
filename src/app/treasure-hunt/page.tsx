@@ -205,12 +205,14 @@ export default function TreasureHuntPage() {
                                 </div>
 
 
-                                {/* Revelados Counter (Badge Style) */}
-                                <div className="bg-white/5 border border-white/10 rounded-2xl px-4 py-3 text-center min-w-[70px] backdrop-blur-md">
-                                    <div className="text-xl font-lilita text-white leading-none mb-1">
-                                        {visitedIds.length}<span className="text-[#00D1FF] mx-1">/</span>{locales.length}
+                                {/* Revelados Counter (Badge Style) — Centering Fix */}
+                                <div className="bg-white/5 border border-white/10 rounded-3xl px-3 py-4 flex flex-col items-center justify-center min-w-[85px] backdrop-blur-md shadow-inner">
+                                    <div className="text-[22px] font-lilita text-white flex items-center justify-center gap-1.5 leading-none">
+                                        <span>{visitedIds.length}</span>
+                                        <span className="text-[#00D1FF] opacity-80">/</span>
+                                        <span>{locales.length}</span>
                                     </div>
-                                    <div className="text-[7px] font-black text-white/40 uppercase tracking-widest">MAPA</div>
+                                    <div className="text-[8px] font-black text-white/30 uppercase tracking-[0.2em] mt-2">MAPA</div>
                                 </div>
                             </div>
 
