@@ -303,7 +303,7 @@ export default function TreasureHuntPage() {
                             </div>
 
 
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 px-2">
                                 {prizes.filter(p => p.prize_type !== 'try_again').map((prize, idx) => {
                                     const locale = locales.find(l => l.id === prize.locale_id)
                                     const isRedeemed = prize.is_redeemed
@@ -311,66 +311,80 @@ export default function TreasureHuntPage() {
                                     return (
                                         <motion.div 
                                             key={prize.id} 
-                                            initial={{ opacity: 0, y: 15 }}
+                                            initial={{ opacity: 0, y: 30 }}
                                             animate={{ opacity: 1, y: 0 }}
-                                            transition={{ delay: idx * 0.08 }}
+                                            transition={{ delay: idx * 0.1 }}
                                             onClick={() => { setViewingPrize(prize); setViewingPrizeIndex(idx + 1) }}
-                                            className={`group relative overflow-hidden rounded-[2rem] border transition-all duration-500 cursor-pointer ${
+                                            className={`group relative flex flex-col items-center pt-10 pb-8 px-6 overflow-hidden rounded-[3rem] border transition-all duration-700 cursor-pointer ${
                                                 isRedeemed 
-                                                    ? 'bg-black/40 border-white/5 backdrop-blur-md opacity-60' 
-                                                    : 'bg-white/5 backdrop-blur-2xl border-white/10 hover:border-orange-500/30'
+                                                    ? 'bg-black/40 border-white/5 backdrop-blur-3xl opacity-50 grayscale scale-[0.98]' 
+                                                    : 'bg-[#ffffff]/[0.03] backdrop-blur-[60px] border-white/10 hover:border-orange-500/50 hover:shadow-[0_0_80px_rgba(255,122,0,0.15)] hover:scale-[1.02]'
                                             }`}
                                         >
-                                            <div className="flex items-center gap-5 p-4 py-5 relative z-10">
-                                                {/* Logo Orb */}
-                                                <div className="relative w-16 h-16 rounded-2xl bg-white/10 p-2 flex-shrink-0 flex items-center justify-center border border-white/10 overflow-hidden shadow-inner">
+                                            {/* Top Decorative Arc Glow */}
+                                            <div className="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-white/[0.05] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
+                                            
+                                            {/* Metallic Shimmer Sweep */}
+                                            {!isRedeemed && (
+                                                <div className="absolute inset-0 z-0 overflow-hidden opacity-30 pointer-events-none">
+                                                    <div className="absolute top-[-100%] left-[-100%] w-[300%] h-[300%] animate-shimmer bg-gradient-to-r from-transparent via-white/20 to-transparent pointer-events-none" />
+                                                </div>
+                                            )}
+
+                                            {/* Floating Trophy/Logo Orb */}
+                                            <div className="relative mb-8 z-10 group-hover:scale-110 transition-transform duration-700 ease-out">
+                                                <div className="absolute inset-0 bg-white/20 blur-3xl rounded-full scale-150 opacity-0 group-hover:opacity-60 transition-opacity" />
+                                                <div className="relative w-28 h-28 md:w-32 md:h-32 rounded-full bg-white/5 backdrop-blur-2xl p-4 flex items-center justify-center border border-white/20 shadow-[0_15px_35px_rgba(0,0,0,0.8),inset_0_2px_10px_rgba(255,255,255,0.1)]">
                                                     <Image 
                                                         src={locale?.image_url || "/logo-fest.png"} 
                                                         alt={locale?.name || "Restaurante"} 
-                                                        width={64}
-                                                        height={64}
-                                                        className={`w-full h-full object-contain filter drop-shadow-[0_4px_8px_rgba(0,0,0,0.5)] group-hover:scale-110 transition-transform duration-500 ${isRedeemed ? 'grayscale' : ''}`}
+                                                        width={120}
+                                                        height={120}
+                                                        className="w-full h-full object-contain filter drop-shadow-[0_4px_12px_rgba(0,0,0,0.8)]"
                                                     />
                                                 </div>
+                                                {/* Trophy Icon Badge */}
+                                                {!isRedeemed && (
+                                                    <div className="absolute -top-2 -right-2 w-10 h-10 bg-gradient-to-br from-orange-400 to-orange-600 rounded-2xl flex items-center justify-center shadow-xl border border-white/40 transform rotate-12">
+                                                        <Gift className="w-5 h-5 text-white" />
+                                                    </div>
+                                                )}
+                                            </div>
 
-                                                <div className="flex-grow">
-                                                    <div className="flex items-center justify-between mb-2">
-                                                        <div className="px-2 py-0.5 rounded-md bg-white/5 border border-white/5">
-                                                            <span className="text-[8px] font-black uppercase text-white/40 tracking-[0.25em]">
-                                                                {locale?.name || "RESTAURANTE"}
-                                                            </span>
-                                                        </div>
-                                                        
-                                                        {isRedeemed ? (
-                                                            <span className="text-[8px] font-black uppercase tracking-[0.15em] text-white/20">COBRADO</span>
-                                                        ) : (
-                                                            <div className="flex items-center gap-1.5">
-                                                                <div className="w-1 h-1 rounded-full bg-[#00FF85] shadow-[0_0_5px_#00FF85] animate-pulse" />
-                                                                <span className="text-[8px] font-black uppercase tracking-[0.15em] text-[#00FF85]">DISPONIBLE</span>
+                                            <div className="flex flex-col items-center gap-1 z-10 text-center w-full">
+                                                <span className="text-[10px] font-black uppercase text-white/30 tracking-[0.5em] mb-3 block">
+                                                    {locale?.name || "RESTAURANTE"}
+                                                </span>
+                                                
+                                                <h4 className={`text-2xl md:text-4xl font-lilita uppercase italic leading-none tracking-tight mb-6 bg-gradient-to-b from-white via-white/90 to-white/60 bg-clip-text text-transparent px-2 ${isRedeemed ? 'opacity-40' : 'drop-shadow-[0_2px_10px_rgba(255,255,255,0.3)]'}`}>
+                                                    {prize.prize_name}
+                                                </h4>
+                                                
+                                                {/* Redemption Status Bar */}
+                                                <div className="w-full flex items-center justify-center mt-2">
+                                                    {isRedeemed ? (
+                                                        <div className="flex flex-col items-center gap-2">
+                                                            <div className="h-[1px] w-20 bg-white/10 mb-2" />
+                                                            <div className="flex items-center gap-2 px-4 py-2 rounded-full border border-white/5 bg-white/5">
+                                                                <CheckCircle2 className="w-4 h-4 text-white/20" />
+                                                                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/20">COBRADO</span>
                                                             </div>
-                                                        )}
-                                                    </div>
-
-                                                    <h4 className={`text-xl font-lilita uppercase leading-tight tracking-normal ${isRedeemed ? 'text-white/30 line-through decoration-orange-500/20' : 'text-white'}`}>
-                                                        {prize.prize_name}
-                                                    </h4>
-                                                </div>
-
-                                                <div className="flex-shrink-0 pr-2">
-                                                    <div className={`w-10 h-10 rounded-2xl flex items-center justify-center border transition-all duration-300 ${
-                                                        isRedeemed 
-                                                            ? 'border-white/5 bg-white/5' 
-                                                            : 'border-orange-500/20 bg-orange-500/10 shadow-[0_0_15px_rgba(255,144,0,0.1)] group-hover:bg-orange-500/20 group-hover:scale-110'
-                                                    }`}>
-                                                        {isRedeemed ? <CheckCircle2 className="w-4 h-4 text-white/20" /> : <Gift className="w-4 h-4 text-[#FF4B1F]" />}
-                                                    </div>
+                                                        </div>
+                                                    ) : (
+                                                        <div className="group/btn relative">
+                                                            <div className="absolute inset-0 bg-green-500/10 blur-xl scale-125 opacity-0 group-hover:opacity-100 transition-opacity" />
+                                                            <div className="relative px-6 py-2 rounded-full border border-green-500/30 bg-green-500/10 flex items-center gap-3">
+                                                                <div className="w-2 h-2 rounded-full bg-[#00FF85] shadow-[0_0_12px_#00FF85] animate-pulse" />
+                                                                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-[#00FF85]">DISPONIBLE</span>
+                                                            </div>
+                                                        </div>
+                                                    )}
                                                 </div>
                                             </div>
 
-                                            {/* Minimalist interactive scanline on hover */}
-                                            {!isRedeemed && (
-                                                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-orange-500/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out pointer-events-none" />
-                                            )}
+                                            {/* Digital Authenticity "Notches" (Visual decoration) */}
+                                            <div className="absolute top-1/2 -left-3 w-6 h-6 bg-[#000B2A] rounded-full border-r border-white/10 translate-y-[-50%]" />
+                                            <div className="absolute top-1/2 -right-3 w-6 h-6 bg-[#000B2A] rounded-full border-l border-white/10 translate-y-[-50%]" />
                                         </motion.div>
                                     )
                                 })}

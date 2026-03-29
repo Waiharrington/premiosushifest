@@ -50,6 +50,16 @@ body {
   animation: float 4s ease-in-out infinite;
 }
 
+@keyframes shimmer {
+  0% { transform: translateX(-100%) rotate(45deg); }
+  100% { transform: translateX(200%) rotate(45deg); }
+}
+
+.animate-shimmer {
+  display: block;
+  animation: shimmer 2s infinite linear;
+}
+
 /* Custom Premium Scrollbar */
 ::-webkit-scrollbar {
   width: 10px;
