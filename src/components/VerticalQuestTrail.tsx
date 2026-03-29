@@ -3,6 +3,7 @@
 import { useState } from "react"
 import Image from "next/image"
 import { motion, AnimatePresence } from "framer-motion"
+import { X } from "lucide-react"
 import { Locale } from "@/types"
 
 interface VerticalQuestTrailProps {
@@ -44,7 +45,7 @@ function getDynamicPath(visitedCount: number): string {
 }
 
 export function VerticalQuestTrail({ locales, visitedIds, onLocaleClick }: VerticalQuestTrailProps) {
-    const [activeIdx, setActiveIdx] = useState<number | null>(null)
+    const [selectedLocale, setSelectedLocale] = useState<Locale | null>(null)
     const activePath = getDynamicPath(visitedIds.length)
 
     return (
@@ -61,6 +62,19 @@ export function VerticalQuestTrail({ locales, visitedIds, onLocaleClick }: Verti
                 }
                 @keyframes flow-route { to { stroke-dashoffset: -40; } }
             `}</style>
+
+            {/* Instruction Label */}
+            <div className="absolute -top-6 left-0 right-0 text-center z-50 pointer-events-none">
+                <motion.div 
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="inline-block px-6 py-2 bg-black/60 backdrop-blur-md rounded-full border border-orange-500/30 shadow-[0_0_20px_rgba(255,144,0,0.2)]"
+                >
+                    <span className="text-white font-lilita text-sm md:text-base tracking-wider uppercase">
+                        ¡Toca cada negocio descubierto para ver su historia!
+                    </span>
+                </motion.div>
+            </div>
             
             <div className="w-full max-w-lg mx-auto mb-12 relative rounded-[2.5rem] overflow-hidden border border-white/10 bg-[#010a1a] shadow-[0_45px_120px_rgba(0,0,0,1)]">
                 
@@ -75,12 +89,6 @@ export function VerticalQuestTrail({ locales, visitedIds, onLocaleClick }: Verti
                     />
                 </div>
 
-                {/* Interaction Canvas Layer (Click background to hide names) */}
-                <div 
-                    className="absolute inset-0 z-0 cursor-default" 
-                    onClick={() => setActiveIdx(null)}
-                />
-
                 {/* SVG canvas — Locked at 9:16 Aspect (177.7% height) */}
                 <div className="relative z-10 w-full" style={{ paddingBottom: '177.7%' }}>
                     <svg
@@ -94,25 +102,25 @@ export function VerticalQuestTrail({ locales, visitedIds, onLocaleClick }: Verti
                                 <stop offset="100%" stopColor="#FF9000" />
                             </linearGradient>
 
-                            <filter id="neon-glow-red" x="-50%" y="-50%" width="200%" height="200%">
-                                <feGaussianBlur stdDeviation="1.25" result="blur" />
+                            <filter id="neon-glow-trail" x="-50%" y="-50%" width="200%" height="200%">
+                                <feGaussianBlur stdDeviation="1.1" result="blur" />
                                 <feComposite in="SourceGraphic" in2="blur" operator="over" />
                             </filter>
                         </defs>
 
-                        {/* Transparent background surface for SVG clicks */}
-                        <rect width="100" height="177.7" fill="transparent" onClick={() => setActiveIdx(null)} />
+                        {/* Interactive transparent surface for bg-clicks */}
+                        <rect width="100" height="177.7" fill="transparent" onClick={() => setSelectedLocale(null)} />
 
                         {/* ── PATH OF CONQUEST ── */}
                         <path 
                             d={activePath} 
                             fill="none" 
                             stroke="url(#samuraiPath)" 
-                            strokeWidth="1" 
+                            strokeWidth="1.1" 
                             strokeLinecap="round" 
                             opacity="0.8"
                             className="energy-trail"
-                            filter="url(#neon-glow-red)"
+                            filter="url(#neon-glow-trail)"
                         />
 
                         {/* ── SLOT RENDERER (30 SLOTS) ── */}
@@ -121,23 +129,22 @@ export function VerticalQuestTrail({ locales, visitedIds, onLocaleClick }: Verti
                             const vId = visitedIds[i]
                             const locale = vId ? locales.find(l => l.id === vId) : null
                             const isRevealed = !!locale
-                            const isActive = activeIdx === i
 
                             return (
                                 <g key={i}>
-                                    {/* Mystery Slot Slot */}
                                     {!isRevealed ? (
-                                        <g filter="url(#neon-glow-red)" opacity="0.6">
-                                            <circle cx={pos.x} cy={pos.y} r="3.2" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.4)" strokeWidth="0.3" />
-                                            <circle cx={pos.x} cy={pos.y} r="2" fill="rgba(255,255,255,0.2)" />
-                                            <text x={pos.x} y={pos.y + 0.8} textAnchor="middle" fontSize="2.8" fill="#FFF" fontWeight="900" opacity="0.8">?</text>
+                                        // Mystery Slot
+                                        <g filter="url(#neon-glow-trail)" opacity="0.65">
+                                            <circle cx={pos.x} cy={pos.y} r="3" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.4)" strokeWidth="0.3" />
+                                            <circle cx={pos.x} cy={pos.y} r="1.8" fill="rgba(255,255,255,0.2)" />
+                                            <text x={pos.x} y={pos.y + 0.8} textAnchor="middle" fontSize="2.5" fill="#FFF" fontWeight="900" opacity="0.8">?</text>
                                         </g>
                                     ) : (
                                         <g 
                                             className="pin-pop" 
                                             onClick={(e) => {
                                                 e.stopPropagation()
-                                                setActiveIdx(isActive ? null : i)
+                                                setSelectedLocale(locale)
                                             }}
                                             style={{ cursor: 'pointer' }}
                                         >
@@ -151,60 +158,88 @@ export function VerticalQuestTrail({ locales, visitedIds, onLocaleClick }: Verti
                                                     fill="#FF4B1F"
                                                     stroke="#FFF"
                                                     strokeWidth="0.6"
-                                                    filter="url(#neon-glow-red)"
+                                                    filter="url(#neon-glow-trail)"
                                                 />
                                                 <circle cx="0" cy="-12" r="4.8" fill="#FFF" />
-                                                <clipPath id={`clip-samurai-v3-${i}`}>
+                                                <clipPath id={`clip-saga-${i}`}>
                                                     <circle cx="0" cy="-12" r="4.5" />
                                                 </clipPath>
                                                 <image
                                                     href={locale.image_url || '/logo-fest.png'}
                                                     x="-4.5" y="-16.5"
                                                     width="9" height="9"
-                                                    clipPath={`url(#clip-samurai-v3-${i})`}
+                                                    clipPath={`url(#clip-saga-${i})`}
                                                     className="object-cover"
                                                 />
                                                 <circle cx="5.2" cy="-6" r="2.2" fill="#FFB800" stroke="#000" strokeWidth="0.35" />
                                                 <text x="5.2" y="-5.2" textAnchor="middle" fontSize="3" fill="#000" fontWeight="900" className="font-lilita">{i + 1}</text>
                                             </g>
-
-                                            {/* ── THE INTERACTIVE TOOLTIP ── */}
-                                            {isActive && (
-                                                <motion.g
-                                                    initial={{ opacity: 0, y: 5 }}
-                                                    animate={{ opacity: 1, y: 0 }}
-                                                    className="pointer-events-none"
-                                                >
-                                                    {/* Tooltip Bubble */}
-                                                    <rect
-                                                        x={pos.x - 25}
-                                                        y={pos.y - 32}
-                                                        width="50"
-                                                        height="10"
-                                                        rx="5"
-                                                        fill="#000"
-                                                        fillOpacity="0.85"
-                                                        filter="url(#neon-glow-red)"
-                                                    />
-                                                    <text
-                                                        x={pos.x}
-                                                        y={pos.y - 25.5}
-                                                        textAnchor="middle"
-                                                        fontSize="4.2"
-                                                        fill="#FFFFFF"
-                                                        className="font-lilita"
-                                                        style={{ letterSpacing: '0.05em' }}
-                                                    >
-                                                        {locale.name.toUpperCase()}
-                                                    </text>
-                                                </motion.g>
-                                            )}
                                         </g>
                                     )}
                                 </g>
                             )
                         })}
                     </svg>
+
+                    {/* ── INTERACTIVE INFO WINDOW OVERLAY ── */}
+                    <AnimatePresence>
+                        {selectedLocale && (
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                                animate={{ opacity: 1, scale: 1, y: 0 }}
+                                exit={{ opacity: 0, scale: 0.9, y: 20 }}
+                                className="absolute inset-0 z-50 flex items-center justify-center p-6 bg-black/40 backdrop-blur-[2px]"
+                                onClick={() => setSelectedLocale(null)}
+                            >
+                                <motion.div 
+                                    className="w-full max-w-[280px] bg-[#020d1f]/95 border border-orange-500/30 rounded-3xl p-6 shadow-[0_25px_80px_rgba(0,0,0,0.8)] relative group overflow-hidden"
+                                    onClick={(e) => e.stopPropagation()}
+                                >
+                                    {/* Gradient Background Effect */}
+                                    <div className="absolute top-0 right-0 w-32 h-32 bg-orange-500/5 blur-3xl rounded-full" />
+                                    
+                                    <button 
+                                        onClick={() => setSelectedLocale(null)}
+                                        className="absolute top-4 right-4 p-2 rounded-full bg-white/5 hover:bg-white/10 transition-colors"
+                                    >
+                                        <X size={18} className="text-white/60" />
+                                    </button>
+
+                                    <div className="flex flex-col items-center text-center">
+                                        {/* Logo Container */}
+                                        <div className="w-20 h-20 rounded-full border-2 border-orange-500/50 p-1 mb-4 shadow-[0_0_20px_rgba(255,75,31,0.2)]">
+                                            <div className="w-full h-full rounded-full bg-white overflow-hidden">
+                                                <Image 
+                                                    src={selectedLocale.image_url || '/logo-fest.png'} 
+                                                    alt={selectedLocale.name} 
+                                                    width={80} height={80} 
+                                                    className="w-full h-full object-cover"
+                                                />
+                                            </div>
+                                        </div>
+
+                                        <h3 className="text-xl text-white font-lilita mb-2 tracking-wide uppercase">
+                                            {selectedLocale.name}
+                                        </h3>
+
+                                        <p className="text-white/70 text-sm leading-relaxed font-inter mb-6">
+                                            {selectedLocale.description || "¡Este restaurante guarda una parte esencial de la Saga de Sushi Fest! Visítalo para reclamar tu premio."}
+                                        </p>
+
+                                        <button 
+                                            onClick={() => {
+                                                onLocaleClick(selectedLocale)
+                                                setSelectedLocale(null)
+                                            }}
+                                            className="w-full py-3 bg-gradient-to-r from-[#FF4B1F] to-[#FF9000] text-black font-lilita rounded-2xl shadow-[0_4px_15px_rgba(255,75,31,0.3)] hover:scale-[1.02] active:scale-95 transition-transform uppercase tracking-wider text-sm"
+                                        >
+                                            Ver Detalles Completos
+                                        </button>
+                                    </div>
+                                </motion.div>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
                 </div>
             </div>
         </div>
