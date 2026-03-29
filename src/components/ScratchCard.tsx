@@ -169,7 +169,7 @@ export function ScratchCard({
     }
 
     return (
-        <div ref={containerRef} className="relative w-full aspect-[3/4] bg-[#000B2A] rounded-[3rem] overflow-hidden border border-white/10 group shadow-[0_20px_50px_rgba(0,0,0,0.5)] mx-auto max-w-[320px]">
+        <div ref={containerRef} className="relative w-full aspect-[3/4] bg-[#000B2A] rounded-[2rem] overflow-hidden ring-1 ring-inset ring-white/5 group shadow-[0_20px_50px_rgba(0,0,0,0.8)] mx-auto max-w-[320px]">
             <div className="absolute inset-0 flex items-center justify-center p-0 text-center">
                 {children}
             </div>
