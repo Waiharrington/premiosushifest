@@ -13,6 +13,7 @@ import { QRScannerUI } from "@/components/QRScannerUI"
 import { ScratchCard } from "@/components/ScratchCard"
 import { SponsorBackground } from "@/components/SponsorBackground"
 import { MysteryModal } from "@/components/MysteryModal"
+import { StatusModal, StatusType } from "@/components/StatusModal"
 import { registerVisit, getTreasureHuntStatus, generateScratchPrize } from "@/actions/treasure-hunt"
 
 
@@ -39,6 +40,18 @@ export default function TreasureHuntPage() {
     const [viewingPrizeIndex, setViewingPrizeIndex] = useState(1)
     const [hasMounted, setHasMounted] = useState(false)
     const [isMysteryModalOpen, setIsMysteryModalOpen] = useState(false)
+    
+    // Status Modal State
+    const [statusModal, setStatusModal] = useState({
+        isOpen: false,
+        title: "",
+        message: "",
+        type: 'info' as StatusType
+    })
+
+    const showAlert = (title: string, message: string, type: StatusType = 'info') => {
+        setStatusModal({ isOpen: true, title, message, type })
+    }
 
 
     useEffect(() => {
@@ -99,15 +112,15 @@ export default function TreasureHuntPage() {
                     setCurrentPrize(prizeRes.prize as TreasureHuntPrize)
                     if (prizeRes.visitNumber) setPrizeVisitNumber(prizeRes.visitNumber)
                 } else {
-                    alert(prizeRes.error || "Ocurrió un error al generar tu premio. Por favor intenta de nuevo.")
+                    showAlert("ERROR DE PREMIO", prizeRes.error || "Ocurrió un error al generar tu premio. Por favor intenta de nuevo.", 'error')
                     setActivePrizeLocale(null)
                 }
             } else {
-                alert(`¡Ya has registrado tu visita en ${locale.name}!`)
+                showAlert("VISITA REGISTRADA", `¡Ya has registrado tu visita en ${locale.name}!`, 'info')
             }
             fetchData()
         } else {
-            alert(res.error)
+            showAlert("ERROR DE CONEXIÓN", res.error || "Algo salió mal al registrar tu visita.", 'error')
         }
         setPrizeLoading(false)
     }
@@ -476,6 +489,14 @@ export default function TreasureHuntPage() {
                 onScan={handleScan}
                 locales={locales}
                 visitedIds={visitedIds}
+            />
+
+            <StatusModal 
+                isOpen={statusModal.isOpen}
+                onClose={() => setStatusModal(prev => ({ ...prev, isOpen: false }))}
+                title={statusModal.title}
+                message={statusModal.message}
+                type={statusModal.type}
             />
 
             {/* Prize Unlocking Modal (Cinematic Reveal) */}
