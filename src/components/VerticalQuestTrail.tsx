@@ -81,18 +81,19 @@ export function VerticalQuestTrail({ locales, visitedIds, onLocaleClick }: Verti
                 }
             `}</style>
             
-            <div className="w-full max-w-lg mx-auto mb-12 relative rounded-3xl overflow-hidden border border-white/5 bg-[#050510]/90 shadow-[0_40px_100px_rgba(0,0,0,0.9)]">
+            <div className="w-full max-w-lg mx-auto mb-12 relative rounded-3xl overflow-hidden border border-white/5 bg-[#010a1a] shadow-[0_40px_100px_rgba(0,0,0,0.9)]">
                 
-                {/* Background Map (Simplified & Visible) */}
+                {/* Background Map (The New Premium Image V3) */}
                 <div className="absolute inset-0 z-0">
                     <Image
-                        src="/panama-map-bg-v2.png"
-                        alt="Mapa de Panamá"
+                        src="/panama-map-v3.png"
+                        alt="Mapa de Panamá Premium"
                         fill
-                        className="object-cover opacity-60 brightness-110"
+                        className="object-cover opacity-100 brightness-100"
                         priority
                     />
-                    <div className="absolute inset-0 bg-gradient-to-b from-[#050510]/80 via-transparent to-[#050510]/80 opacity-90" />
+                    {/* Very light gradient only at the edges */}
+                    <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/40 opacity-30" />
                 </div>
 
                 {/* SVG canvas — Fixed Aspect for better control */}
