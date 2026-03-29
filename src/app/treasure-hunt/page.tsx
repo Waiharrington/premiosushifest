@@ -302,7 +302,7 @@ export default function TreasureHuntPage() {
 
                     {/* Prizes / Recompensas Section (Tesoros de la Saga) */}
                     {prizes.filter(p => p.prize_type !== 'try_again').length > 0 && (
-                        <div className="w-full mt-12 mb-24 px-4 relative z-20">
+                        <div className="w-full mt-10 mb-8 px-4 relative z-20">
                             <div className="flex items-center justify-between mb-8">
                                 <div className="flex items-center gap-5">
                                     <div className="w-14 h-14 bg-gradient-to-br from-[#FF4B1F]/30 to-[#FF9000]/10 backdrop-blur-3xl border border-white/10 rounded-2xl flex items-center justify-center shadow-[0_10px_30px_rgba(255,75,31,0.2)]">
@@ -406,7 +406,7 @@ export default function TreasureHuntPage() {
                     )}
 
                     {/* Map Footer HUD (Mission Pods) — High Impact & Integrated */}
-                    <div className="w-full max-w-lg mt-12 grid grid-cols-2 gap-4 relative z-50">
+                    <div className="w-full max-w-lg mt-6 grid grid-cols-2 gap-4 relative z-50">
                         {/* Conquistados Card */}
                         <div className="bg-black/60 backdrop-blur-3xl border border-white/10 rounded-3xl p-5 flex flex-col gap-3 relative overflow-hidden group shadow-[0_20px_40px_rgba(0,0,0,0.5)] active:scale-95 transition-all">
                             <div className="absolute top-0 left-0 w-1 h-full bg-[#FF4B1F] shadow-[0_0_15px_#FF4B1F]" />
@@ -455,7 +455,7 @@ export default function TreasureHuntPage() {
                         </button>
                     </div>
 
-                    <footer className="mt-12 py-6 text-center text-white/10 text-[8px] uppercase tracking-[0.4em] font-black">
+                    <footer className="mt-8 py-6 text-center text-white/10 text-[8px] uppercase tracking-[0.4em] font-black">
                         <p>© 2026 SUSHIFEST • PANAMÁ</p>
                     </footer>
                 </main>

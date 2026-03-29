@@ -114,7 +114,7 @@ export function VerticalQuestTrail({ locales, visitedIds, onLocaleClick }: Verti
                         preserveAspectRatio="xMidYMid slice"
                     >
                         <defs>
-                            <linearGradient id="samuraiPath" x1="0" y1="0" x2="0" y2="1">
+                            <linearGradient id="samuraiPath" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="177.7">
                                 <stop offset="0%" stopColor="#FF4B1F" />
                                 <stop offset="100%" stopColor="#FF9000" />
                             </linearGradient>
@@ -143,9 +143,8 @@ export function VerticalQuestTrail({ locales, visitedIds, onLocaleClick }: Verti
                         {/* ── SLOT RENDERER (30 SLOTS) ── */}
                         {Array.from({ length: 30 }).map((_, i) => {
                             const pos = NODE_POS[i]
-                            const vId = visitedIds[i]
-                            const locale = vId ? locales.find(l => l.id === vId) : null
-                            const isRevealed = !!locale
+                            const locale = locales[i]
+                            const isRevealed = locale ? visitedIds.includes(locale.id) : false
 
                             return (
                                 <g key={i}>
