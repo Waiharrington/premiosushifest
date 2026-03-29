@@ -80,7 +80,7 @@ export default function AuthModal({ onClose, onSuccess }: AuthModalProps) {
                 className="relative w-full max-w-md my-auto py-8"
             >
                 {/* Character Header - Moved OUTSIDE overflow container to avoid clipping head */}
-                <div className="absolute -top-8 left-1/2 -translate-x-1/2 w-28 drop-shadow-[0_20px_40px_rgba(0,0,0,0.8)] z-40 group select-none pointer-events-none">
+                <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-28 drop-shadow-[0_20px_40px_rgba(0,0,0,0.8)] z-40 group select-none pointer-events-none">
                     <Image src="/sushi-character-v2.png" alt="Sushi" width={112} height={112} className="w-full h-auto animate-float" priority />
                 </div>
 
