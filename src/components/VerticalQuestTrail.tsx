@@ -9,29 +9,27 @@ interface VerticalQuestTrailProps {
     onLocaleClick: (locale: Locale) => void
 }
 
-// ── Serpentine node positions (6 rows × 5 cols = 30 nodes) ────────────────
-const ROW_YS  = [14, 47, 80, 113, 146, 179]
-const X_RTL   = [85, 68, 50, 32, 15]   // right → left (even rows)
-const X_LTR   = [15, 32, 50, 68, 85]   // left  → right (odd rows)
-
-
+// ── Constellation node positions (10 rows × 3 cols = 30 nodes) ────────────────
+const ROW_YS  = [15, 35, 55, 75, 95, 115, 135, 155, 175, 195]
+const X_RTL   = [80, 50, 20]   // right → left (even rows)
+const X_LTR   = [20, 50, 80]   // left  → right (odd rows)
 
 const NODE_POS: { x: number; y: number }[] = []
-for (let row = 0; row < 6; row++) {
-    const xs = row % 2 === 0 ? X_RTL : X_LTR
-    for (let col = 0; col < 5; col++) {
+for (let row = 0; row < 10; row++) {
+    const xs = row % 2 === 0 ? X_LTR : X_RTL
+    for (let col = 0; col < 3; col++) {
         NODE_POS.push({ x: xs[col], y: ROW_YS[row] })
     }
 }
 
-// Decorative sushi emojis scattered between path curves
+// Decorative nautical/map emojis scattered between path curves
 const DECOS = [
-    { emoji: '🍣', x: 50, y: 31 },
-    { emoji: '🥢', x: 12, y: 64 },
-    { emoji: '🍱', x: 88, y: 97 },
-    { emoji: '🍜', x: 10, y: 130 },
-    { emoji: '✨', x: 88, y: 163 },
-    { emoji: '🍘', x: 50, y: 192 },
+    { emoji: '⛵', x: 50, y: 45 },
+    { emoji: '🗺️', x: 12, y: 85 },
+    { emoji: '⚓', x: 88, y: 125 },
+    { emoji: '🐉', x: 10, y: 165 },
+    { emoji: '✨', x: 88, y: 205 },
+    { emoji: '🏝️', x: 50, y: 225 },
 ]
 
 // ── Helper to generate the path dynamically based on node count ───────────
@@ -39,28 +37,24 @@ function getDynamicPath(numNodes: number): string {
     if (numNodes <= 0) return ""
     
     let d = `M ${NODE_POS[0].x} ${NODE_POS[0].y}`
-    const numRows = Math.ceil(numNodes / 5)
+    const numRows = Math.ceil(numNodes / 3)
     
     for (let r = 0; r < numRows; r++) {
         const isLastRow = r === numRows - 1
-        const nodesInThisRow = isLastRow ? (numNodes % 5 || 5) : 5
+        const nodesInThisRow = isLastRow ? (numNodes % 3 || 3) : 3
         
         // Draw horizontal line for the row
-        const targetX = NODE_POS[r * 5 + nodesInThisRow - 1].x
-        const targetY = NODE_POS[r * 5 + nodesInThisRow - 1].y
+        const targetX = NODE_POS[r * 3 + nodesInThisRow - 1].x
+        const targetY = NODE_POS[r * 3 + nodesInThisRow - 1].y
         d += ` L ${targetX} ${targetY}`
         
         // Draw curve to next row if exists
         if (!isLastRow) {
-            const nextRowStart = NODE_POS[(r + 1) * 5]
-            // Curve logic: even rows curve right-to-left, odd rows curve left-to-right
+            const nextRowStart = NODE_POS[(r + 1) * 3]
             const isCurveRight = r % 2 === 0
-            const curveX = isCurveRight ? 5 : 95
+            const curveX = isCurveRight ? 95 : 5
             d += ` C ${curveX} ${targetY}, ${curveX} ${nextRowStart.y}, ${nextRowStart.x} ${nextRowStart.y}`
         }
-
-
-
     }
     return d
 }
@@ -69,13 +63,21 @@ function getDynamicPath(numNodes: number): string {
 export function VerticalQuestTrail({ locales, visitedIds, onLocaleClick }: VerticalQuestTrailProps) {
     const nodes = locales.slice(0, 30)
 
-    // No sequence logic needed for Mystery Mode
-    const numRows = Math.ceil(nodes.length / 5)
+    const numRows = Math.ceil(nodes.length / 3)
     const activeHeight = nodes.length > 0 ? ROW_YS[numRows - 1] + 30 : 100
     const dynamicPath = getDynamicPath(nodes.length)
 
     return (
         <div className="relative w-full overflow-hidden">
+            <style jsx>{`
+                @keyframes dash-flow {
+                    to { stroke-dashoffset: -20; }
+                }
+                .constellation-path {
+                    animation: dash-flow 2s linear infinite;
+                }
+            `}</style>
+            
             {/* SVG canvas — Fixed 100% Width for map size, Dynamic height */}
             <div className="relative w-full" style={{ paddingBottom: `${(activeHeight / 100) * 100}%` }}>
                 <svg
@@ -83,9 +85,6 @@ export function VerticalQuestTrail({ locales, visitedIds, onLocaleClick }: Verti
                     className="absolute inset-0 w-full h-full"
                     preserveAspectRatio="xMidYMid meet"
                 >
-
-
-
                     <defs>
                         {/* Clip paths for circular logos */}
                         {nodes.map((locale, i) => (
@@ -94,60 +93,59 @@ export function VerticalQuestTrail({ locales, visitedIds, onLocaleClick }: Verti
                             </clipPath>
                         ))}
 
-                        {/* Neon Blue Gradient for the path */}
+                        {/* Neon Blue Gradient for the constellation */}
                         <linearGradient id="neonBlueGrad" x1="0" y1="0" x2="1" y2="0">
-                            <stop offset="0%" stopColor="#0038A8" />
+                            <stop offset="0%" stopColor="#00D1FF" />
                             <stop offset="50%" stopColor="#0066FF" />
-                            <stop offset="100%" stopColor="#0038A8" />
+                            <stop offset="100%" stopColor="#00D1FF" />
                         </linearGradient>
 
-                        {/* Logo Orange Gradient for accents */}
-                        <linearGradient id="salmonGrad" x1="0" y1="0" x2="1" y2="1">
-                            <stop offset="0%" stopColor="#FF4B1F" />
-                            <stop offset="100%" stopColor="#D43D16" />
-                        </linearGradient>
-
-
-                        {/* Blur + Grayscale filter for mystery nodes — Expanded region to avoid clipping */}
+                        {/* Blur + Grayscale filter for mystery nodes */}
                         <filter id="mystery-blur" x="-50%" y="-50%" width="200%" height="200%">
                             <feColorMatrix type="saturate" values="0" />
                             <feGaussianBlur stdDeviation="2.5" />
                         </filter>
 
-
                         {/* Intense Neon Glow for path edges */}
                         <filter id="neon-glow" x="-20%" y="-20%" width="140%" height="140%">
-                            <feGaussianBlur stdDeviation="1.2" result="blur" />
+                            <feGaussianBlur stdDeviation="0.8" result="blur" />
                             <feComposite in="SourceGraphic" in2="blur" operator="over" />
                         </filter>
-
-                        {/* Outer Blue Shadow for depth — Expanded region to avoid square clipping */}
-                        <filter id="blue-shadow" x="-50%" y="-50%" width="200%" height="200%">
-                            <feDropShadow dx="0" dy="2" stdDeviation="3" floodColor="#001B4D" floodOpacity="0.8" />
-                        </filter>
-
                     </defs>
 
-
-                    {/* ── ROAD LAYERS (Neo-Blue Version) ── */}
+                    {/* ── CONSTELLATION PATH LAYERS ── */}
                     {/* Glow Layer */}
-                    <path d={dynamicPath} fill="none" stroke="#00D1FF" strokeWidth="13" strokeLinecap="round" strokeLinejoin="round" opacity="0.3" filter="url(#neon-glow)" />
+                    <path 
+                        d={dynamicPath} 
+                        fill="none" 
+                        stroke="#00D1FF" 
+                        strokeWidth="1.5" 
+                        strokeLinecap="round" 
+                        strokeLinejoin="round" 
+                        strokeDasharray="0.5 4"
+                        opacity="0.8" 
+                        filter="url(#neon-glow)" 
+                        className="constellation-path"
+                    />
                     
-                    {/* Main Core */}
-                    <path d={dynamicPath} fill="none" stroke="url(#neonBlueGrad)" strokeWidth="10" strokeLinecap="round" strokeLinejoin="round" />
-                    
-                    {/* Cream Dash Pattern (Sushi Rice style) */}
-                    <path d={dynamicPath} fill="none" stroke="#FFF8E7" strokeWidth="1" strokeLinecap="round" strokeDasharray="1.5 5" opacity="0.6" />
+                    {/* Core Path (Dashed) */}
+                    <path 
+                        d={dynamicPath} 
+                        fill="none" 
+                        stroke="url(#neonBlueGrad)" 
+                        strokeWidth="1" 
+                        strokeLinecap="round" 
+                        strokeLinejoin="round" 
+                        strokeDasharray="4 6"
+                        className="constellation-path"
+                    />
 
-
-
-                    {/* ── DECORATIVE SUSHI EMOJIS ── */}
+                    {/* ── DECORATIVE MAP ELEMENTS ── */}
                     {DECOS.map((d, i) => (
-                        <text key={i} x={d.x} y={d.y} textAnchor="middle" fontSize="5.5" opacity="0.35">
+                        <text key={i} x={d.x} y={d.y} textAnchor="middle" fontSize="4.5" opacity="0.2">
                             {d.emoji}
                         </text>
                     ))}
-
 
                     {/* ── NODES ── */}
                     {nodes.map((locale, i) => {
@@ -155,65 +153,59 @@ export function VerticalQuestTrail({ locales, visitedIds, onLocaleClick }: Verti
                         const isVisited = visitedIds.includes(locale.id)
                         const label     = locale.name.length > 10 ? locale.name.slice(0, 10) + '…' : locale.name
 
-
                         return (
                             <g key={locale.id} onClick={() => onLocaleClick(locale)} style={{ cursor: 'pointer', outline: 'none' }} className="touch-manipulation">
+                                {/* Invisible Hitbox */}
+                                <circle cx={pos.x} cy={pos.y} r="8" fill="transparent" />
 
-                                {/* Invisible Hitbox - Makes clicking much easier on mobile */}
-                                <circle cx={pos.x} cy={pos.y} r="10" fill="transparent" />
+                                {/* Subtle Aura for nodes */}
+                                <circle 
+                                    cx={pos.x} cy={pos.y} r="7" 
+                                    fill="rgba(0,209,255,0.05)" 
+                                    stroke={isVisited ? "rgba(255,75,31,0.3)" : "rgba(255,255,255,0.05)"}
+                                    strokeWidth="0.5"
+                                />
 
-                                {/* Glow for visited */}
-
-                                {isVisited && (
-                                    <circle cx={pos.x} cy={pos.y} r="8" fill="rgba(0,209,255,0.15)" />
-                                )}
-
-                                {/* Node Plate (Deep Blue & Salmon) */}
+                                {/* Node Plate */}
                                 <circle
-                                    cx={pos.x} cy={pos.y} r="6.8"
+                                    cx={pos.x} cy={pos.y} r="5.8"
                                     fill="#0a0a1a"
-                                    stroke={isVisited ? '#FF4B1F' : 'rgba(255,255,255,0.15)'}
-
-                                    strokeWidth={isVisited ? 2.5 : 0.7}
-                                    filter={isVisited ? 'url(#blue-shadow)' : ''}
+                                    stroke={isVisited ? '#FF4B1F' : 'rgba(255,255,255,0.1)'}
+                                    strokeWidth={isVisited ? 1.5 : 0.5}
                                 />
 
                                 {/* Restaurant Logo with Mystery Filter */}
                                 <image
                                     href={locale.image_url || '/logo-fest.png'}
-                                    x={pos.x - 5.4} y={pos.y - 5.4}
-                                    width="10.8" height="10.8"
+                                    x={pos.x - 4.5} y={pos.y - 4.5}
+                                    width="9" height="9"
                                     clipPath={`url(#clipN-${i})`}
                                     style={{ 
-                                        opacity: isVisited ? 1 : 0.4, 
+                                        opacity: isVisited ? 1 : 0.3, 
                                         filter: isVisited ? '' : 'url(#mystery-blur)' 
                                     }}
                                 />
 
-                                {/* Checkmark/Wasabi Status (bottom-right) */}
-                                <circle cx={pos.x + 5.2} cy={pos.y + 4.8} r="2.8" 
-                                    fill={isVisited ? '#4BCF2D' : '#1f2937'} 
-                                    stroke="#001B4D" strokeWidth="0.5"
-                                />
+                                {/* Checkmark (bottom-right) */}
                                 {isVisited && (
-                                    <text x={pos.x + 5.2} y={pos.y + 6.1} textAnchor="middle" fontSize="3.5" fill="#00350a">✓</text>
+                                    <g>
+                                        <circle cx={pos.x + 4.5} cy={pos.y + 4.2} r="2.2" fill="#4BCF2D" stroke="#001B4D" strokeWidth="0.4" />
+                                        <text x={pos.x + 4.5} y={pos.y + 5.2} textAnchor="middle" fontSize="2.8" fill="#00350a" fontWeight="900">✓</text>
+                                    </g>
                                 )}
 
                                 {/* Mystery Name Label */}
                                 <text
                                     x={pos.x} y={pos.y + 11.5}
-                                    textAnchor="middle" fontSize="2.8"
-                                    fill={isVisited ? '#FF4B1F' : 'rgba(255,255,255,0.2)'}
-
+                                    textAnchor="middle" fontSize="2.6"
+                                    fill={isVisited ? '#FFFFFF' : 'rgba(255,255,255,0.2)'}
                                     fontFamily="Arial, sans-serif" fontWeight="900"
-                                    style={{ textShadow: '0 2px 4px rgba(0,0,0,0.8)' }}
+                                    style={{ textShadow: '0 1px 3px rgba(0,0,0,1)' }}
                                 >
                                     {isVisited ? label : '???'}
                                 </text>
                             </g>
                         )
-
-
                     })}
                 </svg>
             </div>
