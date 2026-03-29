@@ -24,7 +24,7 @@ for (let r = 0; r < ROWS; r++) {
     const isEvenRow = r % 2 === 0
     for (let c = 0; c < COLS; c++) {
         const colIdx = isEvenRow ? c : (COLS - 1 - c)
-        let x = 16 + colIdx * 23 // Distributed columns
+        const x = 16 + colIdx * 23 // Distributed columns
         if (NODE_POS.length < 30) {
             NODE_POS.push({ x, y })
         }
@@ -44,8 +44,25 @@ function getDynamicPath(visitedCount: number): string {
     return d
 }
 
+// ── Dynamic Saga Messages (Focus on Food & Individual Rewards) ──────────
+const SAGA_MESSAGES = [
+    "¡Una explosión de sabor te espera! Escanea y descubre tu recompensa exclusiva en este local.",
+    "El arte del buen sushi está en los detalles. Disfruta de tu beneficio especial hoy mismo.",
+    "Cada bocado es una experiencia. ¡No olvides reclamar tu premio directo por visitarnos!",
+    "Tu paladar te lo agradecerá. Desbloquea tu recompensa y deléitate con lo mejor del menú.",
+    "Pasión por el sushi y premios al instante. ¡Disfruta del mejor sabor en este rincón sagrado!",
+    "Un refugio para los amantes del roll. Escanea tu código y vive la experiencia completa.",
+    "Sabor, frescura y beneficios directos. Haz que tu visita valga doble con tu premio al momento.",
+    "La recompensa perfecta para un verdadero fan del sushi. ¡Pide tu favorito y celebra!",
+    "Donde la calidad se vuelve arte. Tu beneficio exclusivo de la Saga te espera aquí mismo.",
+    "Haz una pausa deliciosa: disfruta del mejor sushi y llévate un regalo por tu visita.",
+    "Tu ruta del sabor continúa aquí. ¡Aprovecha tu beneficio y descubre una nueva especialidad!",
+    "Siente la frescura en cada pieza. Escanea, come delicioso y reclama tu recompensa."
+]
+
 export function VerticalQuestTrail({ locales, visitedIds, onLocaleClick }: VerticalQuestTrailProps) {
     const [selectedLocale, setSelectedLocale] = useState<Locale | null>(null)
+    const [selectedIndex, setSelectedIndex] = useState<number>(0)
     const activePath = getDynamicPath(visitedIds.length)
 
     return (
@@ -145,6 +162,7 @@ export function VerticalQuestTrail({ locales, visitedIds, onLocaleClick }: Verti
                                             onClick={(e) => {
                                                 e.stopPropagation()
                                                 setSelectedLocale(locale)
+                                                setSelectedIndex(i)
                                             }}
                                             style={{ cursor: 'pointer' }}
                                         >
@@ -224,7 +242,7 @@ export function VerticalQuestTrail({ locales, visitedIds, onLocaleClick }: Verti
                                         </h3>
 
                                         <p className="text-white/80 text-sm leading-relaxed font-inter italic">
-                                            {selectedLocale.description || "¡Este restaurante guarda una parte esencial de la Saga de Sushi Fest! Visítalo para reclamar tu premio."}
+                                            {selectedLocale.description || SAGA_MESSAGES[selectedIndex % SAGA_MESSAGES.length]}
                                         </p>
                                     </div>
                                 </motion.div>
