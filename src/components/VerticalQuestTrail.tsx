@@ -269,7 +269,15 @@ export function VerticalQuestTrail({ locales, visitedIds, onLocaleClick }: Verti
                         />
                         <motion.div
                             initial={{ opacity: 0, scale: 0.8 }}
-                            animate={{ opacity: 1, scale: 1 }}
+                            animate={{ 
+                                opacity: 1, 
+                                scale: 1,
+                                y: [0, -8, 0] 
+                            }}
+                            transition={{
+                                delay: 0.2,
+                                y: { duration: 4, repeat: Infinity, ease: "easeInOut" }
+                            }}
                             className="relative"
                         >
                             <Image 
