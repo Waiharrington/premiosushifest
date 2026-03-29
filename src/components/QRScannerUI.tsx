@@ -41,7 +41,6 @@ export function QRScannerUI({ isOpen, onClose, onScan, locales = [], visitedIds 
 
                 const config = {
                     fps: 15,
-                    qrbox: { width: 280, height: 280 },
                     aspectRatio: 1.0,
                     formatsToSupport: [Html5QrcodeSupportedFormats.QR_CODE]
                 }
