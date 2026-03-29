@@ -133,16 +133,18 @@ export default function TreasureHuntPage() {
     return (
         <div className="min-h-[100svh] bg-[#000818] text-white relative overflow-hidden selection:bg-primary/30 font-sans">
 
-            {/* Background Layer - Panama Map */}
+            {/* Background Layer - Sushi Pattern */}
             <div className="absolute inset-0 z-0 overflow-hidden">
                 <Image
-                    src="/panama-map-bg.png"
-                    alt="Mapa de Panamá"
+                    src="/bg-treasure-home.png"
+                    alt="Fondo de Festival"
                     fill
-                    className="object-cover opacity-100"
+                    className="object-cover opacity-95"
                     priority
                     quality={100}
                 />
+                {/* Light overlay to keep text readable without hiding the sushi pattern */}
+                <div className="absolute inset-0 bg-[#030818]/50" />
             </div>
 
             <RiceParticles />

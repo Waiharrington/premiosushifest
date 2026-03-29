@@ -1,7 +1,7 @@
 'use client'
 
+import Image from "next/image"
 import { Locale } from "@/types"
-
 
 interface VerticalQuestTrailProps {
     locales: Locale[]
@@ -78,13 +78,30 @@ export function VerticalQuestTrail({ locales, visitedIds, onLocaleClick }: Verti
                 }
             `}</style>
             
-            {/* SVG canvas — Fixed 100% Width for map size, Dynamic height */}
-            <div className="relative w-full" style={{ paddingBottom: `${(activeHeight / 100) * 100}%` }}>
-                <svg
-                    viewBox={`0 0 100 ${activeHeight}`}
-                    className="absolute inset-0 w-full h-full"
-                    preserveAspectRatio="xMidYMid meet"
-                >
+            <div className="w-full max-w-lg mx-auto mb-12 relative group">
+                {/* Map Frame/Glow */}
+                <div className="absolute -inset-1 bg-gradient-to-b from-[#00D1FF]/20 to-transparent rounded-[3rem] blur-2xl opacity-50 group-hover:opacity-80 transition-opacity" />
+                
+                <div className="relative w-full rounded-[3rem] overflow-hidden border border-white/10 bg-black/40 backdrop-blur-sm shadow-[0_30px_60px_rgba(0,0,0,0.8)]">
+                    {/* Background Panama Image - Localized to the trail */}
+                    <div className="absolute inset-0 z-0">
+                        <Image
+                            src="/panama-map-bg.png"
+                            alt="Mapa de Panamá"
+                            fill
+                            className="object-cover opacity-100"
+                        />
+                        {/* Vignette for the map edge */}
+                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_50%,rgba(0,0,0,0.4)_100%)]" />
+                    </div>
+
+                    {/* SVG canvas — Fixed 100% Width for map size, Dynamic height */}
+                    <div className="relative z-10 w-full" style={{ paddingBottom: `${(activeHeight / 100) * 100}%` }}>
+                        <svg
+                            viewBox={`0 0 100 ${activeHeight}`}
+                            className="absolute inset-0 w-full h-full"
+                            preserveAspectRatio="xMidYMid meet"
+                        >
                     <defs>
                         {/* Clip paths for circular logos */}
                         {nodes.map((locale, i) => (
@@ -208,6 +225,8 @@ export function VerticalQuestTrail({ locales, visitedIds, onLocaleClick }: Verti
                         )
                     })}
                 </svg>
+                    </div>
+                </div>
             </div>
         </div>
     )
