@@ -9,30 +9,49 @@ interface VerticalQuestTrailProps {
     onLocaleClick: (locale: Locale) => void
 }
 
-// ── Static Journey Coordinates (30 nodes, 1 per row for a long scroll) ────────
-const ROW_YS  = Array.from({ length: 30 }, (_, i) => 25 + i * 20)
+// ── Organic Constellation Coordinates (30 nodes, 3-2-3-2 alternating) ────────
 const NODE_POS: { x: number; y: number }[] = []
+const ROW_SPACING = 15
+const START_Y = 20
 
-for (let row = 0; row < 30; row++) {
-    // Zigzag single node: Left → Center → Right → Center → Left...
-    const cycle = row % 4
-    let x = 50
-    if (cycle === 1) x = 75
-    else if (cycle === 3) x = 25
-    NODE_POS.push({ x, y: ROW_YS[row] })
+// 12 rows total to reach 30 nodes: 
+// 3 + 2 + 3 + 2 + 3 + 2 + 3 + 2 + 3 + 2 + 3 = 28 -> adding one more row of 2 = 30
+const PATTERN = [3, 2, 3, 2, 3, 2, 3, 2, 3, 2, 3, 2] 
+
+let nodeIdx = 0
+for (let r = 0; r < PATTERN.length; r++) {
+    const numInRow = PATTERN[r]
+    const y = START_Y + r * ROW_SPACING
+    
+    for (let c = 0; c < numInRow; c++) {
+        if (nodeIdx >= 30) break
+        
+        let x = 50
+        if (numInRow === 3) {
+            if (c === 0) x = 20
+            else if (c === 1) x = 50
+            else x = 80
+        } else {
+            // Row of 2: Staggered
+            if (c === 0) x = 35
+            else x = 65
+        }
+        
+        NODE_POS.push({ x, y })
+        nodeIdx++
+    }
 }
 
 // Decorative nautical/map emojis
 const DECOS = [
-    { emoji: '⛵', x: 25, y: 100 },
-    { emoji: '🗺️', x: 75, y: 200 },
-    { emoji: '⚓', x: 15, y: 300 },
-    { emoji: '🐉', x: 80, y: 400 },
-    { emoji: '🏝️', x: 50, y: 500 },
-    { emoji: '🌴', x: 20, y: 580 },
+    { emoji: '⛵', x: 15, y: 40 },
+    { emoji: '🗺️', x: 85, y: 70 },
+    { emoji: '⚓', x: 10, y: 110 },
+    { emoji: '🐉', x: 90, y: 150 },
+    { emoji: '🏝️', x: 50, y: 185 },
 ]
 
-// ── Helper to generate a single-line path ─────────────────────────────────
+// ── Helper to generate an organic snake path ──────────────────────────────
 function getDynamicPath(numNodes: number): string {
     if (numNodes <= 0) return ""
     let d = `M ${NODE_POS[0].x} ${NODE_POS[0].y}`
@@ -40,6 +59,7 @@ function getDynamicPath(numNodes: number): string {
         const prev = NODE_POS[i-1]
         const curr = NODE_POS[i]
         const cpY = (prev.y + curr.y) / 2
+        // Use curves for a more "constellation" feel
         d += ` C ${prev.x} ${cpY}, ${curr.x} ${cpY}, ${curr.x} ${curr.y}`
     }
     return d
@@ -61,139 +81,135 @@ export function VerticalQuestTrail({ locales, visitedIds, onLocaleClick }: Verti
                 }
             `}</style>
             
-            <div className="w-full max-w-lg mx-auto mb-12 relative">
-                {/* Scrollable Container with Sticky Map */}
-                <div className="relative w-full rounded-2xl overflow-hidden border border-white/5 bg-[#050510]/80 shadow-[0_40px_100px_rgba(0,0,0,0.9)]">
-                    
-                    {/* Sticky Panama Image (V2) - Stays in view while nodes move */}
-                    <div className="sticky top-0 left-0 w-full h-[70vh] z-0 pointer-events-none flex items-center justify-center p-8">
-                        <Image
-                            src="/panama-map-bg-v2.png"
-                            alt="Mapa de Panamá"
-                            fill
-                            className="object-contain opacity-80 brightness-90 transition-opacity"
-                            priority
-                        />
-                        {/* Lighter gradient to ensure visibility */}
-                        <div className="absolute inset-0 bg-gradient-to-b from-[#050510]/60 via-transparent to-[#050510]/60 opacity-40" />
-                    </div>
+            <div className="w-full max-w-lg mx-auto mb-12 relative rounded-3xl overflow-hidden border border-white/5 bg-[#050510]/90 shadow-[0_40px_100px_rgba(0,0,0,0.9)]">
+                
+                {/* Background Map (Simplified & Visible) */}
+                <div className="absolute inset-0 z-0">
+                    <Image
+                        src="/panama-map-bg-v2.png"
+                        alt="Mapa de Panamá"
+                        fill
+                        className="object-cover opacity-60 brightness-110"
+                        priority
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-b from-[#050510]/80 via-transparent to-[#050510]/80 opacity-90" />
+                </div>
 
-                    {/* SVG canvas — Very tall for 30 nodes single column */}
-                    <div className="relative z-10 w-full -mt-[70vh]" style={{ paddingBottom: '620%' }}>
-                        <svg
-                            viewBox={`0 0 100 620`}
-                            className="absolute inset-0 w-full h-full"
-                            preserveAspectRatio="xMidYMid slice"
-                        >
-                            <defs>
-                                {/* Clip paths for circular logos */}
-                                {nodes.map((locale, i) => (
-                                    <clipPath key={`clip-${locale.id}`} id={`clipN-${i}`}>
-                                        <circle cx={NODE_POS[i].x} cy={NODE_POS[i].y} r="4.2" />
-                                    </clipPath>
-                                ))}
-
-                                {/* Neon Blue Gradient */}
-                                <linearGradient id="neonBlueGrad" x1="0" y1="0" x2="0" y2="1">
-                                    <stop offset="0%" stopColor="#00D1FF" />
-                                    <stop offset="100%" stopColor="#0066FF" />
-                                </linearGradient>
-
-                                {/* Blur + Grayscale filter for mystery nodes */}
-                                <filter id="mystery-blur" x="-50%" y="-50%" width="200%" height="200%">
-                                    <feColorMatrix type="saturate" values="0" />
-                                    <feGaussianBlur stdDeviation="3" />
-                                </filter>
-
-                                {/* Intense Neon Glow */}
-                                <filter id="neon-glow" x="-20%" y="-20%" width="140%" height="140%">
-                                    <feGaussianBlur stdDeviation="0.6" result="blur" />
-                                    <feComposite in="SourceGraphic" in2="blur" operator="over" />
-                                </filter>
-                            </defs>
-
-                            {/* ── SINGLE SNAKE PATH ── */}
-                            <path 
-                                d={dynamicPath} 
-                                fill="none" 
-                                stroke="url(#neonBlueGrad)" 
-                                strokeWidth="0.8" 
-                                strokeLinecap="round" 
-                                strokeDasharray="4 6"
-                                opacity="0.6"
-                                filter="url(#neon-glow)" 
-                                className="constellation-path"
-                            />
-
-                            {/* ── DECORATIVE EMOJIS ── */}
-                            {DECOS.map((d, i) => (
-                                <text key={i} x={d.x} y={d.y} textAnchor="middle" fontSize="5" opacity="0.3">
-                                    {d.emoji}
-                                </text>
+                {/* SVG canvas — Fixed Aspect for better control */}
+                <div className="relative z-10 w-full" style={{ paddingBottom: '200%' }}>
+                    <svg
+                        viewBox={`0 0 100 200`}
+                        className="absolute inset-0 w-full h-full"
+                        preserveAspectRatio="xMidYMid slice"
+                    >
+                        <defs>
+                            {/* Clip paths for circular logos */}
+                            {nodes.map((locale, i) => (
+                                <clipPath key={`clip-${locale.id}`} id={`clipN-${i}`}>
+                                    <circle cx={NODE_POS[i].x} cy={NODE_POS[i].y} r="3.2" />
+                                </clipPath>
                             ))}
 
-                            {/* ── NODES ── */}
-                            {nodes.map((locale, i) => {
-                                const pos    = NODE_POS[i]
-                                const isVisited = visitedIds.includes(locale.id)
-                                const label     = locale.name.length > 12 ? locale.name.slice(0, 12) + '…' : locale.name
+                            {/* Neon Blue Gradient */}
+                            <linearGradient id="neonBlueGrad" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stopColor="#00D1FF" />
+                                <stop offset="100%" stopColor="#0066FF" />
+                            </linearGradient>
 
-                                return (
-                                    <g key={locale.id} onClick={() => onLocaleClick(locale)} style={{ cursor: 'pointer', outline: 'none' }} className="touch-manipulation">
-                                        {/* Invisible Hitbox */}
-                                        <circle cx={pos.x} cy={pos.y} r="7" fill="transparent" />
+                            {/* Blur + Grayscale filter for mystery nodes */}
+                            <filter id="mystery-blur" x="-50%" y="-50%" width="200%" height="200%">
+                                <feColorMatrix type="saturate" values="0" />
+                                <feGaussianBlur stdDeviation="3" />
+                            </filter>
 
-                                        {/* Subtle Aura */}
-                                        <circle 
-                                            cx={pos.x} cy={pos.y} r="6" 
-                                            fill="rgba(0,178,255,0.05)" 
-                                            stroke={isVisited ? "rgba(255,122,0,0.3)" : "rgba(255,255,255,0.05)"}
-                                            strokeWidth="0.3"
-                                        />
+                            {/* Intense Neon Glow */}
+                            <filter id="neon-glow" x="-20%" y="-20%" width="140%" height="140%">
+                                <feGaussianBlur stdDeviation="0.6" result="blur" />
+                                <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                            </filter>
+                        </defs>
 
-                                        {/* Node Plate */}
-                                        <circle
-                                            cx={pos.x} cy={pos.y} r="4.8"
-                                            fill="#000"
-                                            stroke={isVisited ? '#FF7A00' : 'rgba(255,255,255,0.1)'}
-                                            strokeWidth={isVisited ? 1.2 : 0.4}
-                                        />
+                        {/* ── CONSTELATION PATH ── */}
+                        <path 
+                            d={dynamicPath} 
+                            fill="none" 
+                            stroke="url(#neonBlueGrad)" 
+                            strokeWidth="0.6" 
+                            strokeLinecap="round" 
+                            strokeDasharray="3 5"
+                            opacity="0.5"
+                            filter="url(#neon-glow)" 
+                            className="constellation-path"
+                        />
 
-                                        {/* Logo with Mystery Filter */}
-                                        <image
-                                            href={locale.image_url || '/logo-fest.png'}
-                                            x={pos.x - 3.8} y={pos.y - 3.8}
-                                            width="7.6" height="7.6"
-                                            clipPath={`url(#clipN-${i})`}
-                                            style={{ 
-                                                opacity: isVisited ? 1 : 0.25, 
-                                                filter: isVisited ? '' : 'url(#mystery-blur)' 
-                                            }}
-                                        />
+                        {/* ── DECORATIVE EMOJIS ── */}
+                        {DECOS.map((d, i) => (
+                            <text key={i} x={d.x} y={d.y} textAnchor="middle" fontSize="4.5" opacity="0.25">
+                                {d.emoji}
+                            </text>
+                        ))}
 
-                                        {/* Checkmark */}
-                                        {isVisited && (
-                                            <g>
-                                                <circle cx={pos.x + 3.5} cy={pos.y + 3.5} r="1.8" fill="#4BCF2D" stroke="#000" strokeWidth="0.3" />
-                                                <text x={pos.x + 3.5} y={pos.y + 4.3} textAnchor="middle" fontSize="2.2" fill="#000" fontWeight="900">✓</text>
-                                            </g>
-                                        )}
+                        {/* ── NODES ── */}
+                        {nodes.map((locale, i) => {
+                            const pos    = NODE_POS[i]
+                            const isVisited = visitedIds.includes(locale.id)
+                            const label     = locale.name.length > 10 ? locale.name.slice(0, 10) + '…' : locale.name
 
-                                        {/* Mystery Name Label - Below Node */}
-                                        <text
-                                            x={pos.x} y={pos.y + 10}
-                                            textAnchor="middle" fontSize="3"
-                                            fill={isVisited ? '#FFFFFF' : 'rgba(255,255,255,0.4)'}
-                                            fontFamily="Lilita One, sans-serif"
-                                            style={{ textShadow: '0 2px 4px rgba(0,0,0,0.8)' }}
-                                        >
-                                            {isVisited ? label : '???'}
-                                        </text>
-                                    </g>
-                                )
-                            })}
-                        </svg>
-                    </div>
+                            return (
+                                <g key={locale.id} onClick={() => onLocaleClick(locale)} style={{ cursor: 'pointer', outline: 'none' }} className="touch-manipulation">
+                                    {/* Invisible Hitbox */}
+                                    <circle cx={pos.x} cy={pos.y} r="6" fill="transparent" />
+
+                                    {/* Subtle Aura */}
+                                    <circle 
+                                        cx={pos.x} cy={pos.y} r="5" 
+                                        fill="rgba(0,178,255,0.03)" 
+                                        stroke={isVisited ? "rgba(255,75,31,0.2)" : "rgba(255,255,255,0.03)"}
+                                        strokeWidth="0.2"
+                                    />
+
+                                    {/* Node Plate */}
+                                    <circle
+                                        cx={pos.x} cy={pos.y} r="4"
+                                        fill="#000"
+                                        stroke={isVisited ? '#FF7A00' : 'rgba(255,255,255,0.1)'}
+                                        strokeWidth={isVisited ? 1 : 0.3}
+                                    />
+
+                                    {/* Logo with Mystery Filter */}
+                                    <image
+                                        href={locale.image_url || '/logo-fest.png'}
+                                        x={pos.x - 3.2} y={pos.y - 3.2}
+                                        width="6.4" height="6.4"
+                                        clipPath={`url(#clipN-${i})`}
+                                        style={{ 
+                                            opacity: isVisited ? 1 : 0.2, 
+                                            filter: isVisited ? '' : 'url(#mystery-blur)' 
+                                        }}
+                                    />
+
+                                    {/* Checkmark */}
+                                    {isVisited && (
+                                        <g>
+                                            <circle cx={pos.x + 3} cy={pos.y + 3} r="1.5" fill="#4BCF2D" stroke="#000" strokeWidth="0.2" />
+                                            <text x={pos.x + 3} y={pos.y + 3.6} textAnchor="middle" fontSize="2" fill="#000" fontWeight="900">✓</text>
+                                        </g>
+                                    )}
+
+                                    {/* Mystery Name Label - Below Node */}
+                                    <text
+                                        x={pos.x} y={pos.y + 8}
+                                        textAnchor="middle" fontSize="2.4"
+                                        fill={isVisited ? '#FFFFFF' : 'rgba(255,255,255,0.3)'}
+                                        fontFamily="Lilita One, sans-serif"
+                                        style={{ textShadow: '0 1px 3px rgba(0,0,0,0.9)' }}
+                                    >
+                                        {isVisited ? label : '???'}
+                                    </text>
+                                </g>
+                            )
+                        })}
+                    </svg>
                 </div>
             </div>
         </div>

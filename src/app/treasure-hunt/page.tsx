@@ -372,54 +372,36 @@ export default function TreasureHuntPage() {
                         </div>
                     )}
 
-                    {/* Map Footer HUD (Mission Pods) — High Impact Redesign */}
+                    {/* Map Footer HUD (Mission Pods) — High Impact & Integrated */}
                     <div className="w-full max-w-lg mt-12 grid grid-cols-2 gap-4 relative z-50">
-                        {/* Conquistados Card (Neon Orange Impact) */}
-                        <div 
-                            className="bg-black/60 backdrop-blur-3xl border border-white/10 rounded-3xl p-6 flex flex-col gap-2 relative overflow-hidden group shadow-[0_20px_40px_rgba(0,0,0,0.5)] active:scale-95 transition-all cursor-default"
-                        >
-                            {/* Accent Glow */}
+                        {/* Conquistados Card */}
+                        <div className="bg-black/60 backdrop-blur-3xl border border-white/10 rounded-3xl p-5 flex flex-col gap-3 relative overflow-hidden group shadow-[0_20px_40px_rgba(0,0,0,0.5)] active:scale-95 transition-all">
                             <div className="absolute top-0 left-0 w-1 h-full bg-[#FF4B1F] shadow-[0_0_15px_#FF4B1F]" />
-                            <div className="absolute -top-10 -right-10 w-24 h-24 bg-[#FF4B1F]/5 rounded-full blur-3xl group-hover:bg-[#FF4B1F]/10 transition-colors" />
                             
-                            <div className="flex items-center gap-3">
-                                <div className="p-2 bg-[#FF4B1F]/10 rounded-xl border border-[#FF4B1F]/20">
-                                    <CheckCircle2 size={18} className="text-[#FF4B1F]" />
-                                </div>
-                                <span className="text-[9px] font-black text-white/50 uppercase tracking-[0.2em]">Conquistados ⛩️</span>
+                            <div className="flex items-center gap-2">
+                                <CheckCircle2 size={14} className="text-[#FF4B1F] shrink-0" />
+                                <span className="text-[10px] font-black text-white/50 uppercase tracking-widest whitespace-nowrap">Conquistados ⛩️</span>
                             </div>
                             
-                            <div className="mt-1 flex items-baseline gap-1">
-                                <span className="text-4xl font-lilita text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]">{visitedIds.length}</span>
-                                <span className="text-[10px] font-black text-white/20 uppercase">Locales</span>
+                            <div className="flex items-baseline gap-2">
+                                <span className="text-4xl font-lilita text-white">{visitedIds.length}</span>
+                                <span className="text-[10px] font-black text-white/20 uppercase tracking-tighter">Locales</span>
                             </div>
-
-                            {/* Decorative Watermark Icon */}
-                            <CheckCircle2 size={50} className="absolute -bottom-2 -right-2 text-white/5 -rotate-12 translate-x-2 translate-y-2" />
                         </div>
 
-                        {/* Por Descubrir Card (Neon Blue Goal) */}
-                        <div 
-                            className="bg-black/60 backdrop-blur-3xl border border-white/10 rounded-3xl p-6 flex flex-col gap-2 relative overflow-hidden group shadow-[0_20px_40px_rgba(0,0,0,0.5)] active:scale-95 transition-all cursor-default"
-                        >
-                            {/* Accent Glow */}
+                        {/* Por Descubrir Card */}
+                        <div className="bg-black/60 backdrop-blur-3xl border border-white/10 rounded-3xl p-5 flex flex-col gap-3 relative overflow-hidden group shadow-[0_20px_40px_rgba(0,0,0,0.5)] active:scale-95 transition-all">
                             <div className="absolute top-0 left-0 w-1 h-full bg-[#00D1FF] shadow-[0_0_15px_#00D1FF]" />
-                            <div className="absolute -top-10 -right-10 w-24 h-24 bg-[#00D1FF]/5 rounded-full blur-3xl group-hover:bg-[#00D1FF]/10 transition-colors" />
 
-                            <div className="flex items-center gap-3">
-                                <div className="p-2 bg-[#00D1FF]/10 rounded-xl border border-[#00D1FF]/20">
-                                    <MapIcon size={18} className="text-[#00D1FF]" />
-                                </div>
-                                <span className="text-[9px] font-black text-white/50 uppercase tracking-[0.2em]">Por Descubrir 🗺️</span>
+                            <div className="flex items-center gap-2">
+                                <MapIcon size={14} className="text-[#00D1FF] shrink-0" />
+                                <span className="text-[10px] font-black text-white/50 uppercase tracking-widest whitespace-nowrap">Por Descubrir 🗺️</span>
                             </div>
 
-                            <div className="mt-1 flex items-baseline gap-1">
-                                <span className="text-4xl font-lilita text-[#00D1FF] drop-shadow-[0_0_15px_rgba(0,209,255,0.4)]">{locales.length - visitedIds.length}</span>
-                                <span className="text-[10px] font-black text-white/20 uppercase">Puntos</span>
+                            <div className="flex items-baseline gap-2">
+                                <span className="text-4xl font-lilita text-[#00D1FF]">{locales.length - visitedIds.length}</span>
+                                <span className="text-[10px] font-black text-white/20 uppercase tracking-tighter">Puntos</span>
                             </div>
-
-                            {/* Decorative Watermark Icon */}
-                            <MapIcon size={50} className="absolute -bottom-2 -right-2 text-white/5 rotate-12 translate-x-2 translate-y-2" />
                         </div>
                     </div>
 
