@@ -29,7 +29,10 @@ import confetti from "canvas-confetti"
 function getPrizeImage(prizeName: string, prizeType: string): string {
     if (!prizeName) return '/logo-fest.png'
     const name = prizeName.toLowerCase()
-    if (prizeType === 'gift') {
+    // Courtesy prizes — free plate
+    if (prizeType === 'courtesy') return '/Premio plato cortesia.png'
+    // Sponsor big prizes
+    if (prizeType === 'sponsor_gift' || prizeType === 'gift') {
         if (name.includes('proyector')) return '/Premio Proyector.jpg'
         if (name.includes('tv') || name.includes('smart') || name.includes('televisor')) return '/Premio Smar Tv.jpg'
         if (name.includes('aire') || name.includes('acondicionado')) return '/Premio aire acondicionado.jpg'
@@ -39,7 +42,7 @@ function getPrizeImage(prizeName: string, prizeType: string): string {
             if (name.includes('25')) return '/Descuento regalo 25$.jpeg'
             return '/Descuento regalo 15%.jpeg'
         }
-        return '/Premio Proyector.jpg' // Generic gift fallback
+        return '/Premio Proyector.jpg' // Generic sponsor gift fallback
     }
     // Discount type
     if (name.includes('50')) return '/Descuento regalo 50$.jpeg'
@@ -367,13 +370,13 @@ export default function TreasureHuntPage() {
                                                 </div>
                                             )}
 
-                                            {/* Floating Trophy/Logo Orb - Premier for gifts, restaurant for discounts */}
+                                            {/* Floating Trophy/Logo Orb - Premier for sponsor_gift, restaurant for courtesy/discount */}
                                             <div className="relative mb-8 z-10 group-hover:scale-110 transition-transform duration-700 ease-out">
                                                 <div className="absolute inset-0 bg-white/20 blur-3xl rounded-full scale-150 opacity-0 group-hover:opacity-60 transition-opacity" />
                                                 <div className="relative w-28 h-28 md:w-32 md:h-32 rounded-full bg-white/5 backdrop-blur-2xl p-4 flex items-center justify-center border border-white/20 shadow-[0_15px_35px_rgba(0,0,0,0.8),inset_0_2px_10px_rgba(255,255,255,0.1)]">
                                                     <Image 
-                                                        src={prize.prize_type === 'gift' ? '/Logo tiendas premier.png' : (locale?.image_url || "/logo-fest.png")} 
-                                                        alt={prize.prize_type === 'gift' ? 'Tiendas Premier' : (locale?.name || "Restaurante")} 
+                                                        src={prize.prize_type === 'sponsor_gift' || prize.prize_type === 'gift' ? '/Logo tiendas premier.png' : (locale?.image_url || "/logo-fest.png")} 
+                                                        alt={prize.prize_type === 'sponsor_gift' || prize.prize_type === 'gift' ? 'Tiendas Premier' : (locale?.name || "Restaurante")} 
                                                         width={120}
                                                         height={120}
                                                         className="w-full h-full object-contain filter drop-shadow-[0_4px_12px_rgba(0,0,0,0.8)]"

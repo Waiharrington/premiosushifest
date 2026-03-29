@@ -97,12 +97,12 @@ export async function generateScratchPrize(userId: string, localeId: string) {
         const isPrizeScan = visitNumber % 5 === 0;
 
         let prizeName = "";
-        let prizeType: 'gift' | 'discount' = 'discount';
+        let prizeType: 'gift' | 'discount' | 'sponsor_gift' = 'discount';
 
         if (isPrizeScan) {
             const demoPrizeNames = ["Proyector Smart", "Barra de Sonido", "Aire Acondicionado", "Smart TV 50\""];
             prizeName = demoPrizeNames[Math.floor(Math.random() * demoPrizeNames.length)];
-            prizeType = 'gift';
+            prizeType = 'sponsor_gift';
         } else {
             prizeName = "DESCUENTO ESPECIAL";
             prizeType = 'discount';
@@ -226,8 +226,8 @@ export async function awardGrandPrize(userId: string) {
     const prizeEntries = selected.map(locale => ({
         user_id: userId,
         locale_id: locale.id,
-        prize_name: "COMIDA GRATIS (Cortesía)",
-        prize_type: "gift"
+        prize_name: "PLATO ESPECIAL DE CORTESÍA",
+        prize_type: "courtesy"
     }))
 
     const { error: insertError } = await supabaseAdmin
