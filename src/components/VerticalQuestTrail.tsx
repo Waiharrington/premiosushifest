@@ -49,7 +49,7 @@ export function VerticalQuestTrail({ locales, visitedIds, onLocaleClick }: Verti
     const activePath = getDynamicPath(visitedIds.length)
 
     return (
-        <div className="relative w-full">
+        <div className="relative w-full flex flex-col pt-8">
             <style jsx>{`
                 @keyframes pin-drop {
                     0% { transform: translateY(-10px) scale(0.5); opacity: 0; }
@@ -63,14 +63,14 @@ export function VerticalQuestTrail({ locales, visitedIds, onLocaleClick }: Verti
                 @keyframes flow-route { to { stroke-dashoffset: -40; } }
             `}</style>
 
-            {/* Instruction Label */}
-            <div className="absolute -top-6 left-0 right-0 text-center z-50 pointer-events-none">
+            {/* Instruction Label (Now ABOVE the map, pushing it down) */}
+            <div className="w-full text-center mb-10 px-4">
                 <motion.div 
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="inline-block px-6 py-2 bg-black/60 backdrop-blur-md rounded-full border border-orange-500/30 shadow-[0_0_20px_rgba(255,144,0,0.2)]"
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="inline-block px-8 py-3 bg-black/40 backdrop-blur-md rounded-2xl border border-orange-500/20 shadow-[0_0_20px_rgba(255,144,0,0.1)]"
                 >
-                    <span className="text-white font-lilita text-sm md:text-base tracking-wider uppercase">
+                    <span className="text-white font-lilita text-base md:text-lg tracking-wider uppercase">
                         ¡Toca cada negocio descubierto para ver su historia!
                     </span>
                 </motion.div>
@@ -185,56 +185,46 @@ export function VerticalQuestTrail({ locales, visitedIds, onLocaleClick }: Verti
                     <AnimatePresence>
                         {selectedLocale && (
                             <motion.div
-                                initial={{ opacity: 0, scale: 0.9, y: 20 }}
-                                animate={{ opacity: 1, scale: 1, y: 0 }}
-                                exit={{ opacity: 0, scale: 0.9, y: 20 }}
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
                                 className="absolute inset-0 z-50 flex items-center justify-center p-6 bg-black/40 backdrop-blur-[2px]"
                                 onClick={() => setSelectedLocale(null)}
                             >
                                 <motion.div 
-                                    className="w-full max-w-[280px] bg-[#020d1f]/95 border border-orange-500/30 rounded-3xl p-6 shadow-[0_25px_80px_rgba(0,0,0,0.8)] relative group overflow-hidden"
+                                    initial={{ scale: 0.9, y: 20 }}
+                                    animate={{ scale: 1, y: 0 }}
+                                    exit={{ scale: 0.9, y: 20 }}
+                                    className="w-full max-w-[280px] bg-[#020d1f]/95 border border-orange-500/30 rounded-3xl p-6 shadow-[0_25px_80px_rgba(0,0,0,0.8)] relative overflow-hidden"
                                     onClick={(e) => e.stopPropagation()}
                                 >
-                                    {/* Gradient Background Effect */}
-                                    <div className="absolute top-0 right-0 w-32 h-32 bg-orange-500/5 blur-3xl rounded-full" />
-                                    
                                     <button 
                                         onClick={() => setSelectedLocale(null)}
-                                        className="absolute top-4 right-4 p-2 rounded-full bg-white/5 hover:bg-white/10 transition-colors"
+                                        className="absolute top-4 right-4 p-2 rounded-full bg-white/5 hover:bg-white/10 transition-colors z-10"
                                     >
                                         <X size={18} className="text-white/60" />
                                     </button>
 
                                     <div className="flex flex-col items-center text-center">
                                         {/* Logo Container */}
-                                        <div className="w-20 h-20 rounded-full border-2 border-orange-500/50 p-1 mb-4 shadow-[0_0_20px_rgba(255,75,31,0.2)]">
+                                        <div className="w-24 h-24 rounded-full border-2 border-orange-500/50 p-1 mb-4 shadow-[0_0_20px_rgba(255,75,31,0.2)]">
                                             <div className="w-full h-full rounded-full bg-white overflow-hidden">
                                                 <Image 
                                                     src={selectedLocale.image_url || '/logo-fest.png'} 
                                                     alt={selectedLocale.name} 
-                                                    width={80} height={80} 
+                                                    width={96} height={96} 
                                                     className="w-full h-full object-cover"
                                                 />
                                             </div>
                                         </div>
 
-                                        <h3 className="text-xl text-white font-lilita mb-2 tracking-wide uppercase">
+                                        <h3 className="text-2xl text-white font-lilita mb-2 tracking-wide uppercase">
                                             {selectedLocale.name}
                                         </h3>
 
-                                        <p className="text-white/70 text-sm leading-relaxed font-inter mb-6">
+                                        <p className="text-white/80 text-sm leading-relaxed font-inter italic">
                                             {selectedLocale.description || "¡Este restaurante guarda una parte esencial de la Saga de Sushi Fest! Visítalo para reclamar tu premio."}
                                         </p>
-
-                                        <button 
-                                            onClick={() => {
-                                                onLocaleClick(selectedLocale)
-                                                setSelectedLocale(null)
-                                            }}
-                                            className="w-full py-3 bg-gradient-to-r from-[#FF4B1F] to-[#FF9000] text-black font-lilita rounded-2xl shadow-[0_4px_15px_rgba(255,75,31,0.3)] hover:scale-[1.02] active:scale-95 transition-transform uppercase tracking-wider text-sm"
-                                        >
-                                            Ver Detalles Completos
-                                        </button>
                                     </div>
                                 </motion.div>
                             </motion.div>
