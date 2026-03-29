@@ -534,10 +534,10 @@ export default function TreasureHuntPage() {
                                             Has desbloqueado este beneficio en <span className="text-white">{activePrizeLocale?.name}</span>
                                         </p>
 
-                                        {/* Prize Visual Unit */}
+                                        {/* Prize Visual Unit - Border Fix with Ring Inset */}
                                         <div className="relative w-full aspect-video max-w-md mx-auto mb-10 group rounded-[2.5rem] overflow-hidden">
                                             <div className="absolute inset-0 bg-primary/20 blur-3xl opacity-50" />
-                                            <div className="relative h-full w-full bg-white/5 backdrop-blur-md border border-white/10 flex items-center justify-center overflow-hidden shadow-2xl">
+                                            <div className="relative h-full w-full bg-white/5 backdrop-blur-md ring-1 ring-inset ring-white/20 rounded-[2.5rem] flex items-center justify-center overflow-hidden shadow-2xl">
                                                 {currentPrize?.prize_image ? (
                                                     <Image 
                                                         src={currentPrize.prize_image} 
@@ -567,7 +567,7 @@ export default function TreasureHuntPage() {
                                         >
                                             <div className="absolute inset-0 bg-gradient-to-r from-[#0047FF] via-[#00B2FF] to-[#0047FF] bg-[length:200%_auto] animate-gradient-x" />
                                             <span className="relative z-10 text-white font-lilita text-2xl uppercase tracking-widest flex items-center justify-center gap-4">
-                                                GUARDAR EN MI VAULT <ArrowRight className="w-6 h-6 group-hover:translate-x-3 transition-transform duration-500" />
+                                                AÑADIR A MIS TESOROS <ArrowRight className="w-6 h-6 group-hover:translate-x-3 transition-transform duration-500" />
                                             </span>
                                         </button>
                                     </motion.div>
