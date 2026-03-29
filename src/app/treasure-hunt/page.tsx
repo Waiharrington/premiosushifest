@@ -115,6 +115,13 @@ export default function TreasureHuntPage() {
     const [prizeVisitNumber, setPrizeVisitNumber] = useState(1)
 
     const handleScan = async (decodedText: string) => {
+        // Redirigir si escanean el QR "especial/cortesía"
+        if (decodedText.includes('/especial') || decodedText === 'special') {
+            setIsScannerOpen(false)
+            router.push('/especial')
+            return
+        }
+
         let localeId = decodedText
         if (decodedText.includes('id=')) {
             localeId = decodedText.split('id=')[1].split('&')[0]
