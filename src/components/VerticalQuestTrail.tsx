@@ -10,26 +10,34 @@ interface VerticalQuestTrailProps {
 }
 
 // ── Constellation node positions (10 rows × 3 cols = 30 nodes) ────────────────
-const ROW_YS  = [15, 30, 45, 60, 75, 90, 105, 120, 135, 150]
-const X_RTL   = [80, 50, 20]   // right → left (even rows)
-const X_LTR   = [20, 50, 80]   // left  → right (odd rows)
-
+const ROW_YS  = [160, 145, 130, 115, 100, 85, 70, 55, 40, 25]
 const NODE_POS: { x: number; y: number }[] = []
+
 for (let row = 0; row < 10; row++) {
-    const xs = row % 2 === 0 ? X_LTR : X_RTL
+    // We want to move from West (left) to East (right) as we go up (Y decreases)
+    // Row 0 (bottom) should be more left-ish (Pacific/Coiba)
+    // Row 9 (top) should be more right-ish (Caribbean/San Blas)
+    
+    const xBase = 20 + (row * 5) // Gradual shift to the right
+    const xs = row % 2 === 0 
+        ? [xBase, xBase + 20, xBase + 40] 
+        : [xBase + 40, xBase + 20, xBase]
+
     for (let col = 0; col < 3; col++) {
-        NODE_POS.push({ x: xs[col], y: ROW_YS[row] })
+        // Clamp X between 15 and 85 to stay within map bounds
+        const x = Math.max(15, Math.min(85, xs[col]))
+        NODE_POS.push({ x, y: ROW_YS[row] })
     }
 }
 
-// Decorative nautical/map emojis scattered between path curves
+// Decorative nautical/map emojis scattered over empty sea areas
 const DECOS = [
-    { emoji: '⛵', x: 50, y: 35 },
-    { emoji: '🗺️', x: 12, y: 65 },
-    { emoji: '⚓', x: 88, y: 95 },
-    { emoji: '🐉', x: 10, y: 125 },
-    { emoji: '✨', x: 88, y: 155 },
-    { emoji: '🏝️', x: 50, y: 170 },
+    { emoji: '⛵', x: 25, y: 35 },
+    { emoji: '🗺️', x: 75, y: 75 },
+    { emoji: '⚓', x: 15, y: 115 },
+    { emoji: '🐉', x: 80, y: 135 },
+    { emoji: '✨', x: 20, y: 170 },
+    { emoji: '🏝️', x: 85, y: 165 },
 ]
 
 // ── Helper to generate the path dynamically based on node count ───────────
