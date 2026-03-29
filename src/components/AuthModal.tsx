@@ -77,24 +77,25 @@ export default function AuthModal({ onClose, onSuccess }: AuthModalProps) {
                 initial={{ scale: 0.9, opacity: 0, y: 40 }}
                 animate={{ scale: 1, opacity: 1, y: 0 }}
                 exit={{ scale: 0.9, opacity: 0, y: 40 }}
-                className="relative w-full max-w-md bg-[#000B2A]/90 border border-white/10 rounded-[3.5rem] p-8 md:p-12 shadow-[0_40px_100px_rgba(0,0,0,0.8)] backdrop-blur-3xl overflow-hidden"
+                className="relative w-full max-w-md p-2"
             >
-                {/* Visual Polish */}
-                <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-primary via-secondary to-primary animate-gradient-x" />
-                
-                {/* Character Header */}
-                <div className="absolute -top-6 left-1/2 -translate-x-1/2 w-32 drop-shadow-[0_20px_40px_rgba(0,0,0,0.5)] z-20">
+                {/* Character Header - Moved OUTSIDE overflow container to avoid clipping head */}
+                <div className="absolute -top-12 left-1/2 -translate-x-1/2 w-32 drop-shadow-[0_20px_40px_rgba(0,0,0,0.8)] z-40 group select-none pointer-events-none">
                     <Image src="/sushi-character.png" alt="Sushi" width={128} height={128} className="w-full h-auto animate-float" priority />
                 </div>
 
-                <div className="relative z-10 pt-16">
-                    <button
-                        onClick={onClose}
-                        className="absolute -top-4 -right-4 bg-white/5 border border-white/10 p-3 rounded-full text-white/40 hover:text-white transition-all active:scale-90"
-                        title="Cerrar modal"
-                    >
-                        <X size={20} />
-                    </button>
+                <div className="relative w-full bg-[#000B2A]/90 border border-white/10 rounded-[3.5rem] p-8 md:p-12 shadow-[0_40px_100px_rgba(0,0,0,0.8)] backdrop-blur-3xl overflow-hidden">
+                    {/* Visual Polish */}
+                    <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-primary via-secondary to-primary animate-gradient-x" />
+                    
+                    <div className="relative z-10 pt-20">
+                        <button
+                            onClick={onClose}
+                            className="absolute -top-4 -right-4 bg-white/5 border border-white/10 p-3 rounded-full text-white/40 hover:text-white transition-all active:scale-90"
+                            title="Cerrar modal"
+                        >
+                            <X size={20} />
+                        </button>
 
                     <div className="text-center mb-10">
                         <h2 className="text-4xl font-lilita text-white tracking-tight uppercase mb-1">
@@ -112,7 +113,7 @@ export default function AuthModal({ onClose, onSuccess }: AuthModalProps) {
                     <form onSubmit={handleSubmit} className="space-y-5">
                         {isRegistering && (
                             <div className="space-y-2 group">
-                                <label className="text-[10px] text-white/30 font-black uppercase tracking-[0.2em] ml-2 flex items-center gap-2 transition-colors group-focus-within:text-white/60">
+                                <label className="text-[10px] text-white/60 font-black uppercase tracking-[0.2em] ml-2 flex items-center gap-2 transition-colors group-focus-within:text-white">
                                     <User size={12} /> Nombre Completo
                                 </label>
                                 <input
@@ -120,13 +121,13 @@ export default function AuthModal({ onClose, onSuccess }: AuthModalProps) {
                                     placeholder="Ej: Akio Tanaka"
                                     value={name}
                                     onChange={(e) => setName(e.target.value)}
-                                    className="w-full bg-black/40 border border-white/5 rounded-2xl py-4 px-6 outline-none focus:border-primary/50 text-white placeholder:text-white/10 transition-all font-medium text-lg shadow-inner"
+                                    className="w-full bg-black/40 border border-white/10 rounded-2xl py-4 px-6 outline-none focus:border-primary/50 text-white placeholder:text-white/10 transition-all font-medium text-lg shadow-inner"
                                 />
                             </div>
                         )}
                         
                         <div className="space-y-2 group">
-                            <label className="text-[10px] text-white/30 font-black uppercase tracking-[0.2em] ml-2 flex items-center gap-2 transition-colors group-focus-within:text-white/60">
+                            <label className="text-[10px] text-white/60 font-black uppercase tracking-[0.2em] ml-2 flex items-center gap-2 transition-colors group-focus-within:text-white">
                                 <CreditCard size={12} /> Cédula de Identidad
                             </label>
                             <input
@@ -134,13 +135,13 @@ export default function AuthModal({ onClose, onSuccess }: AuthModalProps) {
                                 placeholder="Ej: 8-888-888"
                                 value={cedula}
                                 onChange={(e) => setCedula(e.target.value)}
-                                className="w-full bg-black/40 border border-white/5 rounded-2xl py-4 px-6 outline-none focus:border-primary/50 text-white placeholder:text-white/10 transition-all font-medium text-lg shadow-inner"
+                                className="w-full bg-black/40 border border-white/10 rounded-2xl py-4 px-6 outline-none focus:border-primary/50 text-white placeholder:text-white/10 transition-all font-medium text-lg shadow-inner"
                             />
                         </div>
 
                         {isRegistering && (
                             <div className="space-y-2 group">
-                                <label className="text-[10px] text-white/30 font-black uppercase tracking-[0.2em] ml-2 flex items-center gap-2 transition-colors group-focus-within:text-white/60">
+                                <label className="text-[10px] text-white/60 font-black uppercase tracking-[0.2em] ml-2 flex items-center gap-2 transition-colors group-focus-within:text-white">
                                     <Phone size={12} /> WhatsApp
                                 </label>
                                 <input
@@ -148,7 +149,7 @@ export default function AuthModal({ onClose, onSuccess }: AuthModalProps) {
                                     placeholder="Ej: 6666-6666"
                                     value={phone}
                                     onChange={(e) => setPhone(e.target.value)}
-                                    className="w-full bg-black/40 border border-white/5 rounded-2xl py-4 px-6 outline-none focus:border-primary/50 text-white placeholder:text-white/10 transition-all font-medium text-lg shadow-inner"
+                                    className="w-full bg-black/40 border border-white/10 rounded-2xl py-4 px-6 outline-none focus:border-primary/50 text-white placeholder:text-white/10 transition-all font-medium text-lg shadow-inner"
                                 />
                                 <input type="text" value={honeypot} onChange={(e) => setHoneypot(e.target.value)} className="hidden" autoComplete="off" title="Security field" placeholder="Security" />
                             </div>
@@ -199,6 +200,7 @@ export default function AuthModal({ onClose, onSuccess }: AuthModalProps) {
                         </button>
                     </div>
                 </div>
+            </div>
             </motion.div>
 
         </motion.div>
