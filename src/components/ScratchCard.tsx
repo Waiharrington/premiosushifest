@@ -13,8 +13,8 @@ interface ScratchCardProps {
 export function ScratchCard({ 
     onComplete, 
     children, 
-    brushSize = 35, 
-    percentageToComplete = 45 
+    brushSize = 50, 
+    percentageToComplete = 25 
 }: ScratchCardProps) {
     const canvasRef = useRef<HTMLCanvasElement>(null)
     const containerRef = useRef<HTMLDivElement>(null)
