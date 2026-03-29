@@ -63,7 +63,6 @@ export function ScratchCard({
             ctx.strokeRect(15, 15, width - 30, height - 30)
             
             // Typography (Premium Render)
-            // Using bold sans-serif as Lilita One fallback
             ctx.font = '900 36px "Montserrat", sans-serif'
             ctx.fillStyle = 'rgba(255,255,255,0.95)'
             ctx.textAlign = 'center'

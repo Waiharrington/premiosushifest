@@ -474,7 +474,6 @@ export default function TreasureHuntPage() {
                 isOpen={isScannerOpen}
                 onClose={() => setIsScannerOpen(false)}
                 onScan={handleScan}
-                locales={locales}
                 visitedIds={visitedIds}
             />
 
@@ -486,7 +485,7 @@ export default function TreasureHuntPage() {
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
-                            className="absolute inset-0 bg-black/98 backdrop-blur-[40px]"
+                            className="absolute inset-0 bg-black/98 backdrop-blur-[60px]"
                         />
                         
                         {/* Gold Dust Particle Field */}
@@ -514,10 +513,10 @@ export default function TreasureHuntPage() {
                             initial={{ scale: 0.9, y: 40, opacity: 0 }}
                             animate={{ scale: 1, y: 0, opacity: 1 }}
                             exit={{ scale: 0.9, y: 40, opacity: 0 }}
-                            className="relative w-full max-w-lg bg-black/40 backdrop-blur-[50px] border border-white/10 rounded-[3.5rem] p-8 md:p-12 shadow-[0_0_150px_rgba(0,0,0,1)] overflow-hidden"
+                            className="relative w-full max-w-lg bg-black/40 backdrop-blur-[60px] border border-white/10 rounded-[3.5rem] p-8 md:p-12 shadow-[0_0_150px_rgba(0,0,0,1)] overflow-hidden"
                         >
-                            {/* Orbital Glow */}
-                            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-1 bg-gradient-to-r from-transparent via-amber-400 to-transparent" />
+                            {/* Orbital Glow Top */}
+                            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-1 bg-gradient-to-r from-transparent via-amber-400/50 to-transparent" />
                             
                             <AnimatePresence mode="wait">
                                 {isScratched && currentPrize ? (
@@ -543,22 +542,21 @@ export default function TreasureHuntPage() {
                                             DESBLOQUEADO EN <span className="text-white">{activePrizeLocale?.name}</span>
                                         </p>
 
-                                        {/* Physical Trophy/Ticket Visual */}
-                                        <div className="relative w-full aspect-square max-w-[280px] mx-auto mb-10 group">
+                                        {/* Physical Trophy/Ticket Visual - Original Proportion */}
+                                        <div className="relative w-full max-w-[280px] mx-auto mb-10 group">
                                             <div className="absolute inset-[-20px] bg-amber-500/10 blur-[60px] rounded-full opacity-50 group-hover:opacity-100 transition-opacity" />
                                             
-                                            <div className="relative h-full w-full bg-white/5 backdrop-blur-2xl border border-white/20 rounded-[2.5rem] overflow-hidden shadow-2xl flex items-center justify-center p-2">
-                                                <div className="relative w-full h-full rounded-[2rem] overflow-hidden bg-black/20">
+                                            <div className="relative w-full bg-white/5 backdrop-blur-3xl border border-white/20 rounded-[2.5rem] overflow-hidden shadow-2xl flex items-center justify-center p-2">
+                                                <div className="relative w-full rounded-[2rem] overflow-hidden bg-black/20">
                                                     {currentPrize?.prize_image ? (
-                                                        <Image 
+                                                        /* Using <img> for natural aspect ratio with h-auto */
+                                                        <img 
                                                             src={currentPrize.prize_image} 
                                                             alt="Premio" 
-                                                            fill 
-                                                            className="object-contain"
-                                                            priority
+                                                            className="w-full h-auto object-contain"
                                                         />
                                                     ) : (
-                                                        <div className="w-full h-full flex items-center justify-center">
+                                                        <div className="w-full aspect-square flex items-center justify-center">
                                                             <Gift className="text-amber-500 w-20 h-20 drop-shadow-[0_0_30px_rgba(255,183,0,0.6)]" />
                                                         </div>
                                                     )}
@@ -573,15 +571,19 @@ export default function TreasureHuntPage() {
                                             </div>
                                         </div>
 
+                                        {/* Button with Orbital Shine */}
                                         <button
                                             onClick={() => {
                                                 setActivePrizeLocale(null)
                                                 setCurrentPrize(null)
                                                 setIsScratched(false)
                                             }}
-                                            className="w-full mt-6 relative h-16 rounded-2xl overflow-hidden group shadow-[0_15px_40px_rgba(0,0,0,0.5)] transition-all active:scale-95"
+                                            className="w-full mt-6 relative h-16 rounded-2xl overflow-hidden group shadow-[0_15px_40px_rgba(0,0,0,0.5)] transition-all active:scale-95 border border-white/10"
                                         >
                                             <div className="absolute inset-0 bg-gradient-to-r from-[#0047FF] via-[#00B2FF] to-[#0047FF] bg-[length:200%_auto] animate-gradient-x" />
+                                            {/* Orbital Glow Effect */}
+                                            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.2)_0%,transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                                            
                                             <span className="relative z-10 text-white font-lilita text-xl uppercase tracking-[0.2em] flex items-center justify-center gap-3">
                                                 GUARDAR EN MI VAULT <ArrowRight className="w-5 h-5 group-hover:translate-x-2 transition-transform duration-500" />
                                             </span>
@@ -595,13 +597,13 @@ export default function TreasureHuntPage() {
                                         className="relative z-10 flex flex-col items-center text-center"
                                     >
                                         <div className="mb-8">
-                                            <span className="text-amber-500/80 font-black text-[10px] uppercase tracking-[0.5em] block mb-3">CONQUISTA COMPLETADA</span>
+                                            <span className="font-lilita text-xl tracking-[0.4em] uppercase bg-gradient-to-b from-slate-200 to-slate-500 bg-clip-text text-transparent drop-shadow-sm block mb-3 italic">¡DESTINO ALCANZADO!</span>
                                             <h2 className="text-4xl md:text-5xl font-lilita uppercase text-white tracking-tight leading-none italic">{activePrizeLocale?.name}</h2>
                                         </div>
 
                                         <div className="relative group mb-10">
-                                            <div className="absolute inset-[-15px] bg-blue-500/10 blur-[50px] rounded-full opacity-60" />
-                                            <div className="relative border border-white/20 rounded-[3.5rem] p-1.5 bg-white/5 backdrop-blur-xl shadow-2xl overflow-hidden">
+                                            <div className="absolute inset-[-15px] bg-amber-500/10 blur-[50px] rounded-full opacity-60" />
+                                            <div className="relative border border-white/20 rounded-[3.5rem] p-1.5 bg-white/5 backdrop-blur-[60px] shadow-2xl overflow-hidden">
                                                 <ScratchCard onComplete={handleScratchComplete}>
                                                     <div className="absolute inset-0 w-full h-full bg-[#000B2A]">
                                                         {prizeLoading ? (
@@ -611,15 +613,14 @@ export default function TreasureHuntPage() {
                                                             </div>
                                                         ) : (
                                                             <div className="relative w-full h-full rounded-[3rem] overflow-hidden">
-                                                                <Image
+                                                                {/* Using <img> for natural aspect ratio within scratch card */}
+                                                                <img
                                                                     src={currentPrize?.prize_type === 'gift' 
                                                                         ? `/demo-prize-${((prizeVisitNumber - 1) % 4) + 1}.jpg`
                                                                         : `/discount-${((prizeVisitNumber - 1) % 3) + 1}.jpeg`
                                                                     }
                                                                     alt="Desbloqueado"
-                                                                    fill
-                                                                    className="object-contain p-4"
-                                                                    priority
+                                                                    className="w-full h-auto object-contain p-4"
                                                                 />
                                                                 <div className="absolute inset-0 bg-black/60 backdrop-blur-[2px]" />
                                                                 <div className="absolute inset-0 flex flex-col items-center justify-center">
@@ -638,7 +639,7 @@ export default function TreasureHuntPage() {
                                         <div className="flex flex-col items-center gap-6">
                                             <div className="flex items-center gap-4">
                                                 <div className="w-8 h-[1px] bg-gradient-to-r from-transparent to-white/20" />
-                                                <p className="text-white/30 text-[9px] font-black uppercase tracking-[0.5em]">Raspa suavemente</p>
+                                                <p className="text-white/30 text-[9px] font-black uppercase tracking-[0.5em]">Raspa el pergamino</p>
                                                 <div className="w-8 h-[1px] bg-gradient-to-l from-transparent to-white/20" />
                                             </div>
 
@@ -666,7 +667,7 @@ export default function TreasureHuntPage() {
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
                             onClick={() => setViewingPrize(null)}
-                            className="absolute inset-0 bg-black/98 backdrop-blur-[50px]"
+                            className="absolute inset-0 bg-black/98 backdrop-blur-[60px]"
                         />
                         
                         {/* Immersive Gold Dust Layer */}
@@ -704,17 +705,15 @@ export default function TreasureHuntPage() {
                                 <div className="absolute top-1/2 -right-4 w-8 h-8 bg-black rounded-full border-l border-white/10 translate-y-[-50%]" />
                                 
                                 <div className="relative flex flex-col p-4">
-                                    {/* Image Container (Elite Frame) */}
-                                    <div className="relative w-full aspect-square md:aspect-[4/5] bg-black/40 rounded-[2.8rem] border border-white/10 overflow-hidden shadow-inner flex items-center justify-center">
-                                        <Image
+                                    {/* Image Container (Elite Frame) - Original Proportion Adaptive */}
+                                    <div className="relative w-full bg-black/40 rounded-[2.8rem] border border-white/10 overflow-hidden shadow-inner flex flex-col items-center justify-center">
+                                        <img
                                             src={viewingPrize?.prize_type === 'gift' 
                                                 ? `/demo-prize-${((viewingPrizeIndex - 1) % 4) + 1}.jpg`
                                                 : `/discount-${((viewingPrizeIndex - 1) % 3) + 1}.jpeg`
                                             }
                                             alt="Benefit"
-                                            fill
-                                            className="object-contain p-2"
-                                            priority
+                                            className="w-full h-auto object-contain p-2"
                                         />
                                         {/* Shimmer sweep */}
                                         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full animate-shimmer pointer-events-none" />
@@ -741,6 +740,7 @@ export default function TreasureHuntPage() {
                     </div>
                 )}
             </AnimatePresence>
+
         </div>
     )
 }
