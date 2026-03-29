@@ -81,7 +81,7 @@ export default function AuthModal({ onClose, onSuccess }: AuthModalProps) {
             >
                 {/* Character Header - Moved OUTSIDE overflow container to avoid clipping head */}
                 <div className="absolute -top-12 left-1/2 -translate-x-1/2 w-32 drop-shadow-[0_20px_40px_rgba(0,0,0,0.8)] z-40 group select-none pointer-events-none">
-                    <Image src="/sushi-character.png" alt="Sushi" width={128} height={128} className="w-full h-auto animate-float" priority />
+                    <Image src="/sushi-character-v2.png" alt="Sushi" width={128} height={128} className="w-full h-auto animate-float" priority />
                 </div>
 
                 <div className="relative w-full bg-[#000B2A]/90 border border-white/10 rounded-[3.5rem] p-8 md:p-12 shadow-[0_40px_100px_rgba(0,0,0,0.8)] backdrop-blur-3xl overflow-hidden">
