@@ -134,31 +134,34 @@ export function VerticalQuestTrail({ locales, visitedIds, onLocaleClick }: Verti
                                             {/* Shadow */}
                                             <ellipse cx={pos.x} cy={pos.y + 1} rx="1.8" ry="0.5" fill="rgba(0,0,0,0.5)" />
                                             
-                                            {/* Compact Teardrop Pin */}
+                                            {/* Enhanced Teardrop Pin (Larger for Brand Impact) */}
                                             <g transform={`translate(${pos.x}, ${pos.y})`}>
                                                 <path 
-                                                    d="M0 0 C-1.8 -3.5 -4.5 -5 -4.5 -9 C-4.5 -12 -2.5 -14 -0 -14 C2.5 -14 4.5 -12 4.5 -9 C4.5 -5 1.8 -3.5 0 0 Z" 
+                                                    d="M0 0 C-2.5 -5 -6 -7 -6 -12 C-6 -16 -3.5 -19 -0 -19 C3.5 -19 6 -16 6 -12 C6 -7 2.5 -5 0 0 Z" 
                                                     fill="#FF4B1F"
                                                     stroke="#FFF"
-                                                    strokeWidth="0.4"
+                                                    strokeWidth="0.6"
                                                     filter="url(#neon-glow)"
                                                 />
                                                 
+                                                {/* Logo Plate (White background to pop the logo) */}
+                                                <circle cx="0" cy="-12" r="4.8" fill="#FFF" />
+                                                
                                                 {/* Logo Clip */}
-                                                <clipPath id={`clip-samurai-v2-${i}`}>
-                                                    <circle cx="0" cy="-9" r="3" />
+                                                <clipPath id={`clip-samurai-v3-${i}`}>
+                                                    <circle cx="0" cy="-12" r="4.5" />
                                                 </clipPath>
                                                 <image
                                                     href={locale.image_url || '/logo-fest.png'}
-                                                    x="-3" y="-12"
-                                                    width="6" height="6"
-                                                    clipPath={`url(#clip-samurai-v2-${i})`}
+                                                    x="-4.5" y="-16.5"
+                                                    width="9" height="9"
+                                                    clipPath={`url(#clip-samurai-v3-${i})`}
                                                     className="object-cover"
                                                 />
-
-                                                {/* Conquest Order (1, 2, 3...) */}
-                                                <circle cx="3.8" cy="-5" r="1.8" fill="#FFB800" stroke="#000" strokeWidth="0.25" />
-                                                <text x="3.8" y="-4.4" textAnchor="middle" fontSize="2.4" fill="#000" fontWeight="900" className="font-lilita">{i + 1}</text>
+ 
+                                                {/* Conquest Order Badge (Matching Scale) */}
+                                                <circle cx="5.2" cy="-6" r="2.2" fill="#FFB800" stroke="#000" strokeWidth="0.35" />
+                                                <text x="5.2" y="-5.2" textAnchor="middle" fontSize="3" fill="#000" fontWeight="900" className="font-lilita">{i + 1}</text>
                                             </g>
 
                                             {/* Label (Above Pin for Visibility) */}
