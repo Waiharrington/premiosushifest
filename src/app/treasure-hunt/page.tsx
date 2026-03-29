@@ -392,6 +392,22 @@ export default function TreasureHuntPage() {
                     </div>
 
 
+                    {/* DEBUG BUTTONS - Testing Only */}
+                    <div className="mt-8 flex flex-wrap justify-center gap-4">
+                        <button 
+                            onClick={() => setVisitedIds(locales.slice(0, 30).map(l => l.id))}
+                            className="px-4 py-2 bg-green-500/20 hover:bg-green-500/40 border border-green-500/30 rounded-xl text-[10px] font-black uppercase tracking-widest text-green-400 transition-all active:scale-95"
+                        >
+                            🔓 Desbloquear Todos (Test)
+                        </button>
+                        <button 
+                            onClick={() => setVisitedIds([])}
+                            className="px-4 py-2 bg-red-500/20 hover:bg-red-500/40 border border-red-500/30 rounded-xl text-[10px] font-black uppercase tracking-widest text-red-400 transition-all active:scale-95"
+                        >
+                            🧹 Limpiar Todo (Test)
+                        </button>
+                    </div>
+
                     <footer className="mt-12 py-6 text-center text-white/10 text-[8px] uppercase tracking-[0.4em] font-black">
                         <p>© 2026 SUSHIFEST • PANAMÁ</p>
                     </footer>
