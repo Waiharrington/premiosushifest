@@ -10,7 +10,7 @@ interface VerticalQuestTrailProps {
 }
 
 // ── Constellation node positions (10 rows × 3 cols = 30 nodes) ────────────────
-const ROW_YS  = [15, 35, 55, 75, 95, 115, 135, 155, 175, 195]
+const ROW_YS  = [15, 30, 45, 60, 75, 90, 105, 120, 135, 150]
 const X_RTL   = [80, 50, 20]   // right → left (even rows)
 const X_LTR   = [20, 50, 80]   // left  → right (odd rows)
 
@@ -24,12 +24,12 @@ for (let row = 0; row < 10; row++) {
 
 // Decorative nautical/map emojis scattered between path curves
 const DECOS = [
-    { emoji: '⛵', x: 50, y: 45 },
-    { emoji: '🗺️', x: 12, y: 85 },
-    { emoji: '⚓', x: 88, y: 125 },
-    { emoji: '🐉', x: 10, y: 165 },
-    { emoji: '✨', x: 88, y: 205 },
-    { emoji: '🏝️', x: 50, y: 225 },
+    { emoji: '⛵', x: 50, y: 35 },
+    { emoji: '🗺️', x: 12, y: 65 },
+    { emoji: '⚓', x: 88, y: 95 },
+    { emoji: '🐉', x: 10, y: 125 },
+    { emoji: '✨', x: 88, y: 155 },
+    { emoji: '🏝️', x: 50, y: 170 },
 ]
 
 // ── Helper to generate the path dynamically based on node count ───────────
@@ -62,9 +62,6 @@ function getDynamicPath(numNodes: number): string {
 
 export function VerticalQuestTrail({ locales, visitedIds, onLocaleClick }: VerticalQuestTrailProps) {
     const nodes = locales.slice(0, 30)
-
-    const numRows = Math.ceil(nodes.length / 3)
-    const activeHeight = nodes.length > 0 ? ROW_YS[numRows - 1] + 30 : 100
     const dynamicPath = getDynamicPath(nodes.length)
 
     return (
@@ -78,29 +75,28 @@ export function VerticalQuestTrail({ locales, visitedIds, onLocaleClick }: Verti
                 }
             `}</style>
             
-            <div className="w-full max-w-lg mx-auto mb-12 relative group">
+            <div className="w-full max-w-lg mx-auto mb-12 relative group antialiased">
                 {/* Map Frame/Glow */}
-                <div className="absolute -inset-1 bg-gradient-to-b from-[#00D1FF]/20 to-transparent rounded-[3rem] blur-2xl opacity-50 group-hover:opacity-80 transition-opacity" />
+                <div className="absolute -inset-2 bg-[#00D1FF]/10 rounded-xl blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
                 
-                <div className="relative w-full rounded-[3rem] overflow-hidden border border-white/10 bg-black/40 backdrop-blur-sm shadow-[0_30px_60px_rgba(0,0,0,0.8)]">
-                    {/* Background Panama Image - Localized to the trail */}
+                <div className="relative w-full rounded-lg overflow-hidden border border-white/5 bg-black/40 shadow-[0_40px_100px_rgba(0,0,0,0.9)]">
+                    {/* Background Panama Image - Original Aspect 9:16 */}
                     <div className="absolute inset-0 z-0">
                         <Image
                             src="/panama-map-bg.png"
                             alt="Mapa de Panamá"
                             fill
-                            className="object-cover opacity-100"
+                            className="object-contain"
+                            priority
                         />
-                        {/* Vignette for the map edge */}
-                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_50%,rgba(0,0,0,0.4)_100%)]" />
                     </div>
 
-                    {/* SVG canvas — Fixed 100% Width for map size, Dynamic height */}
-                    <div className="relative z-10 w-full" style={{ paddingBottom: `${(activeHeight / 100) * 100}%` }}>
+                    {/* SVG canvas — Fixed 100% Width, Aspect Ratio 9:16 (Height 177.7 for Width 100) */}
+                    <div className="relative z-10 w-full" style={{ paddingBottom: '177.7%' }}>
                         <svg
-                            viewBox={`0 0 100 ${activeHeight}`}
+                            viewBox={`0 0 100 177.7`}
                             className="absolute inset-0 w-full h-full"
-                            preserveAspectRatio="xMidYMid meet"
+                            preserveAspectRatio="xMidYMid slice"
                         >
                     <defs>
                         {/* Clip paths for circular logos */}
