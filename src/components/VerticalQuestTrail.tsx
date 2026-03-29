@@ -252,7 +252,7 @@ export function VerticalQuestTrail({ locales, visitedIds, onLocaleClick }: Verti
                 </div>
 
                 {/* Fixed Explorer Mascot (Permanently Anchored to Map Corner with Spirit Aura) */}
-                <div className="absolute -bottom-4 -left-6 z-[60] pointer-events-none select-none">
+                <div className="absolute -bottom-2 -left-6 z-[60] pointer-events-none select-none">
                     <div className="relative">
                         {/* Pulsing Blue Spirit Aura */}
                         <motion.div 
@@ -283,9 +283,9 @@ export function VerticalQuestTrail({ locales, visitedIds, onLocaleClick }: Verti
                             <Image 
                                 src="/assets/character-explorer.png" 
                                 alt="Mascota Explorador" 
-                                width={160} 
-                                height={160} 
-                                className="w-40 h-40 object-contain drop-shadow-[0_10px_20px_rgba(0,0,0,0.8)]"
+                                width={128} 
+                                height={128} 
+                                className="w-32 h-32 object-contain drop-shadow-[0_10px_20px_rgba(0,0,0,0.8)]"
                             />
                         </motion.div>
                     </div>
