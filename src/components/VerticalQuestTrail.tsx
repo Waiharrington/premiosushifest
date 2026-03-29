@@ -63,16 +63,18 @@ export function VerticalQuestTrail({ locales, visitedIds, onLocaleClick }: Verti
                 @keyframes flow-route { to { stroke-dashoffset: -40; } }
             `}</style>
 
-            {/* Instruction Label (Now ABOVE the map, pushing it down) */}
-            <div className="w-full text-center mb-10 px-4">
+            {/* Minimalist Instruction Label */}
+            <div className="w-full text-center mb-4 px-4 overflow-hidden">
                 <motion.div 
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    className="inline-block px-8 py-3 bg-black/40 backdrop-blur-md rounded-2xl border border-orange-500/20 shadow-[0_0_20px_rgba(255,144,0,0.1)]"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className="relative py-2"
                 >
-                    <span className="text-white font-lilita text-base md:text-lg tracking-wider uppercase">
-                        ¡Toca cada negocio descubierto para ver su historia!
+                    <span className="text-white/60 font-lilita text-xs md:text-sm tracking-[0.2em] uppercase">
+                        — Toca un negocio para ver su historia —
                     </span>
+                    {/* Subtle glow underneath */}
+                    <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-32 h-[1px] bg-gradient-to-r from-transparent via-orange-500/40 to-transparent" />
                 </motion.div>
             </div>
             
