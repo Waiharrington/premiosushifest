@@ -16,7 +16,7 @@ interface VerticalQuestTrailProps {
 const NODE_POS: { x: number; y: number }[] = []
 const ROWS = 8
 const COLS = 4
-const Y_START = 22 // Safe margin for top pins
+const Y_START = 28 // Lowered to respect golden borders
 const Y_STEP = 21 // Spacious vertical rows
 
 for (let r = 0; r < ROWS; r++) {
@@ -49,7 +49,7 @@ export function VerticalQuestTrail({ locales, visitedIds, onLocaleClick }: Verti
     const activePath = getDynamicPath(visitedIds.length)
 
     return (
-        <div className="relative w-full flex flex-col pt-8">
+        <div className="relative w-full flex flex-col pt-2">
             <style jsx>{`
                 @keyframes pin-drop {
                     0% { transform: translateY(-10px) scale(0.5); opacity: 0; }
@@ -151,31 +151,31 @@ export function VerticalQuestTrail({ locales, visitedIds, onLocaleClick }: Verti
                                             style={{ cursor: 'pointer' }}
                                         >
                                             {/* Shadow */}
-                                            <ellipse cx={pos.x} cy={pos.y + 1} rx="2.5" ry="0.8" fill="rgba(0,0,0,0.4)" />
+                                            <ellipse cx={pos.x} cy={pos.y + 1} rx="2" ry="0.6" fill="rgba(0,0,0,0.4)" />
                                             
-                                            {/* The Orb of Conquest (Minimalist & High Impact) */}
+                                            {/* The Orb of Conquest (Balanced Size) */}
                                             <g transform={`translate(${pos.x}, ${pos.y})`}>
                                                 {/* Outer Glow Ring */}
-                                                <circle cx="0" cy="-8.5" r="8.2" fill="#FF4B1F" stroke="#FFF" strokeWidth="0.8" filter="url(#neon-glow-trail)" />
+                                                <circle cx="0" cy="-7.5" r="6.8" fill="#FF4B1F" stroke="#FFF" strokeWidth="0.7" filter="url(#neon-glow-trail)" />
                                                 
-                                                {/* Logo Container (White background to pop the logo) */}
-                                                <circle cx="0" cy="-8.5" r="7.4" fill="#FFF" />
+                                                {/* Logo Container */}
+                                                <circle cx="0" cy="-7.5" r="6.0" fill="#FFF" />
                                                 
                                                 <clipPath id={`clip-saga-orb-${i}`}>
-                                                    <circle cx="0" cy="-8.5" r="7.2" />
+                                                    <circle cx="0" cy="-7.5" r="5.8" />
                                                 </clipPath>
                                                 
                                                 <image
                                                     href={locale.image_url || '/logo-fest.png'}
-                                                    x="-7.2" y="-15.7"
-                                                    width="14.4" height="14.4"
+                                                    x="-5.8" y="-13.3"
+                                                    width="11.6" height="11.6"
                                                     clipPath={`url(#clip-saga-orb-${i})`}
                                                     className="object-cover"
                                                 />
                                                 
                                                 {/* Quest Rank Badge (Integrated with Orb) */}
-                                                <circle cx="6.5" cy="-3.5" r="2.8" fill="#FFB800" stroke="#000" strokeWidth="0.4" />
-                                                <text x="6.5" y="-2.5" textAnchor="middle" fontSize="3.8" fill="#000" fontWeight="900" className="font-lilita">{i + 1}</text>
+                                                <circle cx="5.2" cy="-2.5" r="2.2" fill="#FFB800" stroke="#000" strokeWidth="0.3" />
+                                                <text x="5.2" y="-1.7" textAnchor="middle" fontSize="3.0" fill="#000" fontWeight="900" className="font-lilita">{i + 1}</text>
                                             </g>
                                         </g>
                                     )}
