@@ -17,7 +17,7 @@ const NODE_POS: { x: number; y: number }[] = []
 const ROWS = 8
 const COLS = 4
 const Y_START = 28 // Lowered to respect golden borders
-const Y_STEP = 21 // Spacious vertical rows
+const Y_STEP = 18.2 // Compressed to stay within golden borders
 
 for (let r = 0; r < ROWS; r++) {
     const y = Y_START + r * Y_STEP

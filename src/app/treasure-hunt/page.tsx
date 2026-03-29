@@ -334,28 +334,26 @@ export default function TreasureHuntPage() {
                                                 </div>
 
                                                 <div className="flex-grow">
-                                                    <div className="inline-block px-2 py-0.5 rounded-md bg-white/5 border border-white/5 mb-1.5">
-                                                        <span className="text-[8px] font-black uppercase text-white/40 tracking-[0.25em]">
-                                                            {locale?.name || "RESTAURANTE"}
-                                                        </span>
-                                                    </div>
-                                                    <h4 className={`text-xl font-lilita uppercase leading-tight tracking-normal ${isRedeemed ? 'text-white/40 line-through decoration-orange-500/30' : 'text-white'}`}>
-                                                        {prize.prize_name}
-                                                    </h4>
-                                                    
-                                                    <div className="mt-2 flex items-center gap-2">
+                                                    <div className="flex items-center justify-between mb-2">
+                                                        <div className="px-2 py-0.5 rounded-md bg-white/5 border border-white/5">
+                                                            <span className="text-[8px] font-black uppercase text-white/40 tracking-[0.25em]">
+                                                                {locale?.name || "RESTAURANTE"}
+                                                            </span>
+                                                        </div>
+                                                        
                                                         {isRedeemed ? (
-                                                            <div className="px-2 py-0.5 rounded-full border border-white/5 bg-white/5 flex items-center gap-1.5">
-                                                                <div className="w-1 h-1 rounded-full bg-white/20" />
-                                                                <span className="text-[9px] font-black uppercase tracking-[0.15em] text-white/30">TESORO COBRADO</span>
-                                                            </div>
+                                                            <span className="text-[8px] font-black uppercase tracking-[0.15em] text-white/20">COBRADO</span>
                                                         ) : (
-                                                            <div className="px-2 py-0.5 rounded-full border border-green-500/20 bg-green-500/5 flex items-center gap-2">
-                                                                <div className="w-1.5 h-1.5 rounded-full bg-[#00FF85] shadow-[0_0_8px_#00FF85] animate-pulse" />
-                                                                <span className="text-[9px] font-black uppercase tracking-[0.15em] text-[#00FF85]">DISPONIBLE</span>
+                                                            <div className="flex items-center gap-1.5">
+                                                                <div className="w-1 h-1 rounded-full bg-[#00FF85] shadow-[0_0_5px_#00FF85] animate-pulse" />
+                                                                <span className="text-[8px] font-black uppercase tracking-[0.15em] text-[#00FF85]">DISPONIBLE</span>
                                                             </div>
                                                         )}
                                                     </div>
+
+                                                    <h4 className={`text-xl font-lilita uppercase leading-tight tracking-normal ${isRedeemed ? 'text-white/30 line-through decoration-orange-500/20' : 'text-white'}`}>
+                                                        {prize.prize_name}
+                                                    </h4>
                                                 </div>
 
                                                 <div className="flex-shrink-0 pr-2">
