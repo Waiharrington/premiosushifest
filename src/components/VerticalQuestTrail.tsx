@@ -181,21 +181,21 @@ export function VerticalQuestTrail({ locales, visitedIds, onLocaleClick }: Verti
                         })}
                     </svg>
 
-                    {/* ── INTERACTIVE INFO WINDOW OVERLAY ── */}
+                    {/* ── INTERACTIVE INFO WINDOW OVERLAY (Now FIXED to screen for zero scroll) ── */}
                     <AnimatePresence>
                         {selectedLocale && (
                             <motion.div
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
                                 exit={{ opacity: 0 }}
-                                className="absolute inset-0 z-50 flex items-center justify-center p-6 bg-black/40 backdrop-blur-[2px]"
+                                className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/60 backdrop-blur-[4px]"
                                 onClick={() => setSelectedLocale(null)}
                             >
                                 <motion.div 
                                     initial={{ scale: 0.9, y: 20 }}
                                     animate={{ scale: 1, y: 0 }}
                                     exit={{ scale: 0.9, y: 20 }}
-                                    className="w-full max-w-[280px] bg-[#020d1f]/95 border border-orange-500/30 rounded-3xl p-6 shadow-[0_25px_80px_rgba(0,0,0,0.8)] relative overflow-hidden"
+                                    className="w-full max-w-[320px] bg-[#020d1f]/98 border border-orange-500/40 rounded-[2.5rem] p-8 shadow-[0_40px_100px_rgba(0,0,0,0.9)] relative overflow-hidden"
                                     onClick={(e) => e.stopPropagation()}
                                 >
                                     <button 
