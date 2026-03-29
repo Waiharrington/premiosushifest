@@ -66,15 +66,16 @@ export function VerticalQuestTrail({ locales, visitedIds, onLocaleClick }: Verti
                 <div className="relative w-full rounded-2xl overflow-hidden border border-white/5 bg-[#050510]/80 shadow-[0_40px_100px_rgba(0,0,0,0.9)]">
                     
                     {/* Sticky Panama Image (V2) - Stays in view while nodes move */}
-                    <div className="sticky top-0 left-0 w-full h-[70vh] z-0 pointer-events-none">
+                    <div className="sticky top-0 left-0 w-full h-[70vh] z-0 pointer-events-none flex items-center justify-center p-8">
                         <Image
                             src="/panama-map-bg-v2.png"
                             alt="Mapa de Panamá"
                             fill
-                            className="object-cover opacity-60 brightness-75 transition-opacity"
+                            className="object-contain opacity-80 brightness-90 transition-opacity"
                             priority
                         />
-                        <div className="absolute inset-0 bg-gradient-to-b from-[#050510] via-transparent to-[#050510] opacity-80" />
+                        {/* Lighter gradient to ensure visibility */}
+                        <div className="absolute inset-0 bg-gradient-to-b from-[#050510]/60 via-transparent to-[#050510]/60 opacity-40" />
                     </div>
 
                     {/* SVG canvas — Very tall for 30 nodes single column */}
