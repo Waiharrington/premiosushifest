@@ -71,7 +71,7 @@ export function VerticalQuestTrail({ locales, visitedIds, onLocaleClick }: Verti
                     className="relative py-2"
                 >
                     <span className="text-white/60 font-lilita text-xs md:text-sm tracking-[0.2em] uppercase">
-                        — Toca un negocio para ver su historia —
+                        — Toca un negocio para ver sus detalles —
                     </span>
                     {/* Subtle glow underneath */}
                     <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-32 h-[1px] bg-gradient-to-r from-transparent via-orange-500/40 to-transparent" />
