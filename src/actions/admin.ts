@@ -423,3 +423,31 @@ export async function getVotingStatus() {
 
     return data?.value === 'true'
 }
+
+export async function hardResetDatabase(securityWord: string) {
+    const isAuth = await checkAuth()
+    if (!isAuth) return { success: false, error: "No autorizado" }
+
+    // User requested "1" to be the PIN/Word to simplify for now
+    if (securityWord !== "1") {
+        return { success: false, error: "Palabra de seguridad incorrecta." }
+    }
+
+    const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+    if (!serviceRoleKey) return { success: false, error: "Missing SUPABASE_SERVICE_ROLE_KEY" }
+    const supabaseAdmin = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, serviceRoleKey)
+
+    // Delete all records from activity tables using a catch-all filter
+    const { error: e1 } = await supabaseAdmin.from('votes').delete().not('id', 'is', null)
+    const { error: e2 } = await supabaseAdmin.from('treasure_hunt_visits').delete().not('id', 'is', null)
+    const { error: e3 } = await supabaseAdmin.from('treasure_hunt_prizes').delete().not('id', 'is', null)
+
+    if (e1 || e2 || e3) {
+        console.error("Errores al reiniciar DB:", e1, e2, e3)
+        return { success: false, error: "Hubo un error al vaciar algunas tablas." }
+    }
+
+    revalidatePath("/")
+    revalidatePath("/admin")
+    return { success: true, message: "¡Base de datos reiniciada con éxito! Todos los votos y progresos fueron eliminados." }
+}

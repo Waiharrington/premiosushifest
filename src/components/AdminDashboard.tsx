@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useRef, useEffect } from "react"
-import { addLocale, deleteLocale, editLocale, injectVotes, purgeFraudVotes, removeVotes, toggleVoting, getVotingStatus } from "@/actions/admin"
+import { addLocale, deleteLocale, editLocale, injectVotes, purgeFraudVotes, removeVotes, toggleVoting, getVotingStatus, hardResetDatabase } from "@/actions/admin"
 import { Button } from "./ui/button"
 import { Input } from "./ui/input"
 import { motion, AnimatePresence } from "framer-motion"
@@ -218,6 +218,28 @@ export function AdminDashboard({ locales, votes }: AdminDashboardProps) {
                         className="bg-primary/10 text-primary border border-primary/50 hover:bg-primary/20 px-4 py-2 rounded-lg flex items-center gap-2 font-bold transition-all h-[52px]"
                     >
                         <QrCode className="w-5 h-5" /> QR CORTESÍA
+                    </button>
+
+                    <button
+                        onClick={async () => {
+                            const word = prompt("⚠️ PELIGRO:\n\nEsta acción eliminará todos los votos de SushiFest y restablecerá todo el progreso y premios del Mapa a CERO.\n\nEscribe el número 1 para confirmar tu decisión.");
+                            if (word === "1") {
+                                setIsSaving(true);
+                                const res = await hardResetDatabase(word);
+                                setIsSaving(false);
+                                if (res.success) {
+                                    alert(res.message);
+                                } else {
+                                    alert("Error: " + res.error);
+                                }
+                            } else if (word !== null) {
+                                alert("Clave de seguridad incorrecta. Abortando limpieza.");
+                            }
+                        }}
+                        disabled={isSaving}
+                        className="bg-red-500/10 text-red-500 border border-red-500/50 hover:bg-red-500 hover:text-white px-4 py-2 rounded-lg flex items-center gap-2 font-bold transition-all h-[52px] shrink-0"
+                    >
+                        💣 REINICIAR TODO
                     </button>
                 </div>
             </header>
