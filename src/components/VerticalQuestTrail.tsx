@@ -117,7 +117,7 @@ export function VerticalQuestTrail({ locales, visitedIds, onLocaleClick }: Verti
                             const vId = visitedIds[i]
                             const locale = vId ? locales.find(l => l.id === vId) : null
                             const isRevealed = !!locale
-                            const label = isRevealed ? (locale.name.length > 10 ? locale.name.slice(0, 10) + '…' : locale.name) : ""
+                            const label = isRevealed ? (locale.name.length > 18 ? locale.name.slice(0, 18) + '…' : locale.name) : ""
 
                             return (
                                 <g key={i} onClick={() => isRevealed && onLocaleClick(locale)} style={{ cursor: isRevealed ? 'pointer' : 'default', outline: 'none' }}>
@@ -161,13 +161,15 @@ export function VerticalQuestTrail({ locales, visitedIds, onLocaleClick }: Verti
                                                 <text x="3.8" y="-4.4" textAnchor="middle" fontSize="2.4" fill="#000" fontWeight="900" className="font-lilita">{i + 1}</text>
                                             </g>
 
-                                            {/* Label (Smaller & Floating) */}
+                                            {/* Label (Above Pin for Visibility) */}
                                             <text
-                                                x={pos.x} y={pos.y + 7.5}
-                                                textAnchor="middle" fontSize="2.2"
+                                                x={pos.x} y={pos.y - 17}
+                                                textAnchor="middle" fontSize="3.1"
                                                 fill="#FFFFFF"
                                                 className="font-lilita"
-                                                style={{ textShadow: '0 2px 4px rgba(0,0,0,1)' }}
+                                                style={{ 
+                                                    textShadow: '0 2px 8px rgba(0,0,0,1), 0 1px 2px rgba(0,0,0,1), 0 0 10px rgba(0,0,0,0.5)' 
+                                                }}
                                             >
                                                 {label}
                                             </text>
