@@ -564,7 +564,7 @@ export default function TreasureHuntPage() {
                                                         src={currentPrize.prize_image} 
                                                         alt="Premio" 
                                                         fill 
-                                                        className="object-cover group-hover:scale-110 transition-transform duration-1000"
+                                                        className="object-contain p-4 group-hover:scale-105 transition-transform duration-1000"
                                                     />
                                                 ) : (
                                                     <Gift className="text-secondary w-24 h-24 drop-shadow-[0_0_30px_rgba(255,122,0,0.6)]" />
@@ -695,7 +695,7 @@ export default function TreasureHuntPage() {
                                     }
                                     alt="Benefit"
                                     fill
-                                    className="object-cover"
+                                    className="object-contain p-8"
                                     priority
                                 />
                                 {/* Bottom Info Fade */}
