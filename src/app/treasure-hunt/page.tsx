@@ -183,36 +183,36 @@ export default function TreasureHuntPage() {
                     <div className="w-full max-w-lg mb-8 relative p-0.5 rounded-[3rem] bg-gradient-to-b from-white/10 to-transparent">
                         <div className="bg-[#0A0A0B]/80 backdrop-blur-3xl rounded-[2.8rem] p-6 border border-white/5 shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
                             
-                            {/* Top HUD Info */}
-                            <div className="flex items-center gap-5 mb-6">
+                            {/* Top HUD Info — Improved Spacing */}
+                            <div className="flex items-center gap-4 mb-6 pr-1">
                                 {/* Enhanced Glowing Logo Container */}
-                                <div className="relative group">
+                                <div className="relative group shrink-0">
                                     <div className="absolute inset-0 bg-[#FF4B1F]/20 blur-xl rounded-full animate-pulse" />
-                                    <div className="relative w-20 h-20 rounded-full border-2 border-[#FF4B1F]/40 shadow-[0_0_30px_rgba(255,75,31,0.4)] bg-black/40 flex items-center justify-center p-1 overflow-hidden ring-4 ring-[#FF4B1F]/5">
-                                        <Image src="/logo-fest.png" alt="Logo" width={80} height={80} className="w-full h-full object-contain transform group-hover:scale-110 transition-transform duration-500" />
+                                    <div className="relative w-16 h-16 rounded-full border-2 border-[#FF4B1F]/40 shadow-[0_0_30px_rgba(255,75,31,0.4)] bg-black/40 flex items-center justify-center p-1 overflow-hidden ring-4 ring-[#FF4B1F]/5">
+                                        <Image src="/logo-fest.png" alt="Logo" width={64} height={64} className="w-full h-full object-contain transform group-hover:scale-110 transition-transform duration-500" />
                                     </div>
                                 </div>
 
                                 {/* Dynamic Impact Title */}
                                 <div className="flex-grow text-left">
                                     <h1 className="flex flex-col">
-                                        <span className="text-[9px] font-black uppercase text-white/50 tracking-[0.3em] mb-1">Tu Búsqueda del</span>
-                                        <span className="text-[26px] font-lilita leading-tight text-white uppercase tracking-tight whitespace-nowrap">
+                                        <span className="text-[8px] font-black uppercase text-white/50 tracking-[0.3em] mb-0.5">Tu Búsqueda del</span>
+                                        <span className="text-[22px] font-lilita leading-tight text-white uppercase tracking-tight whitespace-nowrap">
                                             ¡Tesoro <span className="text-[#FF4B1F] drop-shadow-[0_0_15px_rgba(255,75,31,0.5)]">Saga!</span>
                                         </span>
                                     </h1>
-                                    <p className="text-[8px] font-black uppercase text-[#00D1FF] tracking-[0.3em] mt-1 opacity-80">Explora • Escanea • Gana</p>
+                                    <p className="text-[7px] font-black uppercase text-[#00D1FF] tracking-[0.3em] mt-0.5 opacity-80">Explora • Escanea • Gana</p>
                                 </div>
 
 
-                                {/* Revelados Counter (Badge Style) — Centering Fix */}
-                                <div className="bg-white/5 border border-white/10 rounded-3xl px-3 py-4 flex flex-col items-center justify-center min-w-[85px] backdrop-blur-md shadow-inner">
-                                    <div className="text-[22px] font-lilita text-white flex items-center justify-center gap-1.5 leading-none">
+                                {/* Revelados Counter (Badge Style) — Centering & Padding Fix */}
+                                <div className="bg-white/5 border border-white/10 rounded-[2rem] px-4 py-4 flex flex-col items-center justify-center min-w-[80px] backdrop-blur-md shadow-inner shrink-0">
+                                    <div className="text-[20px] font-lilita text-white flex items-center justify-center gap-1 leading-none">
                                         <span>{visitedIds.length}</span>
                                         <span className="text-[#00D1FF] opacity-80">/</span>
                                         <span>{locales.length}</span>
                                     </div>
-                                    <div className="text-[8px] font-black text-white/30 uppercase tracking-[0.2em] mt-2">MAPA</div>
+                                    <div className="text-[7px] font-black text-white/30 uppercase tracking-[0.2em] mt-1.5">MAPA</div>
                                 </div>
                             </div>
 
