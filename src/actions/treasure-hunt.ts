@@ -183,12 +183,12 @@ export async function redeemPrize(prizeId: string) {
 export async function awardGrandPrize(userId: string) {
     if (!userId) return { success: false, error: "Usuario no identificado" }
 
-    // 1. Check if user already has a 'gift' (since they only come from Special QR now)
+    // 1. Check if user already has a courtesy prize
     const { count: giftPrizesCount } = await supabase
         .from('treasure_hunt_prizes')
         .select('*', { count: 'exact', head: true })
         .eq('user_id', userId)
-        .eq('prize_type', 'gift')
+        .eq('prize_type', 'courtesy')
 
     if (giftPrizesCount && giftPrizesCount > 0) {
         return { success: false, error: "Ya recibiste tu Premio de Cortesía." }
@@ -198,20 +198,19 @@ export async function awardGrandPrize(userId: string) {
     const { count: totalGiftsAwarded } = await supabase
         .from('treasure_hunt_prizes')
         .select('*', { count: 'exact', head: true })
-        .eq('prize_type', 'gift')
+        .eq('prize_type', 'courtesy')
 
     if (totalGiftsAwarded !== null && totalGiftsAwarded >= 200) {
         return { success: false, error: "Lo sentimos, los 200 premios de cortesía ya han sido entregados." }
     }
 
-    // 3. Select 3 random locales that have prize_pool available
+    // 3. Select 3 random locales (global courtesy pool doesn't rely on specific inventory)
     const { data: locales } = await supabase
         .from('locales')
-        .select('id, name, prize_pool')
-        .gt('prize_pool', 0)
+        .select('id, name')
 
     if (!locales || locales.length < 3) {
-        return { success: false, error: "No hay suficientes locales con disponibilidad de platos gratis en este momento." }
+        return { success: false, error: "Aún no hay suficientes restaurantes registrados en el sistema." }
     }
 
     // Shuffle and pick 3
