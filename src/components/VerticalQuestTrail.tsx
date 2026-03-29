@@ -250,6 +250,24 @@ export function VerticalQuestTrail({ locales, visitedIds, onLocaleClick }: Verti
                         )}
                     </AnimatePresence>
                 </div>
+
+                {/* Fixed Explorer Mascot (Permanently Anchored to Map Corner) */}
+                <div className="absolute -bottom-2 -left-3 z-[60] pointer-events-none select-none">
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        className="relative"
+                    >
+                        <div className="absolute inset-0 bg-[#00D1FF]/10 blur-3xl rounded-full scale-125" />
+                        <Image 
+                            src="/assets/character-explorer.png" 
+                            alt="Mascota Explorador" 
+                            width={130} 
+                            height={130} 
+                            className="w-28 h-28 object-contain drop-shadow-[0_10px_20px_rgba(0,0,0,0.8)]"
+                        />
+                    </motion.div>
+                </div>
             </div>
         </div>
     )
