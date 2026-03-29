@@ -151,30 +151,31 @@ export function VerticalQuestTrail({ locales, visitedIds, onLocaleClick }: Verti
                                             style={{ cursor: 'pointer' }}
                                         >
                                             {/* Shadow */}
-                                            <ellipse cx={pos.x} cy={pos.y + 1} rx="1.8" ry="0.5" fill="rgba(0,0,0,0.5)" />
+                                            <ellipse cx={pos.x} cy={pos.y + 1} rx="2.5" ry="0.8" fill="rgba(0,0,0,0.4)" />
                                             
-                                            {/* The Pin */}
+                                            {/* The Orb of Conquest (Minimalist & High Impact) */}
                                             <g transform={`translate(${pos.x}, ${pos.y})`}>
-                                                <path 
-                                                    d="M0 0 C-2.5 -5 -6 -7 -6 -12 C-6 -16 -3.5 -19 -0 -19 C3.5 -19 6 -16 6 -12 C6 -7 2.5 -5 0 0 Z" 
-                                                    fill="#FF4B1F"
-                                                    stroke="#FFF"
-                                                    strokeWidth="0.6"
-                                                    filter="url(#neon-glow-trail)"
-                                                />
-                                                <circle cx="0" cy="-12" r="4.8" fill="#FFF" />
-                                                <clipPath id={`clip-saga-${i}`}>
-                                                    <circle cx="0" cy="-12" r="4.5" />
+                                                {/* Outer Glow Ring */}
+                                                <circle cx="0" cy="-8.5" r="8.2" fill="#FF4B1F" stroke="#FFF" strokeWidth="0.8" filter="url(#neon-glow-trail)" />
+                                                
+                                                {/* Logo Container (White background to pop the logo) */}
+                                                <circle cx="0" cy="-8.5" r="7.4" fill="#FFF" />
+                                                
+                                                <clipPath id={`clip-saga-orb-${i}`}>
+                                                    <circle cx="0" cy="-8.5" r="7.2" />
                                                 </clipPath>
+                                                
                                                 <image
                                                     href={locale.image_url || '/logo-fest.png'}
-                                                    x="-4.5" y="-16.5"
-                                                    width="9" height="9"
-                                                    clipPath={`url(#clip-saga-${i})`}
+                                                    x="-7.2" y="-15.7"
+                                                    width="14.4" height="14.4"
+                                                    clipPath={`url(#clip-saga-orb-${i})`}
                                                     className="object-cover"
                                                 />
-                                                <circle cx="5.2" cy="-6" r="2.2" fill="#FFB800" stroke="#000" strokeWidth="0.35" />
-                                                <text x="5.2" y="-5.2" textAnchor="middle" fontSize="3" fill="#000" fontWeight="900" className="font-lilita">{i + 1}</text>
+                                                
+                                                {/* Quest Rank Badge (Integrated with Orb) */}
+                                                <circle cx="6.5" cy="-3.5" r="2.8" fill="#FFB800" stroke="#000" strokeWidth="0.4" />
+                                                <text x="6.5" y="-2.5" textAnchor="middle" fontSize="3.8" fill="#000" fontWeight="900" className="font-lilita">{i + 1}</text>
                                             </g>
                                         </g>
                                     )}
