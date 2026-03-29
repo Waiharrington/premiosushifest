@@ -9,60 +9,67 @@ interface VerticalQuestTrailProps {
     onLocaleClick: (locale: Locale) => void
 }
 
-// ── Fixed Geographic Positions (30 locales across Panama landmass) ────────
-const NODE_POS: { x: number; y: number }[] = [
-    { x: 18, y: 35 }, { x: 22, y: 32 }, { x: 25, y: 40 }, { x: 22, y: 48 }, { x: 18, y: 52 }, // West
-    { x: 25, y: 60 }, { x: 32, y: 65 }, { x: 38, y: 70 }, { x: 44, y: 78 }, { x: 35, y: 84 }, // Mid-West
-    { x: 42, y: 92 }, { x: 50, y: 100 }, { x: 58, y: 102 }, { x: 62, y: 95 }, { x: 55, y: 88 }, // Central
-    { x: 65, y: 110 }, { x: 72, y: 115 }, { x: 78, y: 105 }, { x: 85, y: 100 }, { x: 80, y: 90 }, // Mid-East
-    { x: 72, y: 85 }, { x: 78, y: 80 }, { x: 85, y: 75 }, { x: 92, y: 70 }, { x: 88, y: 60 }, // East
-    { x: 82, y: 54 }, { x: 88, y: 48 }, { x: 94, y: 41 }, { x: 90, y: 34 }, { x: 85, y: 28 }, // Far-East
-]
+// ── Fixed Path Slots (30 slots in a compact 9:16 grid) ────────────────
+const NODE_POS: { x: number; y: number }[] = []
+const ROWS = 10
+const COLS = 3
+const Y_START = 15
+const Y_STEP = 15 // Fits 10 rows in 177.7 comfortably
 
-// ── Helper to generate path by visited order ──────────────────────────
-function getDynamicPath(orderOfVisit: number[]): string {
-    if (orderOfVisit.length <= 1) return ""
-    let d = `M ${NODE_POS[orderOfVisit[0]].x} ${NODE_POS[orderOfVisit[0]].y + 2}` // Offset slightly down from Pin tip
-    for (let i = 1; i < orderOfVisit.length; i++) {
-        const prev = NODE_POS[orderOfVisit[i-1]]
-        const curr = NODE_POS[orderOfVisit[i]]
+for (let r = 0; r < ROWS; r++) {
+    const y = Y_START + r * Y_STEP
+    const isEvenRow = r % 2 === 0
+    for (let c = 0; c < COLS; c++) {
+        // Snake pattern: 1-2-3 then 6-5-4
+        const colIdx = isEvenRow ? c : (COLS - 1 - c)
+        let x = 20 + colIdx * 30 // 20, 50, 80
+        NODE_POS.push({ x, y })
+    }
+}
+
+// ── Path Helper (Connects slots in perfectly ordered sequence) ──────────
+function getDynamicPath(visitedCount: number): string {
+    if (visitedCount <= 1) return ""
+    let d = `M ${NODE_POS[0].x} ${NODE_POS[0].y}`
+    for (let i = 1; i < visitedCount; i++) {
+        const prev = NODE_POS[i-1]
+        const curr = NODE_POS[i]
+        // Smooth curve for the snake turn
         const cpY = (prev.y + curr.y) / 2
-        d += ` C ${prev.x} ${cpY}, ${curr.x} ${cpY}, ${curr.x} ${curr.y + 2}`
+        d += ` C ${prev.x} ${cpY}, ${curr.x} ${cpY}, ${curr.x} ${curr.y}`
     }
     return d
 }
 
+
 export function VerticalQuestTrail({ locales, visitedIds, onLocaleClick }: VerticalQuestTrailProps) {
     const nodes = locales.slice(0, 30)
-    
-    // STRICT VISIBILITY: Only show what is in visitedIds
-    // We maintain their order of visit for the path
-    const visitOrderIndices = visitedIds
-        .map(vId => nodes.findIndex(n => n.id === vId))
-        .filter(idx => idx !== -1)
-
-    const activePath = getDynamicPath(visitOrderIndices)
+    const activePath = getDynamicPath(visitedIds.length)
 
     return (
         <div className="relative w-full">
             <style jsx>{`
                 @keyframes pin-drop {
-                    0% { transform: translateY(-20px); opacity: 0; }
-                    100% { transform: translateY(0); opacity: 1; }
+                    0% { transform: translateY(-10px) scale(0.5); opacity: 0; }
+                    100% { transform: translateY(0) scale(1); opacity: 1; }
                 }
-                @keyframes energy-flow {
-                    to { stroke-dashoffset: -40; }
+                @keyframes energy-glow {
+                    0%, 100% { filter: drop-shadow(0 0 5px #FF4B1F); opacity: 0.8; }
+                    50% { filter: drop-shadow(0 0 12px #FF4B1F); opacity: 1; }
                 }
-                .pin-animation { animation: pin-drop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
-                .energy-path { 
+                .pin-pop { animation: pin-drop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+                .energy-trail { 
                     stroke-dasharray: 4 6; 
-                    animation: energy-flow 4s linear infinite; 
+                    animation: flow-route 4s linear infinite; 
+                }
+                @keyframes flow-route {
+                    to { stroke-dashoffset: -40; }
                 }
             `}</style>
             
             <div className="w-full max-w-lg mx-auto mb-12 relative rounded-[2.5rem] overflow-hidden border border-white/10 bg-[#010a1a] shadow-[0_45px_120px_rgba(0,0,0,1)]">
                 
-                {/* Fixed 9:16 Original Aspect Background */}
+                {/* Background Map (Original 9:16 Height) */}
                 <div className="absolute inset-0 z-0">
                     <Image
                         src="/panama-map-v3.png"
@@ -71,11 +78,9 @@ export function VerticalQuestTrail({ locales, visitedIds, onLocaleClick }: Verti
                         className="object-cover opacity-100 brightness-110"
                         priority
                     />
-                    {/* Clear Atmosphere (No dark overlays, just raw photo quality) */}
-                    <div className="absolute inset-0 bg-black/5" />
                 </div>
 
-                {/* SVG canvas — 9:16 Aspect (177.7% height) */}
+                {/* SVG canvas — Locked at 9:16 Aspect (177.7% height) */}
                 <div className="relative z-10 w-full" style={{ paddingBottom: '177.7%' }}>
                     <svg
                         viewBox={`0 0 100 177.7`}
@@ -83,89 +88,91 @@ export function VerticalQuestTrail({ locales, visitedIds, onLocaleClick }: Verti
                         preserveAspectRatio="xMidYMid slice"
                     >
                         <defs>
-                            {/* Pin Shape Template */}
-                            <path id="pin-shape" d="M0 0 C-4 -6 -10 -8 -10 -15 C-10 -21 -5 -25 0 -25 C5 -25 10 -21 10 -15 C10 -8 4 -6 0 0 Z" />
-                            
-                            <linearGradient id="neonPath" x1="0" y1="0" x2="0" y2="1">
+                            <linearGradient id="samuraiPath" x1="0" y1="0" x2="0" y2="1">
                                 <stop offset="0%" stopColor="#FF4B1F" />
                                 <stop offset="100%" stopColor="#FF9000" />
                             </linearGradient>
 
-                            <filter id="p-glow" x="-50%" y="-50%" width="200%" height="200%">
-                                <feGaussianBlur stdDeviation="1.5" result="blur" />
+                            <filter id="neon-glow" x="-50%" y="-50%" width="200%" height="200%">
+                                <feGaussianBlur stdDeviation="0.8" result="blur" />
                                 <feComposite in="SourceGraphic" in2="blur" operator="over" />
                             </filter>
                         </defs>
 
-                        {/* ── DYNAMIC ENERGY PATH (Follows visit order) ── */}
+                        {/* ── PATH OF CONQUEST (Snake Logic) ── */}
                         <path 
                             d={activePath} 
                             fill="none" 
-                            stroke="url(#neonPath)" 
-                            strokeWidth="1.2" 
+                            stroke="url(#samuraiPath)" 
+                            strokeWidth="0.8" 
                             strokeLinecap="round" 
-                            opacity="0.9"
-                            className="energy-path"
-                            filter="url(#p-glow)"
+                            opacity="0.75"
+                            className="energy-trail"
+                            filter="url(#neon-glow)"
                         />
 
-                        {/* ── CONQUERED PINS ── */}
-                        {visitOrderIndices.map((nIdx, i) => {
-                            const locale = nodes[nIdx]
-                            const pos    = NODE_POS[nIdx]
-                            const label  = locale.name.length > 14 ? locale.name.slice(0, 14) + '…' : locale.name
+                        {/* ── SLOT RENDERER (30 SLOTS) ── */}
+                        {Array.from({ length: 30 }).map((_, i) => {
+                            const pos = NODE_POS[i]
+                            const vId = visitedIds[i]
+                            const locale = vId ? locales.find(l => l.id === vId) : null
+                            const isRevealed = !!locale
+                            const label = isRevealed ? (locale.name.length > 10 ? locale.name.slice(0, 10) + '…' : locale.name) : ""
 
                             return (
-                                <g 
-                                    key={locale.id} 
-                                    onClick={() => onLocaleClick(locale)} 
-                                    style={{ cursor: 'pointer', outline: 'none' }} 
-                                    className="touch-manipulation pin-animation"
-                                >
-                                    {/* Interaction Hitbox */}
-                                    <circle cx={pos.x} cy={pos.y - 12} r="12" fill="transparent" />
+                                <g key={i} onClick={() => isRevealed && onLocaleClick(locale)} style={{ cursor: isRevealed ? 'pointer' : 'default', outline: 'none' }}>
+                                    
+                                    {/* Slot Visuals */}
+                                    {!isRevealed ? (
+                                        <g opacity="0.12">
+                                            <circle cx={pos.x} cy={pos.y} r="1.8" fill="#FFF" />
+                                            <circle cx={pos.x} cy={pos.y} r="2.8" fill="none" stroke="#FFF" strokeWidth="0.2" />
+                                            <text x={pos.x} y={pos.y + 0.6} textAnchor="middle" fontSize="1.8" fill="#FFF" fontWeight="700" opacity="0.2">?</text>
+                                        </g>
+                                    ) : (
+                                        <g className="pin-pop">
+                                            {/* Shadow */}
+                                            <ellipse cx={pos.x} cy={pos.y + 1} rx="1.8" ry="0.5" fill="rgba(0,0,0,0.5)" />
+                                            
+                                            {/* Compact Teardrop Pin */}
+                                            <g transform={`translate(${pos.x}, ${pos.y})`}>
+                                                <path 
+                                                    d="M0 0 C-1.8 -3.5 -4.5 -5 -4.5 -9 C-4.5 -12 -2.5 -14 -0 -14 C2.5 -14 4.5 -12 4.5 -9 C4.5 -5 1.8 -3.5 0 0 Z" 
+                                                    fill="#FF4B1F"
+                                                    stroke="#FFF"
+                                                    strokeWidth="0.4"
+                                                    filter="url(#neon-glow)"
+                                                />
+                                                
+                                                {/* Logo Clip */}
+                                                <clipPath id={`clip-samurai-v2-${i}`}>
+                                                    <circle cx="0" cy="-9" r="3" />
+                                                </clipPath>
+                                                <image
+                                                    href={locale.image_url || '/logo-fest.png'}
+                                                    x="-3" y="-12"
+                                                    width="6" height="6"
+                                                    clipPath={`url(#clip-samurai-v2-${i})`}
+                                                    className="object-cover"
+                                                />
 
-                                    {/* Shadow under Pin */}
-                                    <ellipse cx={pos.x} cy={pos.y + 1} rx="3" ry="1" fill="rgba(0,0,0,0.6)" />
+                                                {/* Conquest Order (1, 2, 3...) */}
+                                                <circle cx="3.8" cy="-5" r="1.8" fill="#FFB800" stroke="#000" strokeWidth="0.25" />
+                                                <text x="3.8" y="-4.4" textAnchor="middle" fontSize="2.4" fill="#000" fontWeight="900" className="font-lilita">{i + 1}</text>
+                                            </g>
 
-                                    {/* Teardrop Pin (Google Maps Style) */}
-                                    <g transform={`translate(${pos.x}, ${pos.y})`}>
-                                        <path 
-                                            d="M0 0 C-2.5 -4.5 -6 -7.5 -6 -12 C-6 -15.5 -3.5 -18 -0 -18 C3.5 -18 6 -15.5 6 -12 C6 -7.5 2.5 -4.5 0 0 Z" 
-                                            fill="#FF4B1F"
-                                            stroke="#FFF"
-                                            strokeWidth="0.6"
-                                            filter="url(#p-glow)"
-                                        />
-                                        
-                                        {/* Logo Container Inside Pin */}
-                                        <clipPath id={`clip-${locale.id}`}>
-                                            <circle cx="0" cy="-12" r="4.2" />
-                                        </clipPath>
-                                        <rect x="-4.2" y="-16.2" width="8.4" height="8.4" fill="#000" rx="4.2" />
-                                        <image
-                                            href={locale.image_url || '/logo-fest.png'}
-                                            x="-4.2" y="-16.2"
-                                            width="8.4" height="8.4"
-                                            clipPath={`url(#clip-${locale.id})`}
-                                            className="object-cover"
-                                        />
-
-                                        {/* Badge Score/Check Mark on top for flair */}
-                                        <circle cx="4.5" cy="-7.5" r="1.8" fill="#4BCF2D" stroke="#000" strokeWidth="0.3" />
-                                        <text x="4.5" y="-6.8" textAnchor="middle" fontSize="2.2" fill="#000" fontWeight="900">✓</text>
-                                    </g>
-
-                                    {/* Label Positioning Above Pin */}
-                                    <text
-                                        x={pos.x} y={pos.y - 20}
-                                        textAnchor="middle" fontSize="3.2"
-                                        fill="#FFFFFF"
-                                        className="font-lilita"
-                                        style={{ textShadow: '0 2px 4px rgba(0,0,0,1)' }}
-                                    >
-                                        {label}
-                                    </text>
+                                            {/* Label (Smaller & Floating) */}
+                                            <text
+                                                x={pos.x} y={pos.y + 7.5}
+                                                textAnchor="middle" fontSize="2.2"
+                                                fill="#FFFFFF"
+                                                className="font-lilita"
+                                                style={{ textShadow: '0 2px 4px rgba(0,0,0,1)' }}
+                                            >
+                                                {label}
+                                            </text>
+                                        </g>
+                                    )}
                                 </g>
                             )
                         })}
