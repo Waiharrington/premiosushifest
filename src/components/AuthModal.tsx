@@ -62,7 +62,7 @@ export default function AuthModal({ onClose, onSuccess }: AuthModalProps) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[200] flex items-center justify-center p-4 md:p-12 overflow-y-auto"
+            className="fixed inset-0 z-[200] flex items-center justify-center p-2 md:p-4"
         >
             {/* Backdrop */}
             <div 
@@ -77,18 +77,18 @@ export default function AuthModal({ onClose, onSuccess }: AuthModalProps) {
                 initial={{ scale: 0.9, opacity: 0, y: 40 }}
                 animate={{ scale: 1, opacity: 1, y: 0 }}
                 exit={{ scale: 0.9, opacity: 0, y: 40 }}
-                className="relative w-full max-w-md my-auto py-12"
+                className="relative w-full max-w-md my-auto py-8"
             >
                 {/* Character Header - Moved OUTSIDE overflow container to avoid clipping head */}
-                <div className="absolute -top-12 left-1/2 -translate-x-1/2 w-32 drop-shadow-[0_20px_40px_rgba(0,0,0,0.8)] z-40 group select-none pointer-events-none">
-                    <Image src="/sushi-character-v2.png" alt="Sushi" width={128} height={128} className="w-full h-auto animate-float" priority />
+                <div className="absolute -top-8 left-1/2 -translate-x-1/2 w-28 drop-shadow-[0_20px_40px_rgba(0,0,0,0.8)] z-40 group select-none pointer-events-none">
+                    <Image src="/sushi-character-v2.png" alt="Sushi" width={112} height={112} className="w-full h-auto animate-float" priority />
                 </div>
 
-                <div className="relative w-full bg-[#000B2A]/90 border border-white/10 rounded-[3.5rem] p-8 md:p-12 shadow-[0_40px_100px_rgba(0,0,0,0.8)] backdrop-blur-3xl overflow-hidden">
+                <div className="relative w-full bg-[#000B2A]/90 border border-white/10 rounded-[3.5rem] p-6 md:p-10 shadow-[0_40px_100px_rgba(0,0,0,0.8)] backdrop-blur-3xl overflow-hidden">
                     {/* Visual Polish */}
                     <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-primary via-secondary to-primary animate-gradient-x" />
                     
-                    <div className="relative z-10 pt-20">
+                    <div className="relative z-10 pt-14">
                         <button
                             onClick={onClose}
                             className="absolute -top-4 -right-4 bg-white/5 border border-white/10 p-3 rounded-full text-white/40 hover:text-white transition-all active:scale-90"
@@ -97,8 +97,8 @@ export default function AuthModal({ onClose, onSuccess }: AuthModalProps) {
                             <X size={20} />
                         </button>
 
-                    <div className="text-center mb-10">
-                        <h2 className="text-4xl font-lilita text-white tracking-tight uppercase mb-1">
+                    <div className="text-center mb-6">
+                        <h2 className="text-4xl font-lilita text-white tracking-tight uppercase mb-0.5">
                             {isRegistering ? "¡ÚNETE!" : "¡HOLA!"}
                         </h2>
                         <div className="flex items-center justify-center gap-2">
@@ -110,7 +110,7 @@ export default function AuthModal({ onClose, onSuccess }: AuthModalProps) {
                         </div>
                     </div>
 
-                    <form onSubmit={handleSubmit} className="space-y-5">
+                    <form onSubmit={handleSubmit} className="space-y-4">
                         {isRegistering && (
                             <div className="space-y-2 group">
                                 <label className="text-[10px] text-white/60 font-black uppercase tracking-[0.2em] ml-2 flex items-center gap-2 transition-colors group-focus-within:text-white">
@@ -177,7 +177,7 @@ export default function AuthModal({ onClose, onSuccess }: AuthModalProps) {
                         </button>
                     </form>
 
-                    <div className="mt-8 text-center flex flex-col items-center gap-6">
+                    <div className="mt-4 text-center flex flex-col items-center gap-4">
                         <button
                             onClick={() => setIsRegistering(!isRegistering)}
                             className="text-[10px] text-white/30 hover:text-white uppercase tracking-[0.3em] font-black transition-colors"
