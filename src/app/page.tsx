@@ -1,15 +1,47 @@
 'use client'
 
+import { useEffect } from "react"
 import { motion } from "framer-motion"
 import Image from "next/image"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { RiceParticles } from "@/components/RiceParticles"
 import { SponsorBackground } from "@/components/SponsorBackground"
 import { Trophy, ArrowRight, Map as MapIcon, Tag } from "lucide-react"
 import { useAuth } from "@/context/AuthContext"
 
 export default function Home() {
-    const { user } = useAuth()
+    const router = useRouter()
+    const { user, login, register, isLoading: authLoading } = useAuth()
+
+    useEffect(() => {
+        const processSSO = async () => {
+            const search = window.location.search
+            if (search.includes('cedula=')) {
+                const params = new URLSearchParams(search)
+                const ssoCedula = params.get('cedula')
+                const ssoNombre = params.get('nombre')
+                const ssoTel = params.get('tel')
+                
+                if (ssoCedula && !user) {
+                    const loginSuccess = await login(ssoCedula)
+                    if (!loginSuccess && ssoNombre && ssoTel) {
+                        try {
+                            await register(ssoNombre, ssoCedula, ssoTel)
+                        } catch (e) {
+                            console.error("SSO Register error", e)
+                        }
+                    }
+                }
+                router.replace('/', { scroll: false })
+            }
+        }
+        
+        if (!authLoading) {
+            processSSO()
+        }
+    }, [authLoading, user, login, register, router])
+
     return (
         <div className="min-h-[100svh] bg-[#000B2A] text-white relative overflow-hidden font-sans selection:bg-primary/30">
             {/* Background Layer (New Treasure Image with Cinematic Zoom) */}

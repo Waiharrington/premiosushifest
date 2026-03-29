@@ -52,7 +52,7 @@ function getPrizeImage(prizeName: string, prizeType: string): string {
 
 export default function TreasureHuntPage() {
     const router = useRouter()
-    const { user, isLoading: authLoading, logout, login, register } = useAuth()
+    const { user, isLoading: authLoading, logout } = useAuth()
     const [locales, setLocales] = useState<Locale[]>([])
     const [visitedIds, setVisitedIds] = useState<string[]>([])
     const [prizes, setPrizes] = useState<TreasureHuntPrize[]>([])
@@ -82,35 +82,7 @@ export default function TreasureHuntPage() {
 
     useEffect(() => {
         setHasMounted(true)
-        
-        // --- SSO LOGIC ---
-        const processSSO = async () => {
-            const search = window.location.search
-            if (search.includes('cedula=')) {
-                const params = new URLSearchParams(search)
-                const ssoCedula = params.get('cedula')
-                const ssoNombre = params.get('nombre')
-                const ssoTel = params.get('tel')
-                
-                if (ssoCedula && !user) {
-                    const loginSuccess = await login(ssoCedula)
-                    if (!loginSuccess && ssoNombre && ssoTel) {
-                        try {
-                            await register(ssoNombre, ssoCedula, ssoTel)
-                        } catch (e) {
-                            console.error("SSO Register error", e)
-                        }
-                    }
-                }
-                // Clean URL silently
-                router.replace('/treasure-hunt', { scroll: false })
-            }
-        }
-        
-        if (!authLoading) {
-            processSSO()
-        }
-    }, [authLoading, user, login, register, router])
+    }, [])
 
     const fetchData = useCallback(async () => {
         try {
@@ -134,12 +106,8 @@ export default function TreasureHuntPage() {
     }, [fetchData])
 
     useEffect(() => {
-        // Only open AuthModal if there's no user, auth is loaded, AND we are not processing an SSO in the URL
         if (!authLoading && !user) {
-            const isProcessingSSO = typeof window !== 'undefined' && window.location.search.includes('cedula=')
-            if (!isProcessingSSO) {
-                setIsAuthModalOpen(true)
-            }
+            setIsAuthModalOpen(true)
         }
     }, [user, authLoading])
 
