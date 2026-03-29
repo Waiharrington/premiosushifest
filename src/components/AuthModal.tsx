@@ -62,7 +62,7 @@ export default function AuthModal({ onClose, onSuccess }: AuthModalProps) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[200] flex items-center justify-center p-4 md:p-6 overflow-hidden"
+            className="fixed inset-0 z-[200] flex items-center justify-center p-4 md:p-12 overflow-y-auto"
         >
             {/* Backdrop */}
             <div 
@@ -77,7 +77,7 @@ export default function AuthModal({ onClose, onSuccess }: AuthModalProps) {
                 initial={{ scale: 0.9, opacity: 0, y: 40 }}
                 animate={{ scale: 1, opacity: 1, y: 0 }}
                 exit={{ scale: 0.9, opacity: 0, y: 40 }}
-                className="relative w-full max-w-md p-2"
+                className="relative w-full max-w-md my-auto py-12"
             >
                 {/* Character Header - Moved OUTSIDE overflow container to avoid clipping head */}
                 <div className="absolute -top-12 left-1/2 -translate-x-1/2 w-32 drop-shadow-[0_20px_40px_rgba(0,0,0,0.8)] z-40 group select-none pointer-events-none">
