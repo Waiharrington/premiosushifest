@@ -124,10 +124,11 @@ export function VerticalQuestTrail({ locales, visitedIds, onLocaleClick }: Verti
                                     
                                     {/* Slot Visuals */}
                                     {!isRevealed ? (
-                                        <g opacity="0.12">
-                                            <circle cx={pos.x} cy={pos.y} r="1.8" fill="#FFF" />
-                                            <circle cx={pos.x} cy={pos.y} r="2.8" fill="none" stroke="#FFF" strokeWidth="0.2" />
-                                            <text x={pos.x} y={pos.y + 0.6} textAnchor="middle" fontSize="1.8" fill="#FFF" fontWeight="700" opacity="0.2">?</text>
+                                        // Mystery Slot (Visible & Intriguing)
+                                        <g className="opacity-40 filter drop-shadow-[0_0_8px_rgba(255,255,255,0.2)]">
+                                            <circle cx={pos.x} cy={pos.y} r="2.2" fill="#FFF" opacity="0.3" />
+                                            <circle cx={pos.x} cy={pos.y} r="3.2" fill="none" stroke="#FFF" strokeWidth="0.3" opacity="0.5" />
+                                            <text x={pos.x} y={pos.y + 0.6} textAnchor="middle" fontSize="2.2" fill="#FFF" fontWeight="900" opacity="0.4">?</text>
                                         </g>
                                     ) : (
                                         <g className="pin-pop">
