@@ -287,22 +287,23 @@ export default function TreasureHuntPage() {
                     </section>
 
 
-                    {/* Prizes / Recompensas Section (The Vault) */}
+                    {/* Prizes / Recompensas Section (Tesoros de la Saga) */}
                     {prizes.filter(p => p.prize_type !== 'try_again').length > 0 && (
-                        <div className="w-full mt-2 mb-20 text-left relative z-20">
-                            <div className="flex items-center justify-center md:justify-start gap-4 mb-10">
-                                <div className="w-12 h-12 bg-[#0038A8]/20 backdrop-blur-xl border border-[#0038A8]/30 rounded-2xl flex items-center justify-center shadow-lg">
-                                    <Gift className="text-[#FF4B1F] w-6 h-6" />
-
-                                </div>
-                                <div>
-                                    <h2 className="text-3xl font-lilita uppercase tracking-tight text-white m-0">Mis Recompensas</h2>
-                                    <p className="text-[10px] font-black uppercase text-[#00D1FF] tracking-[0.3em] font-sans">The Vault • Panamá 2026</p>
+                        <div className="w-full mt-12 mb-24 px-4 relative z-20">
+                            <div className="flex items-center justify-between mb-8">
+                                <div className="flex items-center gap-5">
+                                    <div className="w-14 h-14 bg-gradient-to-br from-[#FF4B1F]/30 to-[#FF9000]/10 backdrop-blur-3xl border border-white/10 rounded-2xl flex items-center justify-center shadow-[0_10px_30px_rgba(255,75,31,0.2)]">
+                                        <Gift className="text-[#FF4B1F] w-7 h-7" strokeWidth={1.5} />
+                                    </div>
+                                    <div>
+                                        <h2 className="text-3xl font-lilita uppercase tracking-tight text-white m-0">Mis Recompensas</h2>
+                                        <p className="text-[10px] font-black uppercase text-orange-500/80 tracking-[0.4em] font-sans">Tesoros de la Saga • 2026</p>
+                                    </div>
                                 </div>
                             </div>
 
 
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 {prizes.filter(p => p.prize_type !== 'try_again').map((prize, idx) => {
                                     const locale = locales.find(l => l.id === prize.locale_id)
                                     const isRedeemed = prize.is_redeemed
@@ -310,63 +311,68 @@ export default function TreasureHuntPage() {
                                     return (
                                         <motion.div 
                                             key={prize.id} 
-                                            initial={{ opacity: 0, y: 20 }}
+                                            initial={{ opacity: 0, y: 15 }}
                                             animate={{ opacity: 1, y: 0 }}
-                                            transition={{ delay: idx * 0.1 }}
+                                            transition={{ delay: idx * 0.08 }}
                                             onClick={() => { setViewingPrize(prize); setViewingPrizeIndex(idx + 1) }}
-                                            className={`group relative overflow-hidden rounded-3xl border p-5 flex items-center gap-6 transition-all duration-500 cursor-pointer shadow-2xl ${
+                                            className={`group relative overflow-hidden rounded-[2rem] border transition-all duration-500 cursor-pointer ${
                                                 isRedeemed 
-                                                    ? 'bg-black/40 border-white/5 grayscale opacity-60' 
-                                                    : 'bg-black/60 border-white/10 hover:border-primary/50'
+                                                    ? 'bg-black/40 border-white/5 backdrop-blur-md opacity-60' 
+                                                    : 'bg-white/5 backdrop-blur-2xl border-white/10 hover:border-orange-500/30'
                                             }`}
                                         >
-                                            {/* Glow effect on hover */}
-                                            {!isRedeemed && (
-                                                <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
-                                            )}
+                                            <div className="flex items-center gap-5 p-4 py-5 relative z-10">
+                                                {/* Logo Orb */}
+                                                <div className="relative w-16 h-16 rounded-2xl bg-white/10 p-2 flex-shrink-0 flex items-center justify-center border border-white/10 overflow-hidden shadow-inner">
+                                                    <Image 
+                                                        src={locale?.image_url || "/logo-fest.png"} 
+                                                        alt={locale?.name || "Restaurante"} 
+                                                        width={64}
+                                                        height={64}
+                                                        className={`w-full h-full object-contain filter drop-shadow-[0_4px_8px_rgba(0,0,0,0.5)] group-hover:scale-110 transition-transform duration-500 ${isRedeemed ? 'grayscale' : ''}`}
+                                                    />
+                                                </div>
 
-                                            <div className="relative w-20 h-20 rounded-2xl bg-white/5 p-2 flex-shrink-0 flex items-center justify-center border border-white/10 overflow-hidden group-hover:bg-white/10 transition-colors shadow-inner">
-                                                <Image 
-                                                    src={locale?.image_url || "/logo-fest.png"} 
-                                                    alt={locale?.name || "Restaurante"} 
-                                                    width={80}
-                                                    height={80}
-                                                    className="w-full h-full object-contain filter drop-shadow-[0_4px_10px_rgba(0,0,0,0.5)] group-hover:scale-110 transition-transform duration-500"
-                                                />
-                                            </div>
-
-                                            <div className="flex-grow">
-                                                <p className="text-[9px] font-black uppercase text-white/30 tracking-[0.3em] mb-1">
-                                                    {locale?.name || "RESTAURANTE"}
-                                                </p>
-                                                <h4 className={`text-xl font-lilita uppercase leading-none tracking-tight mb-3 ${isRedeemed ? 'text-white/60' : 'text-white'}`}>
-                                                    {prize.prize_name}
-                                                </h4>
-                                                
-                                                {isRedeemed ? (
-                                                    <div className="flex items-center gap-2">
-                                                        <div className="w-2 h-2 rounded-full bg-white/20" />
-                                                        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/40">Canjeado</span>
+                                                <div className="flex-grow">
+                                                    <div className="inline-block px-2 py-0.5 rounded-md bg-white/5 border border-white/5 mb-1.5">
+                                                        <span className="text-[8px] font-black uppercase text-white/40 tracking-[0.25em]">
+                                                            {locale?.name || "RESTAURANTE"}
+                                                        </span>
                                                     </div>
-                                                ) : (
-                                                    <div className="flex items-center gap-2">
-                                                        <motion.div 
-                                                            animate={{ scale: [1, 1.2, 1] }} 
-                                                            transition={{ duration: 2, repeat: Infinity }}
-                                                            className="w-2 h-2 rounded-full bg-[#00FF85] shadow-[0_0_8px_#00FF85]" 
-                                                        />
-                                                        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[#00FF85]">Disponible</span>
+                                                    <h4 className={`text-xl font-lilita uppercase leading-tight tracking-normal ${isRedeemed ? 'text-white/40 line-through decoration-orange-500/30' : 'text-white'}`}>
+                                                        {prize.prize_name}
+                                                    </h4>
+                                                    
+                                                    <div className="mt-2 flex items-center gap-2">
+                                                        {isRedeemed ? (
+                                                            <div className="px-2 py-0.5 rounded-full border border-white/5 bg-white/5 flex items-center gap-1.5">
+                                                                <div className="w-1 h-1 rounded-full bg-white/20" />
+                                                                <span className="text-[9px] font-black uppercase tracking-[0.15em] text-white/30">TESORO COBRADO</span>
+                                                            </div>
+                                                        ) : (
+                                                            <div className="px-2 py-0.5 rounded-full border border-green-500/20 bg-green-500/5 flex items-center gap-2">
+                                                                <div className="w-1.5 h-1.5 rounded-full bg-[#00FF85] shadow-[0_0_8px_#00FF85] animate-pulse" />
+                                                                <span className="text-[9px] font-black uppercase tracking-[0.15em] text-[#00FF85]">DISPONIBLE</span>
+                                                            </div>
+                                                        )}
                                                     </div>
-                                                )}
-                                            </div>
+                                                </div>
 
-                                            <div className="flex-shrink-0">
-                                                <div className={`p-3 rounded-full border ${isRedeemed ? 'border-white/5 bg-white/5' : 'border-[#00D1FF]/20 bg-[#00D1FF]/10 group-hover:bg-[#00D1FF]/20 transition-colors'}`}>
-                                                    {isRedeemed ? <CheckCircle2 className="w-5 h-5 text-white/20" /> : <Gift className="w-5 h-5 text-[#FF4B1F] group-hover:animate-bounce" />}
-
+                                                <div className="flex-shrink-0 pr-2">
+                                                    <div className={`w-10 h-10 rounded-2xl flex items-center justify-center border transition-all duration-300 ${
+                                                        isRedeemed 
+                                                            ? 'border-white/5 bg-white/5' 
+                                                            : 'border-orange-500/20 bg-orange-500/10 shadow-[0_0_15px_rgba(255,144,0,0.1)] group-hover:bg-orange-500/20 group-hover:scale-110'
+                                                    }`}>
+                                                        {isRedeemed ? <CheckCircle2 className="w-4 h-4 text-white/20" /> : <Gift className="w-4 h-4 text-[#FF4B1F]" />}
+                                                    </div>
                                                 </div>
                                             </div>
 
+                                            {/* Minimalist interactive scanline on hover */}
+                                            {!isRedeemed && (
+                                                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-orange-500/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out pointer-events-none" />
+                                            )}
                                         </motion.div>
                                     )
                                 })}
