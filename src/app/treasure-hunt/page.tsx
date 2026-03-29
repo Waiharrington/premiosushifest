@@ -24,6 +24,29 @@ import { QrCode, Map as MapIcon, Gift, CheckCircle2, LogOut, Sparkles, ArrowRigh
 import { useRouter } from "next/navigation"
 import confetti from "canvas-confetti"
 
+// ── Prize Image Mapper ───────────────────────────────────────────────────────
+// Maps prize name keywords to their real image files in /public/
+function getPrizeImage(prizeName: string, prizeType: string): string {
+    if (!prizeName) return '/logo-fest.png'
+    const name = prizeName.toLowerCase()
+    if (prizeType === 'gift') {
+        if (name.includes('proyector')) return '/Premio Proyector.jpg'
+        if (name.includes('tv') || name.includes('smart') || name.includes('televisor')) return '/Premio Smar Tv.jpg'
+        if (name.includes('aire') || name.includes('acondicionado')) return '/Premio aire acondicionado.jpg'
+        if (name.includes('barra') || name.includes('sonido')) return '/Premio barra de sonido.jpg'
+        if (name.includes('tarjeta') || name.includes('regalo') || name.includes('gift')) {
+            if (name.includes('50')) return '/Descuento regalo 50$.jpeg'
+            if (name.includes('25')) return '/Descuento regalo 25$.jpeg'
+            return '/Descuento regalo 15%.jpeg'
+        }
+        return '/Premio Proyector.jpg' // Generic gift fallback
+    }
+    // Discount type
+    if (name.includes('50')) return '/Descuento regalo 50$.jpeg'
+    if (name.includes('25')) return '/Descuento regalo 25$.jpeg'
+    return '/Descuento regalo 15%.jpeg' // Generic discount fallback
+}
+
 export default function TreasureHuntPage() {
     const router = useRouter()
     const { user, isLoading: authLoading, logout } = useAuth()
@@ -344,13 +367,13 @@ export default function TreasureHuntPage() {
                                                 </div>
                                             )}
 
-                                            {/* Floating Trophy/Logo Orb */}
+                                            {/* Floating Trophy/Logo Orb - Premier for gifts, restaurant for discounts */}
                                             <div className="relative mb-8 z-10 group-hover:scale-110 transition-transform duration-700 ease-out">
                                                 <div className="absolute inset-0 bg-white/20 blur-3xl rounded-full scale-150 opacity-0 group-hover:opacity-60 transition-opacity" />
                                                 <div className="relative w-28 h-28 md:w-32 md:h-32 rounded-full bg-white/5 backdrop-blur-2xl p-4 flex items-center justify-center border border-white/20 shadow-[0_15px_35px_rgba(0,0,0,0.8),inset_0_2px_10px_rgba(255,255,255,0.1)]">
                                                     <Image 
-                                                        src={locale?.image_url || "/logo-fest.png"} 
-                                                        alt={locale?.name || "Restaurante"} 
+                                                        src={prize.prize_type === 'gift' ? '/Logo tiendas premier.png' : (locale?.image_url || "/logo-fest.png")} 
+                                                        alt={prize.prize_type === 'gift' ? 'Tiendas Premier' : (locale?.name || "Restaurante")} 
                                                         width={120}
                                                         height={120}
                                                         className="w-full h-full object-contain filter drop-shadow-[0_4px_12px_rgba(0,0,0,0.8)]"
@@ -616,13 +639,10 @@ export default function TreasureHuntPage() {
                                                         ) : (
                                                             <>
                                                                 <Image
-                                                                    src={currentPrize?.prize_type === 'gift' 
-                                                                        ? `/demo-prize-${((prizeVisitNumber - 1) % 4) + 1}.jpg`
-                                                                        : `/discount-${((prizeVisitNumber - 1) % 3) + 1}.jpeg`
-                                                                    }
+                                                                    src={currentPrize?.prize_image || getPrizeImage(currentPrize?.prize_name || '', currentPrize?.prize_type || '')}
                                                                     alt="Desbloqueado"
                                                                     fill
-                                                                    className="object-cover"
+                                                                    className="object-contain"
                                                                     priority
                                                                 />
                                                                 <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px]" />
@@ -689,10 +709,7 @@ export default function TreasureHuntPage() {
 
                             <div className="relative w-full h-full">
                                 <Image
-                                    src={viewingPrize?.prize_type === 'gift' 
-                                        ? `/demo-prize-${((viewingPrizeIndex - 1) % 4) + 1}.jpg`
-                                        : `/discount-${((viewingPrizeIndex - 1) % 3) + 1}.jpeg`
-                                    }
+                                    src={viewingPrize?.prize_image || getPrizeImage(viewingPrize?.prize_name || '', viewingPrize?.prize_type || '')}
                                     alt="Benefit"
                                     fill
                                     className="object-contain p-8"
