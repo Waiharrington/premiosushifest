@@ -195,17 +195,6 @@ export function VerticalQuestTrail({ locales, visitedIds, onLocaleClick }: Verti
                             )
                         })}
 
-                        {/* ── THE EXPLORER GUIDE (Positions at Next Target) ── */}
-                        {guidePos && (
-                            <image
-                                href="/personaje-fest.png"
-                                x={guidePos.x - 12}
-                                y={guidePos.y - 12}
-                                width="12"
-                                height="12"
-                                className="sushi-guide pointer-events-none drop-shadow-2xl"
-                            />
-                        )}
                     </svg>
                 </div>
             </div>
