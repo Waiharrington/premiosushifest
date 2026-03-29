@@ -9,21 +9,24 @@ interface VerticalQuestTrailProps {
     onLocaleClick: (locale: Locale) => void
 }
 
-// ── Fixed Path Slots (30 slots in a compact 9:16 grid) ────────────────
+// ── Fixed Path Slots (30 slots in a spacious 4-column 9:16 grid) ────────
 const NODE_POS: { x: number; y: number }[] = []
-const ROWS = 10
-const COLS = 3
-const Y_START = 15
-const Y_STEP = 15 // Fits 10 rows in 177.7 comfortably
+const ROWS = 8
+const COLS = 4
+const Y_START = 22 // Increased margin to prevent clipping at the top
+const Y_STEP = 21 // Increased row spacing for breathing room
 
 for (let r = 0; r < ROWS; r++) {
     const y = Y_START + r * Y_STEP
     const isEvenRow = r % 2 === 0
     for (let c = 0; c < COLS; c++) {
-        // Snake pattern: 1-2-3 then 6-5-4
+        // Snake pattern across 4 columns
         const colIdx = isEvenRow ? c : (COLS - 1 - c)
-        let x = 20 + colIdx * 30 // 20, 50, 80
-        NODE_POS.push({ x, y })
+        // Adjust X to be well-centered in the canvas
+        let x = 16 + colIdx * 23 // 16, 39, 62, 85 approximately
+        if (NODE_POS.length < 30) {
+            NODE_POS.push({ x, y })
+        }
     }
 }
 
@@ -34,8 +37,8 @@ function getDynamicPath(visitedCount: number): string {
     for (let i = 1; i < visitedCount; i++) {
         const prev = NODE_POS[i-1]
         const curr = NODE_POS[i]
-        // Smooth curve for the snake turn
         const cpY = (prev.y + curr.y) / 2
+        // Slightly deeper curves for 4-column turns
         d += ` C ${prev.x} ${cpY}, ${curr.x} ${cpY}, ${curr.x} ${curr.y}`
     }
     return d
