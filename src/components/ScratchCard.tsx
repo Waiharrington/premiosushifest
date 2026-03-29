@@ -56,11 +56,6 @@ export function ScratchCard({
                 ctx.fillStyle = `rgba(255, 255, 255, ${Math.random() * 0.1})`
                 ctx.fillRect(x, y, size, size)
             }
-
-            // Decorative border inside scratch
-            ctx.lineWidth = 1
-            ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)'
-            ctx.strokeRect(10, 10, width - 20, height - 20)
             
             // Typography (Lilita One simulation)
             ctx.font = '900 32px sans-serif'
@@ -181,7 +176,7 @@ export function ScratchCard({
                         initial={{ opacity: 1 }}
                         exit={{ opacity: 0, scale: 1.2, filter: 'blur(20px)' }}
                         transition={{ duration: 0.8, ease: "easeOut" }}
-                        className="absolute inset-0 w-full h-full touch-none cursor-crosshair z-20"
+                        className="absolute inset-0 w-full h-full touch-none cursor-crosshair z-20 rounded-[2rem]"
                         onMouseDown={handleStart}
                         onMouseMove={handleMove}
                         onMouseUp={handleEnd}

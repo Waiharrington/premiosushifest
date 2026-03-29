@@ -156,21 +156,27 @@ export function QRScannerUI({ isOpen, onClose, onScan, locales = [], visitedIds 
                                 </div>
                             )}
                             
-                            {/* Scanning UI Overlays (Digital HUD) */}
+                            {/* Scanning UI Overlays (Elite Digital HUD) */}
                             {!isInitializing && !error && (
                                 <>
                                     <div className="absolute inset-0 pointer-events-none z-[155]">
-                                        {/* Corner Brackets */}
-                                        <div className="absolute top-10 left-10 w-10 h-10 border-l-2 border-t-2 border-primary/60 rounded-tl-xl shadow-[-5px_-5px_15px_-5px_rgba(0,178,255,1)]" />
-                                        <div className="absolute top-10 right-10 w-10 h-10 border-r-2 border-t-2 border-primary/60 rounded-tr-xl shadow-[5px_-5px_15px_-5px_rgba(0,178,255,1)]" />
-                                        <div className="absolute bottom-10 left-10 w-10 h-10 border-l-2 border-b-2 border-primary/60 rounded-bl-xl shadow-[-5px_5px_15px_-5px_rgba(0,178,255,1)]" />
-                                        <div className="absolute bottom-10 right-10 w-10 h-10 border-r-2 border-b-2 border-primary/60 rounded-br-xl shadow-[5px_5px_15px_-5px_rgba(0,178,255,1)]" />
+                                        {/* CSS Hack to hide library's internal white borders */}
+                                        <style dangerouslySetInnerHTML={{ __html: `
+                                            #qr-reader__scan_region div { border: none !important; }
+                                            #qr-reader { border: none !important; }
+                                        `}} />
+
+                                        {/* Elite Neon Blue Corners */}
+                                        <div className="absolute top-12 left-12 w-12 h-12 border-l-4 border-t-4 border-primary rounded-tl-2xl shadow-[-5px_-5px_25px_-2px_rgba(0,71,255,0.6)]" />
+                                        <div className="absolute top-12 right-12 w-12 h-12 border-r-4 border-t-4 border-primary rounded-tr-2xl shadow-[5px_-5px_25px_-2px_rgba(0,71,255,0.6)]" />
+                                        <div className="absolute bottom-12 left-12 w-12 h-12 border-l-4 border-b-4 border-primary rounded-bl-2xl shadow-[-5px_5px_25px_-2px_rgba(0,71,255,0.6)]" />
+                                        <div className="absolute bottom-12 right-12 w-12 h-12 border-r-4 border-b-4 border-primary rounded-br-2xl shadow-[5px_5px_25px_-2px_rgba(0,71,255,0.6)]" />
                                         
-                                        {/* Horizontal Laser Line */}
+                                        {/* Electric Laser Line */}
                                         <motion.div 
-                                            animate={{ top: ['20%', '80%', '20%'] }}
-                                            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                                            className="absolute left-[15%] right-[15%] h-[1px] bg-gradient-to-r from-transparent via-primary to-transparent shadow-[0_0_15px_rgba(0,178,255,1)] z-10"
+                                            animate={{ top: ['25%', '75%', '25%'] }}
+                                            transition={{ duration: 3.5, repeat: Infinity, ease: "linear" }}
+                                            className="absolute left-[20%] right-[20%] h-[2px] bg-gradient-to-r from-transparent via-primary to-transparent shadow-[0_0_20px_rgba(0,71,255,1)] z-10"
                                         />
                                     </div>
                                 </>
