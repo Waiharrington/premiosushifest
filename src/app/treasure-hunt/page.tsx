@@ -584,11 +584,11 @@ export default function TreasureHuntPage() {
                                                 setCurrentPrize(null)
                                                 setIsScratched(false)
                                             }}
-                                            className="w-full relative h-20 rounded-2xl overflow-hidden group shadow-[0_15px_40px_rgba(0,71,255,0.4)] transition-all hover:scale-[1.02] active:scale-95"
+                                            className="w-full relative h-20 px-10 rounded-2xl overflow-hidden group shadow-[0_15px_40px_rgba(0,71,255,0.4)] transition-all hover:scale-[1.02] active:scale-95"
                                         >
                                             <div className="absolute inset-0 bg-gradient-to-r from-[#0047FF] via-[#00B2FF] to-[#0047FF] bg-[length:200%_auto] animate-gradient-x" />
-                                            <span className="relative z-10 text-white font-lilita text-2xl uppercase tracking-widest flex items-center justify-center gap-4">
-                                                AÑADIR A MIS TESOROS <ArrowRight className="w-6 h-6 group-hover:translate-x-3 transition-transform duration-500" />
+                                            <span className="relative z-10 text-white font-lilita text-lg md:text-2xl uppercase tracking-widest flex items-center justify-center gap-4">
+                                                AÑADIR A MIS TESOROS <ArrowRight className="w-6 h-6 group-hover:translate-x-3 transition-transform duration-500 shrink-0" />
                                             </span>
                                         </button>
                                     </motion.div>
