@@ -108,11 +108,22 @@ export async function generateScratchPrize(userId: string, localeId: string) {
             prizeType = 'discount';
         }
         
+        // Find the designated Sponsor (Tiendas Premier)
+        const { data: sponsorData } = await supabase
+            .from('locales')
+            .select('id')
+            .eq('type', 'sponsor')
+            .limit(1)
+            .single();
+            
+        // Use sponsor's ID if found, otherwise fallback to the restaurant where it was scanned
+        const assignedLocaleId = sponsorData?.id || localeId;
+
         const { data: newPrize, error } = await supabase
             .from('treasure_hunt_prizes')
             .insert({
                 user_id: userId,
-                locale_id: localeId,
+                locale_id: assignedLocaleId,
                 prize_name: prizeName,
                 prize_type: prizeType,
             })

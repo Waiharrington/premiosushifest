@@ -13,7 +13,9 @@ interface Locale {
     description?: string
     image_url: string
     prize_pool?: number
+    discount_pool?: number
     pin?: string
+    type?: 'restaurant' | 'sponsor'
 }
 
 interface Vote {
@@ -375,13 +377,26 @@ export function AdminDashboard({ locales, votes }: AdminDashboardProps) {
                         </h2>
 
                         <form ref={formRef} action={handleSave} className="space-y-4" key={editingLocale?.id || 'new'}>
-                            <Input
-                                name="name"
-                                placeholder="Nombre del Restaurante"
-                                required
-                                className="bg-slate-950"
-                                defaultValue={editingLocale?.name || ""}
-                            />
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <Input
+                                    name="name"
+                                    placeholder="Nombre del Restaurante o Negocio"
+                                    required
+                                    className="bg-slate-950"
+                                    defaultValue={editingLocale?.name || ""}
+                                />
+                                <div className="bg-slate-950 border border-slate-800 rounded-md overflow-hidden flex">
+                                    <select
+                                        name="type"
+                                        className="bg-transparent w-full text-sm px-3 py-2 outline-none text-slate-300 appearance-none cursor-pointer"
+                                        defaultValue={editingLocale?.type || "restaurant"}
+                                        required
+                                    >
+                                        <option value="restaurant" className="bg-slate-900">🍽️ Restaurante</option>
+                                        <option value="sponsor" className="bg-slate-900">🌟 Patrocinador (Sponsor)</option>
+                                    </select>
+                                </div>
+                            </div>
                             <Input
                                 name="description"
                                 placeholder="Descripción corta (opcional)"

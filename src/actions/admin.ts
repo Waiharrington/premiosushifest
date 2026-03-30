@@ -39,6 +39,7 @@ export async function addLocale(formData: FormData) {
     const prize_pool = parseInt((formData.get("prize_pool") as string) || "0", 10)
     const discount_pool = parseInt((formData.get("discount_pool") as string) || "0", 10)
     const pin = (formData.get("pin") as string) || "1234"
+    const type = (formData.get("type") as string) || "restaurant" // Default to restaurant
 
     if (!name) return { success: false, error: "El nombre es obligatorio" }
 
@@ -87,7 +88,7 @@ export async function addLocale(formData: FormData) {
 
     const { error } = await supabaseAdmin
         .from("locales")
-        .insert({ name, description, image_url, prize_pool, discount_pool, pin })
+        .insert({ name, description, image_url, prize_pool, discount_pool, pin, type })
 
     if (error) {
         return { success: false, error: error.message }
@@ -109,6 +110,7 @@ export async function editLocale(formData: FormData) {
     const prize_pool = parseInt((formData.get("prize_pool") as string) || "0", 10)
     const discount_pool = parseInt((formData.get("discount_pool") as string) || "0", 10)
     const pin = (formData.get("pin") as string) || "1234"
+    const type = (formData.get("type") as string) || "restaurant"
 
     if (!id) return { success: false, error: "ID no válido" }
     if (!name) return { success: false, error: "El nombre es obligatorio" }
@@ -154,7 +156,7 @@ export async function editLocale(formData: FormData) {
 
     const { error } = await supabaseAdmin
         .from("locales")
-        .update({ name, description, image_url, prize_pool, discount_pool, pin })
+        .update({ name, description, image_url, prize_pool, discount_pool, pin, type })
         .eq("id", id)
 
     if (error) {
