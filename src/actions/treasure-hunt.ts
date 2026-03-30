@@ -99,12 +99,20 @@ export async function generateScratchPrize(userId: string, localeId: string) {
         let prizeName = "";
         let prizeType: 'gift' | 'discount' | 'sponsor_gift' = 'discount';
 
+        const discounts = ["Descuento de $25", "Descuento de $50", "Descuento del 15%", "Descuento de $25"];
+        const bigPrizes = ["Aire Acondicionado", "Barra de Sonido", "Proyector Smart", "Smart TV 50\""];
+
         if (isPrizeScan) {
-            const demoPrizeNames = ["Proyector Smart", "Barra de Sonido", "Aire Acondicionado", "Smart TV 50\""];
-            prizeName = demoPrizeNames[Math.floor(Math.random() * demoPrizeNames.length)];
+            // Rotates deterministically among big prizes based on how many 5-scan cycles the user has done
+            const rotationIndex = (Math.floor(visitNumber / 5) - 1) % bigPrizes.length;
+            // Fallback to 0 if negative
+            const safeIndex = rotationIndex >= 0 ? rotationIndex : 0;
+            prizeName = bigPrizes[safeIndex];
             prizeType = 'sponsor_gift';
         } else {
-            prizeName = "DESCUENTO ESPECIAL";
+            // Rotates among discounts based on the remaining scans in the current cycle
+            const rotationIndex = (visitNumber - 1) % discounts.length;
+            prizeName = discounts[rotationIndex];
             prizeType = 'discount';
         }
         
