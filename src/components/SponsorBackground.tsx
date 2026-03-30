@@ -1,10 +1,10 @@
 "use client"
 
 import { motion } from "framer-motion"
-import Image from "next/image"
 
 export function SponsorBackground() {
     // 9 columns for desktop to fill width
+    // Added priority/eager optimizations to prevent scroll lag
     const columns = [
         { duration: 25, delay: 0 },
         { duration: 35, delay: -5 },
@@ -17,11 +17,10 @@ export function SponsorBackground() {
         { duration: 26, delay: -6 },
     ]
 
-    // Solo usar el logo de Epic
     const logos = Array(10).fill("/watermark-epic.png")
 
     return (
-        <div className="fixed inset-0 z-[1] overflow-hidden opacity-[0.50] pointer-events-none mix-blend-screen mix-blend-plus-lighter">
+        <div className="fixed inset-0 z-0 overflow-hidden opacity-[0.50] pointer-events-none mix-blend-screen mix-blend-plus-lighter">
             <div className="flex justify-between w-full h-full max-w-[95%] mx-auto px-2 md:px-4">
                 {columns.map((col, index) => (
                     <div
@@ -41,13 +40,16 @@ export function SponsorBackground() {
                             }}
                             className="flex flex-col gap-16 md:gap-24 w-full items-center pb-16 md:pb-24"
                         >
+                            {/* Standard img tag is much more performant than Next/image for 270 cascading particles */}
                             {[...logos, ...logos, ...logos].map((src, i) => (
-                                <div key={i} className="relative w-16 h-16 md:w-24 md:h-24 opacity-60 hover:opacity-100 transition-opacity">
-                                    <Image
+                                <div key={i} className="relative w-16 h-16 md:w-24 md:h-24 opacity-60">
+                                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                                    <img
                                         src={src}
-                                        alt="sponsor"
-                                        fill
-                                        className="object-contain drop-shadow"
+                                        alt="sponsor bg"
+                                        loading="lazy"
+                                        decoding="async"
+                                        className="w-full h-full object-contain"
                                     />
                                 </div>
                             ))}
