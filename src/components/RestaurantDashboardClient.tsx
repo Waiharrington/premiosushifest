@@ -29,6 +29,7 @@ interface Locale {
     pin: string
     prize_pool: number
     discount_pool: number
+    type?: 'restaurant' | 'sponsor'
 }
 
 function PrizeListSection({ 
@@ -190,8 +191,14 @@ export function RestaurantDashboardClient({ locale }: { locale: Locale }) {
     const redeemedCount = prizes.filter(p => p.is_redeemed).length
     const pool = locale.prize_pool || 0
     const discountPool = locale.discount_pool || 0
+    const isSponsor = locale.type === 'sponsor'
 
-    const giftPrizes = prizes.filter(p => p.prize_type === 'gift' && !p.is_redeemed)
+    // Si es Patrocinador, filtramos los físicos (sponsor_gift o gift) y los descuentos.
+    // Si es Restaurante, filtramos los platos de cortesía (courtesy).
+    const giftPrizes = prizes.filter(p => !p.is_redeemed && 
+        (isSponsor ? (p.prize_type === 'sponsor_gift' || p.prize_type === 'gift') : p.prize_type === 'courtesy')
+    )
+    
     const discountPrizes = prizes.filter(p => p.prize_type === 'discount' && !p.is_redeemed)
     const redeemedPrizesList = prizes.filter(p => p.is_redeemed)
 
@@ -254,10 +261,10 @@ export function RestaurantDashboardClient({ locale }: { locale: Locale }) {
                         </div>
                     </div>
 
-                    {/* Column 2: Platos Gratis */}
+                    {/* Column 2: Premios Principales */}
                     <div className="space-y-8">
                         <PrizeListSection 
-                            title="Platos Gratis Activos"
+                            title={isSponsor ? "Premios Físicos Activos" : "Platos Gratis Activos"}
                             icon={<Gift className="w-5 h-5 text-primary" />}
                             prizes={giftPrizes}
                             loading={loading}
@@ -267,16 +274,18 @@ export function RestaurantDashboardClient({ locale }: { locale: Locale }) {
                     </div>
 
                     {/* Column 3: Descuentos */}
-                    <div className="space-y-8">
-                        <PrizeListSection 
-                            title="Descuentos Activos"
-                            icon={<Tag className="w-5 h-5 text-blue-400" />}
-                            prizes={discountPrizes}
-                            loading={loading}
-                            searchQuery={searchQuery}
-                            handleRedeem={handleRedeem}
-                        />
-                    </div>
+                    {isSponsor && (
+                        <div className="space-y-8">
+                            <PrizeListSection 
+                                title="Descuentos y Giftcards"
+                                icon={<Tag className="w-5 h-5 text-blue-400" />}
+                                prizes={discountPrizes}
+                                loading={loading}
+                                searchQuery={searchQuery}
+                                handleRedeem={handleRedeem}
+                            />
+                        </div>
+                    )}
 
                 </div>
 
