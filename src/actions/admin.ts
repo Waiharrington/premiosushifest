@@ -439,10 +439,10 @@ export async function hardResetDatabase(securityWord: string) {
     if (!serviceRoleKey) return { success: false, error: "Missing SUPABASE_SERVICE_ROLE_KEY" }
     const supabaseAdmin = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, serviceRoleKey)
 
-    // Delete all records from activity tables using a catch-all filter
-    const { error: e1 } = await supabaseAdmin.from('votes').delete().not('id', 'is', null)
-    const { error: e2 } = await supabaseAdmin.from('treasure_hunt_visits').delete().not('id', 'is', null)
-    const { error: e3 } = await supabaseAdmin.from('treasure_hunt_prizes').delete().not('id', 'is', null)
+    // Delete all records from activity tables using a catch-all filter based on date
+    const { error: e1 } = await supabaseAdmin.from('votes').delete().gte('id', '00000000-0000-0000-0000-000000000000')
+    const { error: e2 } = await supabaseAdmin.from('treasure_hunt_visits').delete().gte('id', '00000000-0000-0000-0000-000000000000')
+    const { error: e3 } = await supabaseAdmin.from('treasure_hunt_prizes').delete().gte('id', '00000000-0000-0000-0000-000000000000')
 
     if (e1 || e2 || e3) {
         console.error("Errores al reiniciar DB:", e1, e2, e3)
