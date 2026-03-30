@@ -99,7 +99,7 @@ export async function generateScratchPrize(userId: string, localeId: string) {
         let prizeName = "";
         let prizeType: 'gift' | 'discount' | 'sponsor_gift' = 'discount';
 
-        const discounts = ["Giftcard de $25", "Giftcard de $50", "Descuento del 15%", "Giftcard de $25"];
+        const discounts = ["Gift Card de $25", "Gift Card de $50", "Descuento del 15%", "Gift Card de $25"];
         const bigPrizes = ["Aire Acondicionado", "Barra de Sonido", "Proyector Smart", "Smart TV 50\""];
 
         if (isPrizeScan) {
