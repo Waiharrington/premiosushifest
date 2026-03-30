@@ -17,7 +17,8 @@ export function SponsorBackground() {
         { duration: 26, delay: -6 },
     ]
 
-    const logos = Array(10).fill(null).map((_, i) => i % 2 === 0 ? "/watermark-uni.png" : "/watermark-epic.png")
+    // Solo usar el logo de Epic
+    const logos = Array(10).fill("/watermark-epic.png")
 
     return (
         <div className="fixed inset-0 z-[1] overflow-hidden opacity-[0.50] pointer-events-none mix-blend-screen mix-blend-plus-lighter">
