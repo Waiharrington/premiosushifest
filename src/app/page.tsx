@@ -112,8 +112,8 @@ export default function Home() {
                         }}
                         className="absolute top-[60%] left-1/2 -translate-x-1/2 z-[30] w-[100%] max-w-[180px]"
                     >
-                        {/* Fake glow placeholder avoiding heavy CSS filter drop-shadow */}
-                        <div className="absolute inset-4 bg-yellow-500/40 blur-[20px] rounded-full" />
+                        {/* Fake glow placeholder avoiding heavy CSS filter drop-shadow, moved up and constrained to prevent bleeding into text */}
+                        <div className="absolute inset-x-8 inset-y-8 bg-yellow-500/30 blur-[15px] rounded-full -translate-y-4" />
                         <Image 
                             src="/compass.png" 
                             alt="Brújula del Tesoro" 
