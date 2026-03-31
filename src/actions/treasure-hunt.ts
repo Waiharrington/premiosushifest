@@ -41,6 +41,7 @@ export async function getTreasureHuntStatus(userId: string) {
         .from('treasure_hunt_visits')
         .select('*')
         .eq('user_id', userId)
+        .order('created_at', { ascending: true })
 
     const { data: prizes } = await supabase
         .from('treasure_hunt_prizes')

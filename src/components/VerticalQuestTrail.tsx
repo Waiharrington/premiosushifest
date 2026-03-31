@@ -31,15 +31,22 @@ for (let r = 0; r < ROWS; r++) {
     }
 }
 
-// ── Path Helper (Connects slots in perfectly ordered sequence) ──────────
-function getDynamicPath(visitedCount: number): string {
-    if (visitedCount <= 1) return ""
-    let d = `M ${NODE_POS[0].x} ${NODE_POS[0].y}`
-    for (let i = 1; i < visitedCount; i++) {
-        const prev = NODE_POS[i-1]
-        const curr = NODE_POS[i]
-        const cpY = (prev.y + curr.y) / 2
-        d += ` C ${prev.x} ${cpY}, ${curr.x} ${cpY}, ${curr.x} ${curr.y}`
+// ── Path Helper (Connects visited nodes with direct straight lines) ──────────
+function getDynamicPath(locales: Locale[], visitedIds: string[]): string {
+    if (visitedIds.length <= 1) return ""
+    
+    // Map visited IDs to their actual coordinates in the map
+    const visitedCoords = visitedIds.map(id => {
+        const index = locales.findIndex(l => l.id === id)
+        return index !== -1 ? NODE_POS[index] : null
+    }).filter(pos => pos !== null) as { x: number; y: number }[]
+
+    if (visitedCoords.length <= 1) return ""
+
+    let d = `M ${visitedCoords[0].x} ${visitedCoords[0].y}`
+    for (let i = 1; i < visitedCoords.length; i++) {
+        const curr = visitedCoords[i]
+        d += ` L ${curr.x} ${curr.y}`
     }
     return d
 }
@@ -63,7 +70,7 @@ const SAGA_MESSAGES = [
 export function VerticalQuestTrail({ locales, visitedIds, onLocaleClick }: VerticalQuestTrailProps) {
     const [selectedLocale, setSelectedLocale] = useState<Locale | null>(null)
     const [selectedIndex, setSelectedIndex] = useState<number>(0)
-    const activePath = getDynamicPath(visitedIds.length)
+    const activePath = getDynamicPath(locales, visitedIds)
 
     return (
         <div className="relative w-full flex flex-col pt-2">
@@ -128,14 +135,15 @@ export function VerticalQuestTrail({ locales, visitedIds, onLocaleClick }: Verti
                         {/* Interactive transparent surface for bg-clicks */}
                         <rect width="100" height="177.7" fill="transparent" onClick={() => setSelectedLocale(null)} />
 
-                        {/* ── PATH OF CONQUEST ── */}
+                        {/* ── PATH OF CONQUEST (Direct Orange Straight Lines) ── */}
                         <path 
                             d={activePath} 
                             fill="none" 
-                            stroke="url(#samuraiPath)" 
-                            strokeWidth="1.1" 
+                            stroke="#FFB800" 
+                            strokeWidth="1.5" 
                             strokeLinecap="round" 
-                            opacity="0.8"
+                            strokeLinejoin="round"
+                            opacity="1"
                             className="energy-trail"
                             filter="url(#neon-glow-trail)"
                         />
