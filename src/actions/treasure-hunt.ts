@@ -85,7 +85,7 @@ export async function generateScratchPrize(userId: string, localeId: string) {
     const discountCount = winningPrizes?.filter(p => p.prize_type === 'discount').length || 0
 
     // DEMO MODE TOGGLE
-    const DEMO_MODE = true;
+    const DEMO_MODE = false;
  
     if (DEMO_MODE) {
         // Count total visits for this user to determine if it's a prize or discount scan
