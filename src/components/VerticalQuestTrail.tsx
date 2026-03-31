@@ -31,14 +31,14 @@ for (let r = 0; r < ROWS; r++) {
     }
 }
 
-// ── Path Helper (Connects visited nodes with direct straight lines) ──────────
+// ── Path Helper (Connects visited nodes with direct straight lines at orb center height) ──────────
 function getDynamicPath(locales: Locale[], visitedIds: string[]): string {
     if (visitedIds.length <= 1) return ""
     
-    // Map visited IDs to their actual coordinates in the map
     const visitedCoords = visitedIds.map(id => {
         const index = locales.findIndex(l => l.id === id)
-        return index !== -1 ? NODE_POS[index] : null
+        // Subtract 7.5 to align with the vertical center of the orbs
+        return index !== -1 ? { x: NODE_POS[index].x, y: NODE_POS[index].y - 7.5 } : null
     }).filter(pos => pos !== null) as { x: number; y: number }[]
 
     if (visitedCoords.length <= 1) return ""
