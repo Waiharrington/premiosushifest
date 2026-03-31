@@ -185,19 +185,7 @@ export default function AuthModal({ onClose, onSuccess }: AuthModalProps) {
                             {isRegistering ? "¿Ya tienes cuenta? Ingresa aquí" : "¿Eres nuevo? Únete a la ruta"}
                         </button>
 
-                        {/* Demo Helper */}
-                        <button
-                            type="button"
-                            onClick={() => {
-                                setCedula("8-888-888");
-                                setName("Catador Premium");
-                                setPhone("6666-6666");
-                            }}
-                            className="px-4 py-2 rounded-full bg-white/5 border border-white/10 text-[9px] text-white/20 hover:text-white/40 hover:bg-white/10 transition-all flex items-center gap-2 uppercase tracking-widest font-bold"
-                        >
-                            <span className="w-1.5 h-1.5 rounded-full bg-secondary animate-pulse" />
-                            Autocompletar Demo
-                        </button>
+
                     </div>
                 </div>
             </div>
