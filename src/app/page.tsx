@@ -83,11 +83,11 @@ export default function Home() {
                     transition={{ duration: 1.2, type: "spring" }}
                     className="relative w-full max-w-[160px] aspect-[4/3] mb-4 flex items-center justify-center will-change-transform"
                 >
-                    {/* Pulsing blue glow (Optimized blur for mobile) */}
+                    {/* Glowing background to emulate logo drop shadow without CPU penalty */}
                     <motion.div 
-                        animate={{ opacity: [0.1, 0.25, 0.1], scale: [0.9, 1.1, 0.9] }}
+                        animate={{ opacity: [0.15, 0.35, 0.15], scale: [0.9, 1.1, 0.9] }}
                         transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-                        className="absolute inset-x-[-40%] inset-y-[-40%] bg-[#0066FF]/25 blur-[80px] rounded-full" 
+                        className="absolute inset-x-[-20%] inset-y-[-20%] bg-[#0066FF]/60 blur-[60px] rounded-full" 
                     />
                     
                     <Image
@@ -95,7 +95,7 @@ export default function Home() {
                         alt="Sushi Fest 2026 Logo"
                         width={280}
                         height={210}
-                        className="w-full h-auto drop-shadow-[0_0_40px_rgba(0,178,255,0.6)] brightness-110 relative z-10"
+                        className="w-full h-auto brightness-110 relative z-10"
                         priority
                     />
 
@@ -112,12 +112,14 @@ export default function Home() {
                         }}
                         className="absolute top-[60%] left-1/2 -translate-x-1/2 z-[30] w-[100%] max-w-[180px]"
                     >
+                        {/* Fake glow placeholder avoiding heavy CSS filter drop-shadow */}
+                        <div className="absolute inset-4 bg-yellow-500/40 blur-[20px] rounded-full" />
                         <Image 
                             src="/compass.png" 
                             alt="Brújula del Tesoro" 
                             width={180} 
                             height={180} 
-                            className="w-full drop-shadow-[0_20px_50px_rgba(255,183,0,0.4)]"
+                            className="w-full relative z-10"
                         />
                     </motion.div>
                 </motion.div>
@@ -130,13 +132,13 @@ export default function Home() {
                         transition={{ delay: 0.8, duration: 1 }}
                         className="space-y-3"
                     >
-                        <h2 className="text-white font-lilita text-xl md:text-2xl tracking-[0.25em] uppercase drop-shadow-[0_4px_8px_rgba(0,0,0,0.8)]">
+                        <h2 className="text-white font-lilita text-xl md:text-2xl tracking-[0.25em] uppercase" style={{ textShadow: "0 4px 8px rgba(0,0,0,1)" }}>
                             Búsqueda del <span className="text-white">Tesoro</span>
                         </h2>
-                        <h1 className="text-5xl md:text-7xl font-lilita uppercase tracking-tight leading-[0.95] text-white my-2 drop-shadow-[0_10px_30px_rgba(0,0,0,0.8)]">
+                        <h1 className="text-5xl md:text-7xl font-lilita uppercase tracking-tight leading-[0.95] text-white my-2" style={{ textShadow: "0 10px 30px rgba(0,0,0,1)" }}>
                             ¡GANA <span className="italic">PREMIOS</span> INCREÍBLES!
                         </h1>
-                        <p className="text-white/90 text-xs md:text-sm font-medium tracking-wide max-w-[380px] mx-auto leading-relaxed drop-shadow-lg opacity-80">
+                        <p className="text-white/90 text-xs md:text-sm font-medium tracking-wide max-w-[380px] mx-auto leading-relaxed opacity-90" style={{ textShadow: "0 2px 4px rgba(0,0,0,0.8)" }}>
                             Explora la ciudad, descubre nuevos sabores y desbloquea descuentos exclusivos en cada restaurante que visites.
                         </p>
                     </motion.div>

@@ -1,7 +1,5 @@
 "use client"
 
-import { motion } from "framer-motion"
-
 export function SponsorBackground() {
     // 9 columns for desktop to fill width
     // Added priority/eager optimizations to prevent scroll lag
@@ -21,6 +19,18 @@ export function SponsorBackground() {
 
     return (
         <div className="fixed inset-0 z-0 overflow-hidden opacity-[0.50] pointer-events-none mix-blend-screen mix-blend-plus-lighter">
+            <style dangerouslySetInnerHTML={{__html: `
+                @keyframes sponsorMoveUp {
+                    0% { transform: translateY(0); }
+                    100% { transform: translateY(-1000px); }
+                }
+                .sponsor-col {
+                    animation-name: sponsorMoveUp;
+                    animation-timing-function: linear;
+                    animation-iteration-count: infinite;
+                    will-change: transform;
+                }
+            `}} />
             <div className="flex justify-between w-full h-full max-w-[95%] mx-auto px-2 md:px-4">
                 {columns.map((col, index) => (
                     <div
@@ -30,15 +40,12 @@ export function SponsorBackground() {
                             index % 2 === 0 ? 'flex' : 'hidden md:flex'
                         }`}
                     >
-                        <motion.div
-                            animate={{ y: [0, -1000] }}
-                            transition={{
-                                repeat: Infinity,
-                                ease: "linear",
-                                duration: col.duration,
-                                repeatType: "loop"
+                        <div
+                            className="sponsor-col flex flex-col gap-16 md:gap-24 w-full items-center pb-16 md:pb-24"
+                            style={{ 
+                                animationDuration: `${col.duration}s`,
+                                animationDelay: `${col.delay}s`
                             }}
-                            className="flex flex-col gap-16 md:gap-24 w-full items-center pb-16 md:pb-24"
                         >
                             {/* Standard img tag is much more performant than Next/image for 270 cascading particles */}
                             {[...logos, ...logos, ...logos].map((src, i) => (
@@ -47,13 +54,12 @@ export function SponsorBackground() {
                                     <img
                                         src={src}
                                         alt="sponsor bg"
-                                        loading="lazy"
                                         decoding="async"
                                         className="w-full h-full object-contain"
                                     />
                                 </div>
                             ))}
-                        </motion.div>
+                        </div>
                     </div>
                 ))}
             </div>
