@@ -59,37 +59,43 @@ export function TreasureMap({ locales, visitedIds, onLocaleClick }: TreasureMapP
                     strokeDasharray="2 2"
                 />
                 
-                {/* Active (Visited) Path Segment by Segment */}
-                {locales.map((_, i) => {
-                    if (i === 0 || !visitedIds.includes(locales[i].id) || !visitedIds.includes(locales[i-1].id)) return null;
-                    const p1 = getCoordinates(i-1);
-                    const p2 = getCoordinates(i);
+                {/* Active (Visited) Path Segment by Segment (Chronological Route) */}
+                {visitedIds.map((id, k) => {
+                    if (k === 0) return null;
+                    const prevId = visitedIds[k - 1];
+                    const prevIndex = locales.findIndex(l => l.id === prevId);
+                    const currIndex = locales.findIndex(l => l.id === id);
+                    if (prevIndex === -1 || currIndex === -1) return null;
+                    
+                    const p1 = getCoordinates(prevIndex);
+                    const p2 = getCoordinates(currIndex);
+                    
                     return (
-                        <g key={`path-group-${i}`}>
-                            {/* Inner Glow Line */}
+                        <g key={`path-group-${k}`}>
+                            {/* Inner Glow Line (Orange) */}
                             <motion.line
                                 x1={parseFloat(p1.x)}
                                 y1={parseFloat(p1.y)}
                                 x2={parseFloat(p2.x)}
                                 y2={parseFloat(p2.y)}
-                                stroke="#00B2FF"
+                                stroke="#FFB800"
                                 strokeWidth="0.8"
                                 initial={{ pathLength: 0, opacity: 0 }}
-                                animate={{ pathLength: 1, opacity: 0.8 }}
-                                transition={{ duration: 1.5, delay: i * 0.1, ease: "easeInOut" }}
-                                className="drop-shadow-[0_0_12px_rgba(0,178,255,1)]"
+                                animate={{ pathLength: 1, opacity: 1 }}
+                                transition={{ duration: 1.5, delay: k * 0.1, ease: "easeInOut" }}
+                                className="drop-shadow-[0_0_12px_rgba(255,184,0,0.8)]"
                             />
-                            {/* Outer Soft Glow */}
+                            {/* Outer Soft Glow (Orange) */}
                             <motion.line
                                 x1={parseFloat(p1.x)}
                                 y1={parseFloat(p1.y)}
                                 x2={parseFloat(p2.x)}
                                 y2={parseFloat(p2.y)}
-                                stroke="#0047FF"
+                                stroke="#FF6B00"
                                 strokeWidth="2.5"
                                 initial={{ opacity: 0 }}
-                                animate={{ opacity: 0.15 }}
-                                transition={{ duration: 2, delay: i * 0.1 }}
+                                animate={{ opacity: 0.3 }}
+                                transition={{ duration: 2, delay: k * 0.1 }}
                             />
                         </g>
                     );
