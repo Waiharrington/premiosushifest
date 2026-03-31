@@ -84,73 +84,64 @@ export async function generateScratchPrize(userId: string, localeId: string) {
     const giftCount = winningPrizes?.filter(p => p.prize_type === 'gift').length || 0
     const discountCount = winningPrizes?.filter(p => p.prize_type === 'discount').length || 0
 
-    // DEMO MODE TOGGLE
-    const DEMO_MODE = false;
- 
-    if (DEMO_MODE) {
-        // Count total visits for this user to determine if it's a prize or discount scan
-        const { count: totalVisits } = await supabase
-            .from('treasure_hunt_visits')
-            .select('*', { count: 'exact', head: true })
-            .eq('user_id', userId);
+    // ── Visit Counter Logic (Determine scan number for prize tier) ──────────
+    const { count: totalVisits } = await supabase
+        .from('treasure_hunt_visits')
+        .select('*', { count: 'exact', head: true })
+        .eq('user_id', userId);
+    
+    const visitNumber = totalVisits || 1;
+    const isPrizeScan = visitNumber % 5 === 0;
+
+    let prizeName = "";
+    let prizeType: 'gift' | 'discount' | 'sponsor_gift' = 'discount';
+
+    // Official Winning Pools (Balanced for 30 slots)
+    const discounts = ["Cupón de Descuento (Saga)", "Súper Descuento Sushi", "Beneficio Especial Escaneo", "Cupón del Explorador"];
+    const bigPrizes = ["Aire Acondicionado Split", "Barra de Sonido Yamaha", "Proyector Smart Portable", "Smart TV Ultra HD 50\"", "Freidora de Aire Digital", "Audífonos Sony Noise Canceling"];
+
+    if (isPrizeScan) {
+        // Rotates deterministically among big prizes based on how many 5-scan cycles the user has done
+        const rotationIndex = (Math.floor(visitNumber / 5) - 1) % bigPrizes.length;
+        const safeIndex = rotationIndex >= 0 ? rotationIndex : 0;
+        prizeName = bigPrizes[safeIndex];
+        prizeType = 'sponsor_gift';
+    } else {
+        // Rotates among discounts based on the visit number
+        const rotationIndex = (visitNumber - 1) % discounts.length;
+        prizeName = discounts[rotationIndex];
+        prizeType = 'discount';
+    }
+    
+    // Find the designated Sponsor (Tiendas Premier) for the big prizes
+    const { data: sponsorData } = await supabase
+        .from('locales')
+        .select('id')
+        .eq('type', 'sponsor')
+        .limit(1)
+        .single();
         
-        const visitNumber = totalVisits || 1;
-        const isPrizeScan = visitNumber % 5 === 0;
+    // Use sponsor's ID if found for big prizes, otherwise use current restaurante
+    const assignedLocaleId = (isPrizeScan && sponsorData?.id) ? sponsorData.id : localeId;
 
-        let prizeName = "";
-        let prizeType: 'gift' | 'discount' | 'sponsor_gift' = 'discount';
+    const { data: newPrize, error: insertError } = await supabase
+        .from('treasure_hunt_prizes')
+        .insert({
+            user_id: userId,
+            locale_id: assignedLocaleId,
+            prize_name: prizeName,
+            prize_type: prizeType,
+        })
+        .select()
+        .single();
 
-        const discounts = ["Gift Card de $25", "Gift Card de $50", "Descuento del 15%", "Gift Card de $25"];
-        const bigPrizes = ["Aire Acondicionado", "Barra de Sonido", "Proyector Smart", "Smart TV 50\""];
-
-        if (isPrizeScan) {
-            // Rotates deterministically among big prizes based on how many 5-scan cycles the user has done
-            const rotationIndex = (Math.floor(visitNumber / 5) - 1) % bigPrizes.length;
-            // Fallback to 0 if negative
-            const safeIndex = rotationIndex >= 0 ? rotationIndex : 0;
-            prizeName = bigPrizes[safeIndex];
-            prizeType = 'sponsor_gift';
-        } else {
-            // Rotates among discounts based on the remaining scans in the current cycle
-            const rotationIndex = (visitNumber - 1) % discounts.length;
-            prizeName = discounts[rotationIndex];
-            prizeType = 'discount';
-        }
-        
-        // Find the designated Sponsor (Tiendas Premier)
-        const { data: sponsorData } = await supabase
-            .from('locales')
-            .select('id')
-            .eq('type', 'sponsor')
-            .limit(1)
-            .single();
-            
-        // Use sponsor's ID if found, otherwise fallback to the restaurant where it was scanned
-        const assignedLocaleId = sponsorData?.id || localeId;
-
-        const { data: newPrize, error } = await supabase
-            .from('treasure_hunt_prizes')
-            .insert({
-                user_id: userId,
-                locale_id: assignedLocaleId,
-                prize_name: prizeName,
-                prize_type: prizeType,
-            })
-            .select()
-            .single();
- 
-        if (error) {
-            console.error("Error saving demo prize:", error);
-            return { success: false, error: "Error al guardar el premio: " + error.message };
-        }
- 
-        // Return visitNumber so the frontend can pick the right discount image (1-3 cycling)
-        revalidatePath("/treasure-hunt");
-        return { success: true, prize: newPrize as TreasureHuntPrize, visitNumber };
+    if (insertError) {
+        console.error("Error saving prize:", insertError);
+        return { success: false, error: "Error al generar tu premio. Por favor intenta de nuevo." };
     }
 
-    // Normal logic is currently disabled in favor of DEMO_MODE
-    return { success: false, error: "Modo Demo activo." };
+    revalidatePath("/treasure-hunt");
+    return { success: true, prize: newPrize as TreasureHuntPrize, visitNumber };
 }
 
 
